@@ -242,6 +242,34 @@
     /* ── SVG ICONS ── */
     .icon { width: 16px; height: 16px; fill: currentColor; vertical-align: middle; }
 
+
+    /* ── DIAGRAM TOGGLE ── */
+    .diagram-toggle {
+      margin-top: 1.25rem;
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+    }
+    .diagram-toggle summary {
+      cursor: pointer;
+      font-size: 0.8rem; font-weight: 600;
+      color: var(--teal); letter-spacing: 0.03em;
+      list-style: none;
+      display: flex; align-items: center; gap: 0.4rem;
+      user-select: none;
+    }
+    .diagram-toggle summary::-webkit-details-marker { display: none; }
+    .diagram-toggle summary::before {
+      content: '▶';
+      font-size: 0.6rem; transition: transform 0.2s;
+    }
+    .diagram-toggle[open] summary::before { transform: rotate(90deg); }
+    .diagram-wrap {
+      margin-top: 1rem;
+      border-radius: 8px; overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .diagram-wrap svg { width: 100%; height: auto; display: block; }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 700px) {
       nav { padding: 0 1rem; }
@@ -303,7 +331,7 @@
       </div>
       <div class="stat-grid">
         <div class="stat-card">
-          <span class="stat-num">809</span>
+          <span class="stat-num">808</span>
           <span class="stat-label">Genomes processed across projects</span>
         </div>
         <div class="stat-card">
@@ -345,12 +373,16 @@
             </a>
           </div>
           <p class="card-desc">
-            End-to-end Nextflow DSL2 pipeline characterising antimicrobial resistance across 283 clinical strains. Integrates AMRFinderPlus resistance profiling with custom promoter-variant detection (mtrR, penB loci), core-genome phylogeny via Parsnp, and an interactive Dash dashboard linking resistance phenotypes to phylogenetic context for rapid clinical interpretation.
+            End-to-end Nextflow DSL2 pipeline characterising antimicrobial resistance across 283 clinical strains. Integrates AMRFinderPlus resistance profiling with a custom alignment-based mutation caller (penA, gyrA, parC, mtrR, porB) and promoter-variant detection, core-genome phylogeny via Parsnp, and an interactive Dash dashboard linking resistance phenotypes to phylogenetic context for rapid clinical interpretation.
           </p>
           <div class="card-metrics">
             <div class="metric"><b>283</b> strains</div>
             <div class="metric">Reference: <b>FA1090</b></div>
-            <div class="metric">Promoter variant analysis</div>
+            <div class="metric"><b>60%</b> ciprofloxacin resistance (GyrA QRDR)</div>
+            <div class="metric"><b>51%</b> reduced cephalosporin susceptibility (mosaic penA)</div>
+            <div class="metric">Mean <b>10.6</b> AMR elements per strain</div>
+            <div class="metric">Dual-track: AMRFinderPlus + custom mutation caller</div>
+            <div class="metric">mtrR · porB promoter-variant analysis</div>
             <div class="metric">Core-genome phylogeny</div>
             <div class="metric">Interactive dashboard</div>
             <div class="metric">Inclusivity/exclusivity analysis</div>
@@ -365,6 +397,128 @@
             <span class="tag">Docker</span>
             <span class="tag">Python</span>
           </div>
+          <details class="diagram-toggle">
+            <summary>View Workflow Diagram</summary>
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 860 620" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" role="img">
+  <title>N. gonorrhoeae Diagnostic Pipeline Workflow</title>
+  <desc>Two-stream pipeline diagram: AMR and promoter analysis, and core genome phylogeny, converging into a Dash dashboard.</desc>
+
+  <defs>
+    <marker id="arr-ng" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#2E4057"/>
+    </marker>
+    <marker id="arr2-ng" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#555"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="860" height="620" fill="#F4F6F8" rx="10"/>
+
+  <!-- Title -->
+  <text x="430" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E4057">N. gonorrhoeae Diagnostic Pipeline</text>
+  <text x="430" y="46" text-anchor="middle" font-size="10" fill="#777">283 clinical strains · FA1090 reference · Nextflow DSL2 · Docker</text>
+
+  <!-- INPUT -->
+  <rect x="280" y="58" width="300" height="40" rx="6" fill="#2E4057"/>
+  <text x="430" y="74" text-anchor="middle" font-size="12" font-weight="bold" fill="white">283 N. gonorrhoeae Genomes</text>
+  <text x="430" y="89" text-anchor="middle" font-size="9" fill="#A8BFD0">NCBI RefSeq · complete assemblies</text>
+
+  <!-- Input to Prokka -->
+  <line x1="430" y1="98" x2="430" y2="114" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-ng)"/>
+
+  <!-- PROKKA -->
+  <rect x="320" y="114" width="220" height="36" rx="5" fill="#2E4057"/>
+  <text x="430" y="130" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Prokka Annotation</text>
+  <text x="430" y="143" text-anchor="middle" font-size="9" fill="#A8BFD0">GFF · protein FASTA</text>
+
+  <!-- Fork line - two streams -->
+  <line x1="430" y1="150" x2="430" y2="163" stroke="#2E4057" stroke-width="1.5"/>
+  <line x1="260" y1="163" x2="600" y2="163" stroke="#2E4057" stroke-width="1.5"/>
+  <line x1="260" y1="163" x2="260" y2="180" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-ng)"/>
+  <line x1="600" y1="163" x2="600" y2="180" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-ng)"/>
+
+  <!-- Stream headers -->
+  <rect x="155" y="180" width="210" height="22" rx="4" fill="#D8E4EE"/>
+  <text x="260" y="195" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">① AMR Profiling</text>
+
+  <rect x="495" y="180" width="210" height="22" rx="4" fill="#D8E4EE"/>
+  <text x="600" y="195" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">② Core Genome Phylogeny</text>
+
+  <!-- STREAM 1: AMR -->
+  <rect x="155" y="210" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="260" y="226" text-anchor="middle" font-size="11" font-weight="bold" fill="white">AMRFinderPlus</text>
+  <text x="260" y="239" text-anchor="middle" font-size="9" fill="#A8BFD0">Resistance genes · point mutations</text>
+  <line x1="260" y1="246" x2="260" y2="260" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-ng)"/>
+
+  <rect x="155" y="260" width="210" height="38" rx="5" fill="#2E4057"/>
+  <text x="260" y="274" text-anchor="middle" font-size="10" font-weight="bold" fill="white">QRDR Mutation Calling</text>
+  <text x="260" y="284" text-anchor="middle" font-size="8" fill="#A8BFD0">penA · gyrA · parC · mtrR · porB</text>
+  <text x="260" y="294" text-anchor="middle" font-size="8" fill="#A8BFD0">BLAST+MAFFT alignment</text>
+  <line x1="260" y1="298" x2="260" y2="312" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-ng)"/>
+
+  <rect x="155" y="310" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="260" y="326" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Promoter Variant Analysis</text>
+  <text x="260" y="339" text-anchor="middle" font-size="9" fill="#A8BFD0">mtrR · porB · IR detection</text>
+  <line x1="260" y1="346" x2="260" y2="360" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-ng)"/>
+
+  <rect x="155" y="360" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="260" y="376" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Profile Aggregation</text>
+  <text x="260" y="389" text-anchor="middle" font-size="9" fill="#A8BFD0">Per-strain · cross-strain summary</text>
+  <line x1="260" y1="396" x2="260" y2="410" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-ng)"/>
+
+  <rect x="155" y="410" width="210" height="36" rx="5" fill="#1A6B45"/>
+  <text x="260" y="426" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Resistance Profiles</text>
+  <text x="260" y="439" text-anchor="middle" font-size="9" fill="#A8D5B8">Per-strain TSV · 6 antibiotic classes</text>
+
+  <!-- STREAM 2: Phylogeny -->
+  <rect x="495" y="210" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="600" y="226" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Parsnp</text>
+  <text x="600" y="239" text-anchor="middle" font-size="9" fill="#A8BFD0">Core-genome SNP alignment</text>
+  <line x1="600" y1="246" x2="600" y2="260" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-ng)"/>
+
+  <rect x="495" y="260" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="600" y="276" text-anchor="middle" font-size="11" font-weight="bold" fill="white">SNP Distance Matrix</text>
+  <text x="600" y="289" text-anchor="middle" font-size="9" fill="#A8BFD0">Pairwise distances · clustering</text>
+  <line x1="600" y1="296" x2="600" y2="310" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-ng)"/>
+
+  <rect x="495" y="310" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="600" y="326" text-anchor="middle" font-size="11" font-weight="bold" fill="white">ML Phylogeny</text>
+  <text x="600" y="339" text-anchor="middle" font-size="9" fill="#A8BFD0">FastTree · SNP-based tree</text>
+  <line x1="600" y1="346" x2="600" y2="360" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-ng)"/>
+
+  <rect x="495" y="360" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="600" y="376" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Clade Annotation</text>
+  <text x="600" y="389" text-anchor="middle" font-size="9" fill="#A8BFD0">4 major clades identified</text>
+  <line x1="600" y1="396" x2="600" y2="410" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-ng)"/>
+
+  <rect x="495" y="410" width="210" height="36" rx="5" fill="#1A6B45"/>
+  <text x="600" y="426" text-anchor="middle" font-size="11" font-weight="bold" fill="white">AMR Burden Overlay</text>
+  <text x="600" y="439" text-anchor="middle" font-size="9" fill="#A8D5B8">Clonality vs convergence</text>
+
+  <!-- Converge lines -->
+  <line x1="260" y1="446" x2="260" y2="530" stroke="#555" stroke-width="1.5"/>
+  <line x1="260" y1="530" x2="340" y2="530" stroke="#555" stroke-width="1.5" marker-end="url(#arr2-ng)"/>
+
+  <line x1="600" y1="446" x2="600" y2="530" stroke="#555" stroke-width="1.5"/>
+  <line x1="600" y1="530" x2="520" y2="530" stroke="#555" stroke-width="1.5" marker-end="url(#arr2-ng)"/>
+
+  <!-- Dashboard -->
+  <rect x="240" y="538" width="380" height="48" rx="7" fill="#6B3FA0"/>
+  <text x="430" y="557" text-anchor="middle" font-size="13" font-weight="bold" fill="white">Interactive Dash Dashboard</text>
+  <text x="430" y="573" text-anchor="middle" font-size="9" fill="#D8C4F0">5 tabs · AMR overview · Mutations · Phylogeny · Promoters</text>
+
+  <!-- Legend -->
+  <rect x="50" y="597" width="12" height="10" rx="2" fill="#2E4057"/>
+  <text x="66" y="606" font-size="9" fill="#555">Analysis step</text>
+  <rect x="160" y="597" width="12" height="10" rx="2" fill="#1A6B45"/>
+  <text x="176" y="606" font-size="9" fill="#555">Key output</text>
+  <rect x="260" y="597" width="12" height="10" rx="2" fill="#6B3FA0"/>
+  <text x="276" y="606" font-size="9" fill="#555">Dashboard</text>
+</svg>
+            </div>
+          </details>
         </div>
       </div>
 
@@ -383,10 +537,10 @@
             </a>
           </div>
           <p class="card-desc">
-            Scalable pipeline processing 376 publicly available <em>S. pyogenes</em> genomes with integrated resistance profiling, MLST, and emm typing. Identified 22.9% AMR prevalence across the cohort, with ST28 as the dominant sequence type (22.4%) and emm5 the most prevalent emm type (47.5%). Designed for rapid integration of newly sequenced clinical isolates into ongoing surveillance.
+            Scalable pipeline processing 375 publicly available <em>S. pyogenes</em> genomes with integrated resistance profiling, MLST, and emm typing. Identified 22.9% AMR prevalence across the cohort, with ST28 as the dominant sequence type (22.4%) and emm5 the most prevalent emm type (47.5%). Designed for rapid integration of newly sequenced clinical isolates into ongoing surveillance.
           </p>
           <div class="card-metrics">
-            <div class="metric"><b>376</b> genomes</div>
+            <div class="metric"><b>375</b> genomes</div>
             <div class="metric"><b>22.9%</b> AMR prevalence</div>
             <div class="metric">ST28 dominant (<b>22.4%</b>)</div>
             <div class="metric">emm5 dominant (<b>47.5%</b>)</div>
@@ -399,6 +553,148 @@
             <span class="tag">Docker</span>
             <span class="tag">Python</span>
           </div>
+          <details class="diagram-toggle">
+            <summary>View Workflow Diagram</summary>
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 860 590" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" role="img">
+  <title>S. pyogenes AMR and Typing Pipeline Workflow</title>
+  <desc>Three-stream pipeline: AMR profiling, MLST typing, and emm typing of 375 S. pyogenes genomes, converging into an integrated report.</desc>
+
+  <defs>
+    <marker id="arr-sa" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#2E4057"/>
+    </marker>
+    <marker id="arr2-sa" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#555"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="860" height="590" fill="#F4F6F8" rx="10"/>
+
+  <!-- Title -->
+  <text x="430" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E4057">S. pyogenes AMR &amp; Typing Pipeline</text>
+  <text x="430" y="46" text-anchor="middle" font-size="10" fill="#777">375 clinical strains · pubMLST spyogenes scheme · Nextflow DSL2 · Docker</text>
+
+  <!-- INPUT -->
+  <rect x="280" y="58" width="300" height="40" rx="6" fill="#2E4057"/>
+  <text x="430" y="74" text-anchor="middle" font-size="12" font-weight="bold" fill="white">375 S. pyogenes Genomes</text>
+  <text x="430" y="89" text-anchor="middle" font-size="9" fill="#A8BFD0">NCBI RefSeq · complete assemblies</text>
+
+  <!-- Fork -->
+  <line x1="430" y1="98" x2="430" y2="112" stroke="#2E4057" stroke-width="1.5"/>
+  <line x1="155" y1="112" x2="705" y2="112" stroke="#2E4057" stroke-width="1.5"/>
+  <line x1="155" y1="112" x2="155" y2="128" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-sa)"/>
+  <line x1="430" y1="112" x2="430" y2="128" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-sa)"/>
+  <line x1="705" y1="112" x2="705" y2="128" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-sa)"/>
+
+  <!-- Stream headers -->
+  <rect x="50" y="128" width="210" height="22" rx="4" fill="#D8E4EE"/>
+  <text x="155" y="143" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">① AMR Profiling</text>
+
+  <rect x="325" y="128" width="210" height="22" rx="4" fill="#D8E4EE"/>
+  <text x="430" y="143" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">② MLST Typing</text>
+
+  <rect x="600" y="128" width="210" height="22" rx="4" fill="#D8E4EE"/>
+  <text x="705" y="143" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">③ emm Typing</text>
+
+  <!-- STREAM 1: AMR -->
+  <rect x="50" y="158" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="155" y="174" text-anchor="middle" font-size="11" font-weight="bold" fill="white">AMRFinderPlus</text>
+  <text x="155" y="187" text-anchor="middle" font-size="9" fill="#A8BFD0">Resistance genes · Streptococcus_pyogenes</text>
+  <line x1="155" y1="194" x2="155" y2="208" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-sa)"/>
+
+  <rect x="50" y="208" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="155" y="224" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Resistance Classification</text>
+  <text x="155" y="237" text-anchor="middle" font-size="9" fill="#A8BFD0">mef · erm macrolide · tet genes</text>
+  <line x1="155" y1="244" x2="155" y2="258" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-sa)"/>
+
+  <rect x="50" y="258" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="155" y="274" text-anchor="middle" font-size="11" font-weight="bold" fill="white">POINT Mutation Screening</text>
+  <text x="155" y="287" text-anchor="middle" font-size="9" fill="#A8BFD0">--plus flag · no beta-lactam resistance detected</text>
+  <line x1="155" y1="294" x2="155" y2="308" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-sa)"/>
+
+  <rect x="50" y="308" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="155" y="324" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Profile Aggregation</text>
+  <text x="155" y="337" text-anchor="middle" font-size="9" fill="#A8BFD0">Per-strain · cross-strain summary</text>
+  <line x1="155" y1="344" x2="155" y2="358" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-sa)"/>
+
+  <rect x="50" y="358" width="210" height="36" rx="5" fill="#1A6B45"/>
+  <text x="155" y="374" text-anchor="middle" font-size="11" font-weight="bold" fill="white">AMR Prevalence: 22.9%</text>
+  <text x="155" y="387" text-anchor="middle" font-size="9" fill="#A8D5B8">Macrolide · tetracycline dominant</text>
+
+  <!-- STREAM 2: MLST -->
+  <rect x="325" y="158" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="430" y="174" text-anchor="middle" font-size="11" font-weight="bold" fill="white">MLST 7-locus</text>
+  <text x="430" y="187" text-anchor="middle" font-size="9" fill="#A8BFD0">gki · gtr · murI · mutS · recP · xpt · yqiL</text>
+  <line x1="430" y1="194" x2="430" y2="208" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-sa)"/>
+
+  <rect x="325" y="208" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="430" y="224" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Allele Profiling</text>
+  <text x="430" y="237" text-anchor="middle" font-size="9" fill="#A8BFD0">PubMLST spyogenes database</text>
+  <line x1="430" y1="244" x2="430" y2="258" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-sa)"/>
+
+  <rect x="325" y="258" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="430" y="274" text-anchor="middle" font-size="11" font-weight="bold" fill="white">ST Assignment</text>
+  <text x="430" y="287" text-anchor="middle" font-size="9" fill="#A8BFD0">Sequence type per genome</text>
+  <line x1="430" y1="294" x2="430" y2="308" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-sa)"/>
+
+  <rect x="325" y="308" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="430" y="324" text-anchor="middle" font-size="11" font-weight="bold" fill="white">ST Frequency Distribution</text>
+  <text x="430" y="337" text-anchor="middle" font-size="9" fill="#A8BFD0">133 unique STs · ranked by prevalence</text>
+  <line x1="430" y1="344" x2="430" y2="358" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-sa)"/>
+
+  <rect x="325" y="358" width="210" height="36" rx="5" fill="#1A6B45"/>
+  <text x="430" y="374" text-anchor="middle" font-size="11" font-weight="bold" fill="white">ST28 Dominant: 22.4%</text>
+  <text x="430" y="387" text-anchor="middle" font-size="9" fill="#A8D5B8">133 distinct STs identified</text>
+
+  <!-- STREAM 3: emm -->
+  <rect x="600" y="158" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="705" y="174" text-anchor="middle" font-size="11" font-weight="bold" fill="white">emmtyper</text>
+  <text x="705" y="187" text-anchor="middle" font-size="9" fill="#A8BFD0">In silico emm gene typing</text>
+  <line x1="705" y1="194" x2="705" y2="208" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-sa)"/>
+
+  <rect x="600" y="208" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="705" y="224" text-anchor="middle" font-size="11" font-weight="bold" fill="white">emm Type Assignment</text>
+  <text x="705" y="237" text-anchor="middle" font-size="9" fill="#A8BFD0">CDC emm database</text>
+  <line x1="705" y1="244" x2="705" y2="258" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-sa)"/>
+
+  <rect x="600" y="258" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="705" y="274" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Prevalence Ranking</text>
+  <text x="705" y="287" text-anchor="middle" font-size="9" fill="#A8BFD0">Type frequency analysis</text>
+  <line x1="705" y1="294" x2="705" y2="308" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-sa)"/>
+
+  <rect x="600" y="308" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="705" y="324" text-anchor="middle" font-size="11" font-weight="bold" fill="white">AMR × emm Cross-tabulation</text>
+  <text x="705" y="337" text-anchor="middle" font-size="9" fill="#A8BFD0">AMR carriage rate per emm type</text>
+  <line x1="705" y1="344" x2="705" y2="358" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-sa)"/>
+
+  <rect x="600" y="358" width="210" height="36" rx="5" fill="#1A6B45"/>
+  <text x="705" y="374" text-anchor="middle" font-size="11" font-weight="bold" fill="white">emm5 Dominant: 47.5%</text>
+  <text x="705" y="387" text-anchor="middle" font-size="9" fill="#A8D5B8">11 emm types identified</text>
+
+  <!-- Converge lines -->
+  <line x1="155" y1="394" x2="155" y2="476" stroke="#555" stroke-width="1.5"/>
+  <line x1="155" y1="476" x2="340" y2="476" stroke="#555" stroke-width="1.5" marker-end="url(#arr2-sa)"/>
+
+  <line x1="430" y1="394" x2="430" y2="476" stroke="#555" stroke-width="1.5" marker-end="url(#arr2-sa)"/>
+
+  <line x1="705" y1="394" x2="705" y2="476" stroke="#555" stroke-width="1.5"/>
+  <line x1="705" y1="476" x2="520" y2="476" stroke="#555" stroke-width="1.5" marker-end="url(#arr2-sa)"/>
+
+  <!-- Summary output -->
+  <rect x="220" y="484" width="420" height="48" rx="7" fill="#1A6B45"/>
+  <text x="430" y="504" text-anchor="middle" font-size="13" font-weight="bold" fill="white">Integrated AMR + Typing Report</text>
+  <text x="430" y="519" text-anchor="middle" font-size="9" fill="#A8D5B8">Per-strain TSV · cohort summary · 375 genomes · 47 min runtime</text>
+
+  <!-- Legend -->
+  <rect x="50" y="547" width="12" height="10" rx="2" fill="#2E4057"/>
+  <text x="66" y="556" font-size="9" fill="#555">Analysis step</text>
+  <rect x="160" y="547" width="12" height="10" rx="2" fill="#1A6B45"/>
+  <text x="176" y="556" font-size="9" fill="#555">Key output</text>
+</svg>
+            </div>
+          </details>
         </div>
       </div>
 
@@ -452,6 +748,129 @@
             <span class="tag">Docker</span>
             <span class="tag">Python</span>
           </div>
+          <details class="diagram-toggle">
+            <summary>View Workflow Diagram</summary>
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 860 600" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" role="img">
+  <title>Diagnostic Validation Pipeline Workflow</title>
+  <desc>Two parallel streams — N. gonorrhoeae (283 genomes) and S. pyogenes (375 genomes) — each processed through Prokka, Panaroo, inclusivity filter, exclusivity BLAST, and interval merging to yield validated diagnostic targets.</desc>
+
+  <defs>
+    <marker id="arr-dv" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#2E4057"/>
+    </marker>
+    <marker id="arr2-dv" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#555"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="860" height="600" fill="#F4F6F8" rx="10"/>
+
+  <!-- Title -->
+  <text x="430" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E4057">Diagnostic Validation Pipeline</text>
+  <text x="430" y="46" text-anchor="middle" font-size="10" fill="#777">Inclusivity · Exclusivity · Interval Merging · nt_prok database · Primer3</text>
+
+  <!-- Shared method label -->
+  <text x="430" y="70" text-anchor="middle" font-size="9" fill="#999">Same methodology applied to two species panels</text>
+
+  <!-- Stream headers -->
+  <rect x="75" y="82" width="320" height="22" rx="4" fill="#D8E4EE"/>
+  <text x="235" y="97" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">① N. gonorrhoeae Panel</text>
+
+  <rect x="465" y="82" width="320" height="22" rx="4" fill="#D8E4EE"/>
+  <text x="625" y="97" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">② S. pyogenes Panel</text>
+
+  <!-- STREAM 1: N. gonorrhoeae -->
+  <rect x="75" y="112" width="320" height="36" rx="6" fill="#2E4057"/>
+  <text x="235" y="128" text-anchor="middle" font-size="12" font-weight="bold" fill="white">283 N. gonorrhoeae Genomes</text>
+  <text x="235" y="141" text-anchor="middle" font-size="9" fill="#A8BFD0">NCBI RefSeq · FA1090 reference</text>
+  <line x1="235" y1="148" x2="235" y2="162" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
+
+  <rect x="75" y="162" width="320" height="36" rx="5" fill="#2E4057"/>
+  <text x="235" y="178" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Prokka Annotation</text>
+  <text x="235" y="191" text-anchor="middle" font-size="9" fill="#A8BFD0">GFF · protein FASTA · CDS features</text>
+  <line x1="235" y1="198" x2="235" y2="212" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
+
+  <rect x="75" y="212" width="320" height="36" rx="5" fill="#2E4057"/>
+  <text x="235" y="228" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Panaroo Pan-genome</text>
+  <text x="235" y="241" text-anchor="middle" font-size="9" fill="#A8BFD0">Core genes ≥99% presence</text>
+  <line x1="235" y1="248" x2="235" y2="262" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
+
+  <rect x="75" y="262" width="320" height="36" rx="5" fill="#2E4057"/>
+  <text x="235" y="278" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Inclusivity Filter</text>
+  <text x="235" y="291" text-anchor="middle" font-size="9" fill="#A8BFD0">≥98% intra-species identity · all 283 strains</text>
+  <line x1="235" y1="298" x2="235" y2="312" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
+
+  <rect x="75" y="312" width="320" height="36" rx="5" fill="#2E4057"/>
+  <text x="235" y="328" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Exclusivity BLAST</text>
+  <text x="235" y="341" text-anchor="middle" font-size="9" fill="#A8BFD0">vs. nt_prok · non-Neisseria exclusivity panel</text>
+  <line x1="235" y1="348" x2="235" y2="362" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
+
+  <rect x="75" y="362" width="320" height="36" rx="5" fill="#2E4057"/>
+  <text x="235" y="378" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Interval Merging</text>
+  <text x="235" y="391" text-anchor="middle" font-size="9" fill="#A8BFD0">Unique region detection · Primer3</text>
+  <line x1="235" y1="398" x2="235" y2="412" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
+
+  <rect x="75" y="412" width="320" height="36" rx="5" fill="#1A6B45"/>
+  <text x="235" y="428" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Targets: polA · norR</text>
+  <text x="235" y="441" text-anchor="middle" font-size="9" fill="#A8D5B8">Species-specific · 150–400 bp amplicons</text>
+
+  <!-- STREAM 2: S. pyogenes -->
+  <rect x="465" y="112" width="320" height="36" rx="6" fill="#2E4057"/>
+  <text x="625" y="128" text-anchor="middle" font-size="12" font-weight="bold" fill="white">375 S. pyogenes Genomes</text>
+  <text x="625" y="141" text-anchor="middle" font-size="9" fill="#A8BFD0">NCBI RefSeq · complete assemblies</text>
+  <line x1="625" y1="148" x2="625" y2="162" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
+
+  <rect x="465" y="162" width="320" height="36" rx="5" fill="#2E4057"/>
+  <text x="625" y="178" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Prokka Annotation</text>
+  <text x="625" y="191" text-anchor="middle" font-size="9" fill="#A8BFD0">GFF · protein FASTA · CDS features</text>
+  <line x1="625" y1="198" x2="625" y2="212" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
+
+  <rect x="465" y="212" width="320" height="36" rx="5" fill="#2E4057"/>
+  <text x="625" y="228" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Panaroo Pan-genome</text>
+  <text x="625" y="241" text-anchor="middle" font-size="9" fill="#A8BFD0">Core genes ≥99% presence</text>
+  <line x1="625" y1="248" x2="625" y2="262" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
+
+  <rect x="465" y="262" width="320" height="36" rx="5" fill="#2E4057"/>
+  <text x="625" y="278" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Inclusivity Filter</text>
+  <text x="625" y="291" text-anchor="middle" font-size="9" fill="#A8BFD0">≥98% intra-species identity · all 375 strains</text>
+  <line x1="625" y1="298" x2="625" y2="312" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
+
+  <rect x="465" y="312" width="320" height="36" rx="5" fill="#2E4057"/>
+  <text x="625" y="328" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Exclusivity BLAST</text>
+  <text x="625" y="341" text-anchor="middle" font-size="9" fill="#A8BFD0">vs. nt_prok · 1,307-genome non-pyogenes panel</text>
+  <line x1="625" y1="348" x2="625" y2="362" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
+
+  <rect x="465" y="362" width="320" height="36" rx="5" fill="#2E4057"/>
+  <text x="625" y="378" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Interval Merging</text>
+  <text x="625" y="391" text-anchor="middle" font-size="9" fill="#A8BFD0">Unique region detection · Primer3</text>
+  <line x1="625" y1="398" x2="625" y2="412" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
+
+  <rect x="465" y="412" width="320" height="36" rx="5" fill="#1A6B45"/>
+  <text x="625" y="428" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Targets: mvaS · mtnN · truA</text>
+  <text x="625" y="441" text-anchor="middle" font-size="9" fill="#A8D5B8">463 candidates · top exclusivity-validated loci</text>
+
+  <!-- Converge lines -->
+  <line x1="235" y1="448" x2="235" y2="515" stroke="#555" stroke-width="1.5"/>
+  <line x1="235" y1="515" x2="370" y2="515" stroke="#555" stroke-width="1.5" marker-end="url(#arr2-dv)"/>
+
+  <line x1="625" y1="448" x2="625" y2="515" stroke="#555" stroke-width="1.5"/>
+  <line x1="625" y1="515" x2="490" y2="515" stroke="#555" stroke-width="1.5" marker-end="url(#arr2-dv)"/>
+
+  <!-- Summary output -->
+  <rect x="240" y="523" width="380" height="48" rx="7" fill="#1A6B45"/>
+  <text x="430" y="542" text-anchor="middle" font-size="13" font-weight="bold" fill="white">Validated Diagnostic Targets</text>
+  <text x="430" y="558" text-anchor="middle" font-size="9" fill="#A8D5B8">658 genomes · 1,307-genome exclusivity panel · species-specific amplicons</text>
+
+  <!-- Legend -->
+  <rect x="50" y="582" width="12" height="10" rx="2" fill="#2E4057"/>
+  <text x="66" y="591" font-size="9" fill="#555">Analysis step</text>
+  <rect x="175" y="582" width="12" height="10" rx="2" fill="#1A6B45"/>
+  <text x="191" y="591" font-size="9" fill="#555">Key output</text>
+</svg>
+            </div>
+          </details>
         </div>
       </div>
 
@@ -490,6 +909,158 @@
             <span class="tag">Dash</span>
             <span class="tag">Docker</span>
           </div>
+          <details class="diagram-toggle">
+            <summary>View Workflow Diagram</summary>
+            <div class="diagram-wrap">
+              <svg viewBox="0 0 860 620" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" role="img">
+  <title>K. pneumoniae Phylogenomics Pipeline Workflow</title>
+  <desc>Three-stream pipeline: AMR profiling, molecular typing, and core genome phylogeny of 150 K. pneumoniae genomes, converging into a 6-tab Dash dashboard.</desc>
+
+  <defs>
+    <marker id="arr-kp" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#2E4057"/>
+    </marker>
+    <marker id="arr2-kp" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#555"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="860" height="620" fill="#F4F6F8" rx="10"/>
+
+  <!-- Title -->
+  <text x="430" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E4057">K. pneumoniae Phylogenomics Pipeline</text>
+  <text x="430" y="46" text-anchor="middle" font-size="10" fill="#777">150 clinical genomes · Pasteur MLST scheme · Nextflow DSL2 · Docker</text>
+
+  <!-- INPUT -->
+  <rect x="280" y="58" width="300" height="40" rx="6" fill="#2E4057"/>
+  <text x="430" y="74" text-anchor="middle" font-size="12" font-weight="bold" fill="white">150 K. pneumoniae Genomes</text>
+  <text x="430" y="89" text-anchor="middle" font-size="9" fill="#A8BFD0">NCBI RefSeq · complete assemblies</text>
+
+  <!-- Input to QUAST -->
+  <line x1="430" y1="98" x2="430" y2="114" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-kp)"/>
+
+  <!-- QUAST QC -->
+  <rect x="320" y="114" width="220" height="36" rx="5" fill="#2E4057"/>
+  <text x="430" y="130" text-anchor="middle" font-size="11" font-weight="bold" fill="white">QUAST Quality Control</text>
+  <text x="430" y="143" text-anchor="middle" font-size="9" fill="#A8BFD0">N50 · contig count · assembly size</text>
+
+  <!-- Fork line -->
+  <line x1="430" y1="150" x2="430" y2="163" stroke="#2E4057" stroke-width="1.5"/>
+  <line x1="155" y1="163" x2="705" y2="163" stroke="#2E4057" stroke-width="1.5"/>
+  <line x1="155" y1="163" x2="155" y2="180" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-kp)"/>
+  <line x1="430" y1="163" x2="430" y2="180" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-kp)"/>
+  <line x1="705" y1="163" x2="705" y2="180" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-kp)"/>
+
+  <!-- Stream headers -->
+  <rect x="50" y="180" width="210" height="22" rx="4" fill="#D8E4EE"/>
+  <text x="155" y="195" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">① AMR Profiling</text>
+
+  <rect x="325" y="180" width="210" height="22" rx="4" fill="#D8E4EE"/>
+  <text x="430" y="195" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">② Molecular Typing</text>
+
+  <rect x="600" y="180" width="210" height="22" rx="4" fill="#D8E4EE"/>
+  <text x="705" y="195" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">③ Core Genome Phylogeny</text>
+
+  <!-- STREAM 1: AMR -->
+  <rect x="50" y="210" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="155" y="226" text-anchor="middle" font-size="11" font-weight="bold" fill="white">AMRFinderPlus</text>
+  <text x="155" y="239" text-anchor="middle" font-size="9" fill="#A8BFD0">Resistance genes · Klebsiella_pneumoniae</text>
+  <line x1="155" y1="246" x2="155" y2="260" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-kp)"/>
+
+  <rect x="50" y="260" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="155" y="276" text-anchor="middle" font-size="11" font-weight="bold" fill="white">β-lactamase Detection</text>
+  <text x="155" y="289" text-anchor="middle" font-size="9" fill="#A8BFD0">ESBL · KPC · OXA · NDM classes</text>
+  <line x1="155" y1="296" x2="155" y2="310" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-kp)"/>
+
+  <rect x="50" y="310" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="155" y="326" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Resistance Gene Matrix</text>
+  <text x="155" y="339" text-anchor="middle" font-size="9" fill="#A8BFD0">Per-strain binary presence/absence</text>
+  <line x1="155" y1="346" x2="155" y2="360" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-kp)"/>
+
+  <rect x="50" y="360" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="155" y="376" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Drug Class Summary</text>
+  <text x="155" y="389" text-anchor="middle" font-size="9" fill="#A8BFD0">Cross-strain aggregation</text>
+  <line x1="155" y1="396" x2="155" y2="410" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-kp)"/>
+
+  <rect x="50" y="410" width="210" height="36" rx="5" fill="#1A6B45"/>
+  <text x="155" y="426" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Resistance Profiles</text>
+  <text x="155" y="439" text-anchor="middle" font-size="9" fill="#A8D5B8">ESBL · KPC · carbapenem prevalence</text>
+
+  <!-- STREAM 2: Typing -->
+  <rect x="325" y="210" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="430" y="226" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Kleborate</text>
+  <text x="430" y="239" text-anchor="middle" font-size="9" fill="#A8BFD0">MLST · virulence loci · capsule</text>
+  <line x1="430" y1="246" x2="430" y2="260" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-kp)"/>
+
+  <rect x="325" y="260" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="430" y="276" text-anchor="middle" font-size="11" font-weight="bold" fill="white">ST Assignment</text>
+  <text x="430" y="289" text-anchor="middle" font-size="9" fill="#A8BFD0">Pasteur scheme · 7 loci</text>
+  <line x1="430" y1="296" x2="430" y2="310" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-kp)"/>
+
+  <rect x="325" y="310" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="430" y="326" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Virulence Scoring</text>
+  <text x="430" y="339" text-anchor="middle" font-size="9" fill="#A8BFD0">ybt · clb · iuc · iro · rmpA loci</text>
+  <line x1="430" y1="346" x2="430" y2="360" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-kp)"/>
+
+  <rect x="325" y="360" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="430" y="376" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Clonal Group Analysis</text>
+  <text x="430" y="389" text-anchor="middle" font-size="9" fill="#A8BFD0">CG258 · high-risk lineages</text>
+  <line x1="430" y1="396" x2="430" y2="410" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-kp)"/>
+
+  <rect x="325" y="410" width="210" height="36" rx="5" fill="#1A6B45"/>
+  <text x="430" y="426" text-anchor="middle" font-size="11" font-weight="bold" fill="white">ST11 Dominant</text>
+  <text x="430" y="439" text-anchor="middle" font-size="9" fill="#A8D5B8">ST258 · ST307 · ST147 · ST16</text>
+
+  <!-- STREAM 3: Phylogeny -->
+  <rect x="600" y="210" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="705" y="226" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Snippy</text>
+  <text x="705" y="239" text-anchor="middle" font-size="9" fill="#A8BFD0">SNP calling vs. reference genome</text>
+  <line x1="705" y1="246" x2="705" y2="260" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-kp)"/>
+
+  <rect x="600" y="260" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="705" y="276" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Gubbins</text>
+  <text x="705" y="289" text-anchor="middle" font-size="9" fill="#A8BFD0">Recombination masking</text>
+  <line x1="705" y1="296" x2="705" y2="310" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-kp)"/>
+
+  <rect x="600" y="310" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="705" y="326" text-anchor="middle" font-size="11" font-weight="bold" fill="white">IQ-TREE</text>
+  <text x="705" y="339" text-anchor="middle" font-size="9" fill="#A8BFD0">Maximum likelihood · GTR+G model</text>
+  <line x1="705" y1="346" x2="705" y2="360" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-kp)"/>
+
+  <rect x="600" y="360" width="210" height="36" rx="5" fill="#2E4057"/>
+  <text x="705" y="376" text-anchor="middle" font-size="11" font-weight="bold" fill="white">snp-dists</text>
+  <text x="705" y="389" text-anchor="middle" font-size="9" fill="#A8BFD0">Pairwise SNP distance matrix</text>
+  <line x1="705" y1="396" x2="705" y2="410" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-kp)"/>
+
+  <rect x="600" y="410" width="210" height="36" rx="5" fill="#1A6B45"/>
+  <text x="705" y="426" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Phylogenetic Tree</text>
+  <text x="705" y="439" text-anchor="middle" font-size="9" fill="#A8D5B8">Clonal clusters · AMR burden overlay</text>
+
+  <!-- Converge lines -->
+  <line x1="155" y1="446" x2="155" y2="530" stroke="#555" stroke-width="1.5"/>
+  <line x1="155" y1="530" x2="340" y2="530" stroke="#555" stroke-width="1.5" marker-end="url(#arr2-kp)"/>
+
+  <line x1="430" y1="446" x2="430" y2="530" stroke="#555" stroke-width="1.5" marker-end="url(#arr2-kp)"/>
+
+  <line x1="705" y1="446" x2="705" y2="530" stroke="#555" stroke-width="1.5"/>
+  <line x1="705" y1="530" x2="520" y2="530" stroke="#555" stroke-width="1.5" marker-end="url(#arr2-kp)"/>
+
+  <!-- Dashboard -->
+  <rect x="240" y="538" width="380" height="48" rx="7" fill="#6B3FA0"/>
+  <text x="430" y="557" text-anchor="middle" font-size="13" font-weight="bold" fill="white">Interactive Dash Dashboard</text>
+  <text x="430" y="573" text-anchor="middle" font-size="9" fill="#D8C4F0">6 tabs · QC · AMR · Typing · Virulence · Phylogeny · Comparison</text>
+
+  <!-- Legend -->
+  <rect x="50" y="597" width="12" height="10" rx="2" fill="#2E4057"/>
+  <text x="66" y="606" font-size="9" fill="#555">Analysis step</text>
+  <rect x="160" y="597" width="12" height="10" rx="2" fill="#1A6B45"/>
+  <text x="176" y="606" font-size="9" fill="#555">Key output</text>
+  <rect x="260" y="597" width="12" height="10" rx="2" fill="#6B3FA0"/>
+  <text x="276" y="606" font-size="9" fill="#555">Dashboard</text>
+</svg>
+            </div>
+          </details>
         </div>
       </div>
 
