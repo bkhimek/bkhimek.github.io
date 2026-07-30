@@ -325,7 +325,7 @@ Content-Type: text/plain; charset=utf-8
     <div class="hero-tag">Bioinformatics Consultant</div>
     <h1 class="hero-name">Krzysztof<br><span>Gizynski</span></h1>
     <p class="hero-sub">
-      Building production-grade microbial genomics pipelines for clinical and public health surveillance — from raw sequencing data to interpretable, reproducible results.
+      Building production-grade genomics pipelines for pathogen surveillance and clinical variant interpretation — from raw sequencing data to interpretable, reproducible results.
     </p>
     <div class="hero-cta">
       <a class="btn btn-primary" href="#projects">View Projects</a>
@@ -338,17 +338,17 @@ Content-Type: text/plain; charset=utf-8
 <section id="about">
   <div class="section-inner">
     <div class="section-label">About</div>
-    <h2 class="section-title">Microbial Genomics, End to End</h2>
+    <h2 class="section-title">Genomics, End to End</h2>
     <div class="about-grid">
       <div class="about-text">
         <p>
-          I specialise in designing and delivering <span class="highlight">automated AMR surveillance and phylogenomics pipelines</span> for bacterial pathogens of clinical relevance — including <em>Neisseria gonorrhoeae</em>, <em>Streptococcus pyogenes</em>, and <em>Klebsiella pneumoniae</em>.
+          I specialise in two connected practices: <span class="highlight">automated AMR surveillance and phylogenomics pipelines</span> for bacterial pathogens of clinical relevance — including <em>Neisseria gonorrhoeae</em>, <em>Streptococcus pyogenes</em>, and <em>Klebsiella pneumoniae</em> — and <span class="highlight">human clinical genomics</span>, building sequencing-to-classification software for rare-disease variant interpretation.
         </p>
         <p>
-          My pipelines are built with <span class="highlight">Nextflow DSL2</span>, containerised with Docker/Singularity for portability, and paired with interactive <span class="highlight">Dash dashboards</span> so clinicians and epidemiologists can explore results without touching the command line.
+          My microbial pipelines are built with <span class="highlight">Nextflow DSL2</span>, containerised with Docker/Singularity for portability, and paired with interactive <span class="highlight">Dash dashboards</span> so clinicians and epidemiologists can explore results without touching the command line. My clinical genomics work follows the same reproducibility discipline: variant calls and ACMG/AMP classifications are independently benchmarked against public ground-truth data — Genome in a Bottle, ClinVar — rather than trusted on their own.
         </p>
         <p>
-          My work is designed for public health labs and research groups who need rigorous, reproducible genomic workflows — from assembly QC through resistance profiling, typing, and phylogenetic inference.
+          My work is designed for public health labs, diagnostic developers, and research groups who need rigorous, reproducible genomic workflows — from raw reads through resistance profiling, variant calling, typing, phylogenetic inference, and clinical classification.
         </p>
       </div>
       <div class="stat-grid">
@@ -367,6 +367,10 @@ Content-Type: text/plain; charset=utf-8
         <div class="stat-card">
           <span class="stat-num">AMR</span>
           <span class="stat-label">Resistance surveillance focus</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num">1.0/1.0</span>
+          <span class="stat-label">GIAB HG002 recall/precision (clinical pipeline)</span>
         </div>
       </div>
     </div>
@@ -1138,6 +1142,232 @@ Content-Type: text/plain; charset=utf-8
               </a>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- Project 5 -->
+      <div class="project-card">
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div>
+              <div class="card-org">CAPN3 / DMD</div>
+              <div class="card-title">Variant Calling Pipeline</div>
+            </div>
+            <a class="card-github" href="https://github.com/bkhimek/CAPN3-DMD-variant-calling-pipeline" target="_blank" rel="noopener">
+              <svg class="icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              GitHub
+            </a>
+          </div>
+          <p class="card-desc">
+            Reads-to-VCF pipeline scoped to the CAPN3 and DMD loci, independently benchmarked against Genome in a Bottle's HG002 reference sample. Two variant callers — GATK HaplotypeCaller and DeepVariant — are run independently and cross-checked against each other, then the concordant call set is annotated with Ensembl VEP transcript consequence and gnomAD population frequency, producing evidence ready for the downstream ACMG classifier.
+          </p>
+          <div class="card-metrics">
+            <div class="metric"><b>1.0/1.0</b> SNP + INDEL recall/precision (GIAB HG002)</div>
+            <div class="metric"><b>9</b>-module Nextflow DSL2 pipeline</div>
+            <div class="metric">Two callers cross-checked: <b>GATK</b> + <b>DeepVariant</b></div>
+            <div class="metric"><b>2,271</b> concordant calls annotated (VEP + gnomAD v4.1)</div>
+            <div class="metric">Remote HTTP-range extraction — no full-genome download</div>
+            <div class="metric">CAPN3 (chr15) + DMD (chrX) scoped</div>
+          </div>
+          <div class="card-tags">
+            <span class="tag">Nextflow DSL2</span>
+            <span class="tag">BWA-MEM2</span>
+            <span class="tag">GATK</span>
+            <span class="tag">DeepVariant</span>
+            <span class="tag">VEP</span>
+            <span class="tag">gnomAD</span>
+            <span class="tag">hap.py</span>
+            <span class="tag">Docker</span>
+          </div>
+          <details class="diagram-toggle">
+            <summary>View Workflow Diagram</summary>
+            <div class="diagram-wrap">
+<svg viewBox="0 0 860 720" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" role="img">
+<title>CAPN3/DMD Variant Calling Pipeline Workflow</title>
+<desc>Reads-to-VCF pipeline: alignment and dual-caller variant calling converging into cross-check, then forking into GIAB benchmark and VEP/gnomAD annotation, feeding the ACMG classifier.</desc>
+<defs>
+<marker id="arr-vcp" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+<path d="M0,0 L0,6 L8,3 z" fill="#2E4057"/>
+</marker>
+<marker id="arr2-vcp" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+<path d="M0,0 L0,6 L8,3 z" fill="#555"/>
+</marker>
+</defs>
+<rect width="860" height="720" fill="#F4F6F8" rx="10"/>
+<text x="430" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E4057">CAPN3/DMD Variant Calling Pipeline</text>
+<text x="430" y="46" text-anchor="middle" font-size="10" fill="#777">CAPN3 (chr15) + DMD (chrX) · GIAB HG002 benchmark · Nextflow DSL2 · Docker</text>
+<rect x="280" y="58" width="300" height="40" rx="6" fill="#2E4057"/>
+<text x="430" y="74" text-anchor="middle" font-size="12" font-weight="bold" fill="white">HG002 GRCh38 BAM (remote)</text>
+<text x="430" y="89" text-anchor="middle" font-size="9" fill="#A8BFD0">GIAB · HTTP range-extracted, no full download</text>
+<line x1="430" y1="98" x2="430" y2="114" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-vcp)"/>
+<rect x="320" y="114" width="220" height="36" rx="5" fill="#2E4057"/>
+<text x="430" y="130" text-anchor="middle" font-size="11" font-weight="bold" fill="white">EXTRACT_REGION</text>
+<text x="430" y="143" text-anchor="middle" font-size="9" fill="#A8BFD0">region FASTQ (R1/R2)</text>
+<line x1="430" y1="150" x2="430" y2="166" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-vcp)"/>
+<rect x="320" y="166" width="220" height="36" rx="5" fill="#2E4057"/>
+<text x="430" y="182" text-anchor="middle" font-size="11" font-weight="bold" fill="white">BWA_ALIGN</text>
+<text x="430" y="195" text-anchor="middle" font-size="9" fill="#A8BFD0">BWA-MEM2 → aligned BAM</text>
+<line x1="430" y1="202" x2="430" y2="218" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-vcp)"/>
+<rect x="320" y="218" width="220" height="36" rx="5" fill="#2E4057"/>
+<text x="430" y="234" text-anchor="middle" font-size="11" font-weight="bold" fill="white">SORT_MARKDUP</text>
+<text x="430" y="247" text-anchor="middle" font-size="9" fill="#A8BFD0">sort + mark duplicates (GATK)</text>
+<line x1="430" y1="254" x2="430" y2="267" stroke="#2E4057" stroke-width="1.5"/>
+<line x1="260" y1="267" x2="600" y2="267" stroke="#2E4057" stroke-width="1.5"/>
+<line x1="260" y1="267" x2="260" y2="284" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-vcp)"/>
+<line x1="600" y1="267" x2="600" y2="284" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-vcp)"/>
+<rect x="155" y="284" width="210" height="22" rx="4" fill="#D8E4EE"/>
+<text x="260" y="299" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">① GATK HaplotypeCaller</text>
+<rect x="495" y="284" width="210" height="22" rx="4" fill="#D8E4EE"/>
+<text x="600" y="299" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">② DeepVariant</text>
+<rect x="155" y="314" width="210" height="36" rx="5" fill="#2E4057"/>
+<text x="260" y="330" text-anchor="middle" font-size="11" font-weight="bold" fill="white">GATK_CALL</text>
+<text x="260" y="343" text-anchor="middle" font-size="9" fill="#A8BFD0">HaplotypeCaller · 2,318 variants</text>
+<rect x="495" y="314" width="210" height="36" rx="5" fill="#2E4057"/>
+<text x="600" y="330" text-anchor="middle" font-size="11" font-weight="bold" fill="white">DEEPVARIANT_CALL</text>
+<text x="600" y="343" text-anchor="middle" font-size="9" fill="#A8BFD0">WGS model · 3,170 variants</text>
+<line x1="260" y1="350" x2="260" y2="378" stroke="#2E4057" stroke-width="1.5"/>
+<line x1="260" y1="378" x2="310" y2="378" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-vcp)"/>
+<line x1="600" y1="350" x2="600" y2="378" stroke="#2E4057" stroke-width="1.5"/>
+<line x1="600" y1="378" x2="550" y2="378" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-vcp)"/>
+<rect x="310" y="392" width="240" height="40" rx="6" fill="#2E4057"/>
+<text x="430" y="408" text-anchor="middle" font-size="12" font-weight="bold" fill="white">CROSS_CHECK_VCFS</text>
+<text x="430" y="423" text-anchor="middle" font-size="9" fill="#A8BFD0">bcftools isec · 2,271 concordant calls</text>
+<line x1="430" y1="432" x2="430" y2="448" stroke="#2E4057" stroke-width="1.5"/>
+<line x1="260" y1="448" x2="600" y2="448" stroke="#2E4057" stroke-width="1.5"/>
+<line x1="260" y1="448" x2="260" y2="464" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-vcp)"/>
+<line x1="600" y1="448" x2="600" y2="464" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-vcp)"/>
+<rect x="155" y="464" width="210" height="22" rx="4" fill="#D8E4EE"/>
+<text x="260" y="479" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">③ Benchmark (hap.py)</text>
+<rect x="495" y="464" width="210" height="22" rx="4" fill="#D8E4EE"/>
+<text x="600" y="479" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">④ Annotate (VEP + gnomAD)</text>
+<rect x="155" y="494" width="210" height="36" rx="5" fill="#2E4057"/>
+<text x="260" y="510" text-anchor="middle" font-size="11" font-weight="bold" fill="white">HAPPY_BENCHMARK</text>
+<text x="260" y="523" text-anchor="middle" font-size="9" fill="#A8BFD0">vs. GIAB HG002 truth (NISTv4.2.1)</text>
+<rect x="495" y="494" width="210" height="36" rx="5" fill="#2E4057"/>
+<text x="600" y="510" text-anchor="middle" font-size="11" font-weight="bold" fill="white">ANNOTATE_CALLS</text>
+<text x="600" y="523" text-anchor="middle" font-size="9" fill="#A8BFD0">VEP transcript + gnomAD v4.1 AF</text>
+<line x1="260" y1="530" x2="260" y2="544" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-vcp)"/>
+<line x1="600" y1="530" x2="600" y2="544" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-vcp)"/>
+<rect x="155" y="544" width="210" height="40" rx="5" fill="#1A6B45"/>
+<text x="260" y="561" text-anchor="middle" font-size="10.5" font-weight="bold" fill="white">1.0/1.0 recall/precision</text>
+<text x="260" y="576" text-anchor="middle" font-size="8.5" fill="#A8D5B8">SNP + INDEL, both callers vs. GIAB</text>
+<rect x="495" y="544" width="210" height="40" rx="5" fill="#1A6B45"/>
+<text x="600" y="561" text-anchor="middle" font-size="10.5" font-weight="bold" fill="white">2,271 annotated calls</text>
+<text x="600" y="576" text-anchor="middle" font-size="8.5" fill="#A8D5B8">concordant set · VEP + gnomAD</text>
+<line x1="260" y1="584" x2="260" y2="620" stroke="#555" stroke-width="1.5"/>
+<line x1="260" y1="620" x2="340" y2="620" stroke="#555" stroke-width="1.5" marker-end="url(#arr2-vcp)"/>
+<line x1="600" y1="584" x2="600" y2="620" stroke="#555" stroke-width="1.5"/>
+<line x1="600" y1="620" x2="520" y2="620" stroke="#555" stroke-width="1.5" marker-end="url(#arr2-vcp)"/>
+<rect x="240" y="628" width="380" height="48" rx="7" fill="#6B3FA0"/>
+<text x="430" y="647" text-anchor="middle" font-size="12" font-weight="bold" fill="white">→ CAPN3-DMD-variant-classifier</text>
+<text x="430" y="663" text-anchor="middle" font-size="9" fill="#D8C4F0">annotated VCF → VariantEvidenceBundle</text>
+<rect x="50" y="687" width="12" height="10" rx="2" fill="#2E4057"/>
+<text x="66" y="696" font-size="9" fill="#555">Analysis step</text>
+<rect x="160" y="687" width="12" height="10" rx="2" fill="#1A6B45"/>
+<text x="176" y="696" font-size="9" fill="#555">Key output</text>
+<rect x="260" y="687" width="12" height="10" rx="2" fill="#6B3FA0"/>
+<text x="276" y="696" font-size="9" fill="#555">Feeds classifier</text>
+</svg>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- Project 6 -->
+      <div class="project-card">
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div>
+              <div class="card-org">CAPN3 / DMD</div>
+              <div class="card-title">ACMG/AMP Variant Classifier</div>
+            </div>
+            <a class="card-github" href="https://github.com/bkhimek/CAPN3-DMD-variant-classifier" target="_blank" rel="noopener">
+              <svg class="icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              GitHub
+            </a>
+          </div>
+          <p class="card-desc">
+            A scoped ACMG/AMP (Richards et al. 2015) variant classification engine for CAPN3 (limb-girdle muscular dystrophy) and DMD (Duchenne/Becker muscular dystrophy). Applies seven ACMG criteria across population frequency, protein effect, and computational evidence, combined by two independent systems — classic Table 5 and Tavtigian et al. 2020's Bayesian points — cross-checked against each other, plus a case-level layer reasoning about whether a patient's variant(s) actually explain their disease.
+          </p>
+          <div class="card-metrics">
+            <div class="metric"><b>22</b> ClinVar/gnomAD-curated variants</div>
+            <div class="metric"><b>142/142</b> automated tests passing</div>
+            <div class="metric">Seven ACMG/AMP criteria evaluators</div>
+            <div class="metric">Two independent combining systems cross-checked</div>
+            <div class="metric">Case-level inheritance reasoning (AR + X-linked)</div>
+            <div class="metric">Fed directly by the variant-calling pipeline's annotated output</div>
+          </div>
+          <div class="card-tags">
+            <span class="tag">Python</span>
+            <span class="tag">dataclasses</span>
+            <span class="tag">ACMG/AMP</span>
+            <span class="tag">PyYAML</span>
+            <span class="tag">stdlib-only</span>
+          </div>
+          <details class="diagram-toggle">
+            <summary>View Workflow Diagram</summary>
+            <div class="diagram-wrap">
+<svg viewBox="0 0 860 500" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" role="img">
+<title>CAPN3-DMD-variant-classifier Workflow</title>
+<desc>ACMG/AMP evidence bundle evaluated against seven criteria, combined by two independent systems, cross-checked, then reasoned about at the case level.</desc>
+<defs>
+<marker id="arr-acmg" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+<path d="M0,0 L0,6 L8,3 z" fill="#2E4057"/>
+</marker>
+<marker id="arr2-acmg" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+<path d="M0,0 L0,6 L8,3 z" fill="#555"/>
+</marker>
+</defs>
+<rect width="860" height="500" fill="#F4F6F8" rx="10"/>
+<text x="430" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E4057">CAPN3-DMD-variant-classifier</text>
+<text x="430" y="46" text-anchor="middle" font-size="10" fill="#777">22 curated variants · 142/142 tests · seven ACMG/AMP criteria</text>
+<rect x="280" y="58" width="300" height="40" rx="6" fill="#2E4057"/>
+<text x="430" y="74" text-anchor="middle" font-size="12" font-weight="bold" fill="white">VariantEvidenceBundle</text>
+<text x="430" y="89" text-anchor="middle" font-size="9" fill="#A8BFD0">curated evidence, or fed by the calling pipeline</text>
+<line x1="430" y1="98" x2="430" y2="114" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-acmg)"/>
+<rect x="250" y="114" width="360" height="40" rx="6" fill="#2E4057"/>
+<text x="430" y="130" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Seven ACMG/AMP Criteria Evaluators</text>
+<text x="430" y="145" text-anchor="middle" font-size="9" fill="#A8BFD0">population frequency · protein effect · computational scores</text>
+<line x1="430" y1="154" x2="430" y2="167" stroke="#2E4057" stroke-width="1.5"/>
+<line x1="260" y1="167" x2="600" y2="167" stroke="#2E4057" stroke-width="1.5"/>
+<line x1="260" y1="167" x2="260" y2="184" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-acmg)"/>
+<line x1="600" y1="167" x2="600" y2="184" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-acmg)"/>
+<rect x="155" y="184" width="210" height="22" rx="4" fill="#D8E4EE"/>
+<text x="260" y="199" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">① Classic (Table 5)</text>
+<rect x="495" y="184" width="210" height="22" rx="4" fill="#D8E4EE"/>
+<text x="600" y="199" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">② Bayesian Points</text>
+<rect x="155" y="216" width="210" height="36" rx="5" fill="#2E4057"/>
+<text x="260" y="232" text-anchor="middle" font-size="11" font-weight="bold" fill="white">TABLE5_COMBINE</text>
+<text x="260" y="245" text-anchor="middle" font-size="9" fill="#A8BFD0">Richards et al. 2015</text>
+<rect x="495" y="216" width="210" height="36" rx="5" fill="#2E4057"/>
+<text x="600" y="232" text-anchor="middle" font-size="11" font-weight="bold" fill="white">BAYESIAN_COMBINE</text>
+<text x="600" y="245" text-anchor="middle" font-size="9" fill="#A8BFD0">Tavtigian et al. 2020</text>
+<line x1="260" y1="252" x2="260" y2="280" stroke="#2E4057" stroke-width="1.5"/>
+<line x1="260" y1="280" x2="310" y2="280" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-acmg)"/>
+<line x1="600" y1="252" x2="600" y2="280" stroke="#2E4057" stroke-width="1.5"/>
+<line x1="600" y1="280" x2="550" y2="280" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-acmg)"/>
+<rect x="310" y="294" width="240" height="40" rx="5" fill="#1A6B45"/>
+<text x="430" y="311" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Cross-checked classification</text>
+<text x="430" y="326" text-anchor="middle" font-size="8.5" fill="#A8D5B8">Pathogenic → Benign · 2 systems agree</text>
+<line x1="430" y1="334" x2="430" y2="350" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-acmg)"/>
+<rect x="280" y="350" width="300" height="40" rx="6" fill="#2E4057"/>
+<text x="430" y="366" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Case-Level Reasoning</text>
+<text x="430" y="381" text-anchor="middle" font-size="9" fill="#A8BFD0">AR (CAPN3) · X-linked (DMD) inheritance</text>
+<line x1="430" y1="390" x2="430" y2="406" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-acmg)"/>
+<rect x="240" y="406" width="380" height="48" rx="7" fill="#6B3FA0"/>
+<text x="430" y="425" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Clinical Interpretation</text>
+<text x="430" y="441" text-anchor="middle" font-size="9" fill="#D8C4F0">variant + case-level · verified vs. 22 curated ClinVar cases</text>
+<rect x="50" y="467" width="12" height="10" rx="2" fill="#2E4057"/>
+<text x="66" y="476" font-size="9" fill="#555">Analysis step</text>
+<rect x="160" y="467" width="12" height="10" rx="2" fill="#1A6B45"/>
+<text x="176" y="476" font-size="9" fill="#555">Key output</text>
+<rect x="260" y="467" width="12" height="10" rx="2" fill="#6B3FA0"/>
+<text x="276" y="476" font-size="9" fill="#555">Final interpretation</text>
+</svg>
+            </div>
+          </details>
         </div>
       </div>
 
