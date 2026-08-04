@@ -1289,20 +1289,22 @@ Content-Type: text/plain; charset=utf-8
             </a>
           </div>
           <p class="card-desc">
-            A scoped ACMG/AMP (Richards et al. 2015) variant classification engine for CAPN3 (limb-girdle muscular dystrophy) and DMD (Duchenne/Becker muscular dystrophy). Applies seven ACMG criteria across population frequency, protein effect, and computational evidence, combined by two independent systems — classic Table 5 and Tavtigian et al. 2020's Bayesian points — cross-checked against each other, plus a case-level layer reasoning about whether a patient's variant(s) actually explain their disease.
+            A scoped ACMG/AMP (Richards et al. 2015) variant classification engine for CAPN3 (limb-girdle muscular dystrophy) and DMD (Duchenne/Becker muscular dystrophy). Applies twelve ACMG criteria across population frequency, protein effect, computational evidence, and structural variation — including a dedicated CNV deletion/duplication scoring module for DMD's largely exon-deletion mutational spectrum — combined by two independent systems (classic Table 5 and Tavtigian et al. 2020's Bayesian points) cross-checked against each other, plus a case-level layer reasoning about whether a patient's variant(s) actually explain their disease, including biallelic X-linked (XX) inheritance scenarios.
           </p>
           <div class="card-metrics">
-            <div class="metric"><b>22</b> ClinVar/gnomAD-curated variants</div>
-            <div class="metric"><b>142/142</b> automated tests passing</div>
-            <div class="metric">Seven ACMG/AMP criteria evaluators</div>
-            <div class="metric">Two independent combining systems cross-checked</div>
-            <div class="metric">Case-level inheritance reasoning (AR + X-linked)</div>
+            <div class="metric"><b>29</b> point-mutation + <b>5</b> CNV + <b>11</b> case-level fixtures</div>
+            <div class="metric"><b>250/250</b> automated tests passing</div>
+            <div class="metric">Twelve ACMG/AMP criteria evaluators</div>
+            <div class="metric">Two combining systems (<b>4</b> documented divergences found)</div>
+            <div class="metric">CNV deletion + duplication scoring module</div>
+            <div class="metric">Case-level reasoning (AR + X-linked, incl. biallelic XX)</div>
             <div class="metric">Fed directly by the variant-calling pipeline's annotated output</div>
           </div>
           <div class="card-tags">
             <span class="tag">Python</span>
             <span class="tag">dataclasses</span>
             <span class="tag">ACMG/AMP</span>
+            <span class="tag">CNV</span>
             <span class="tag">PyYAML</span>
             <span class="tag">stdlib-only</span>
           </div>
@@ -1311,7 +1313,7 @@ Content-Type: text/plain; charset=utf-8
             <div class="diagram-wrap">
 <svg viewBox="0 0 860 500" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" role="img">
 <title>CAPN3-DMD-variant-classifier Workflow</title>
-<desc>ACMG/AMP evidence bundle evaluated against seven criteria, combined by two independent systems, cross-checked, then reasoned about at the case level.</desc>
+<desc>ACMG/AMP evidence bundle evaluated against twelve criteria, including a CNV deletion/duplication module, combined by two independent systems, cross-checked, then reasoned about at the case level.</desc>
 <defs>
 <marker id="arr-acmg" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
 <path d="M0,0 L0,6 L8,3 z" fill="#2E4057"/>
@@ -1322,13 +1324,13 @@ Content-Type: text/plain; charset=utf-8
 </defs>
 <rect width="860" height="500" fill="#F4F6F8" rx="10"/>
 <text x="430" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E4057">CAPN3-DMD-variant-classifier</text>
-<text x="430" y="46" text-anchor="middle" font-size="10" fill="#777">22 curated variants · 142/142 tests · seven ACMG/AMP criteria</text>
+<text x="430" y="46" text-anchor="middle" font-size="10" fill="#777">29 point + 5 CNV + 11 case-level fixtures · 250/250 tests · twelve ACMG/AMP criteria</text>
 <rect x="280" y="58" width="300" height="40" rx="6" fill="#2E4057"/>
 <text x="430" y="74" text-anchor="middle" font-size="12" font-weight="bold" fill="white">VariantEvidenceBundle</text>
 <text x="430" y="89" text-anchor="middle" font-size="9" fill="#A8BFD0">curated evidence, or fed by the calling pipeline</text>
 <line x1="430" y1="98" x2="430" y2="114" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-acmg)"/>
 <rect x="250" y="114" width="360" height="40" rx="6" fill="#2E4057"/>
-<text x="430" y="130" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Seven ACMG/AMP Criteria Evaluators</text>
+<text x="430" y="130" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Twelve ACMG/AMP Criteria Evaluators</text>
 <text x="430" y="145" text-anchor="middle" font-size="9" fill="#A8BFD0">population frequency · protein effect · computational scores</text>
 <line x1="430" y1="154" x2="430" y2="167" stroke="#2E4057" stroke-width="1.5"/>
 <line x1="260" y1="167" x2="600" y2="167" stroke="#2E4057" stroke-width="1.5"/>
@@ -1358,7 +1360,7 @@ Content-Type: text/plain; charset=utf-8
 <line x1="430" y1="390" x2="430" y2="406" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-acmg)"/>
 <rect x="240" y="406" width="380" height="48" rx="7" fill="#6B3FA0"/>
 <text x="430" y="425" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Clinical Interpretation</text>
-<text x="430" y="441" text-anchor="middle" font-size="9" fill="#D8C4F0">variant + case-level · verified vs. 22 curated ClinVar cases</text>
+<text x="430" y="441" text-anchor="middle" font-size="9" fill="#D8C4F0">variant + case-level · verified vs. 45 curated fixtures</text>
 <rect x="50" y="467" width="12" height="10" rx="2" fill="#2E4057"/>
 <text x="66" y="476" font-size="9" fill="#555">Analysis step</text>
 <rect x="160" y="467" width="12" height="10" rx="2" fill="#1A6B45"/>
@@ -1368,6 +1370,23 @@ Content-Type: text/plain; charset=utf-8
 </svg>
             </div>
           </details>
+          <div class="card-reports">
+            <div class="card-reports-label">Interactive Reports</div>
+            <div class="card-reports-links">
+              <a class="btn-report" href="assets/classifier_01_table5_vs_bayesian.html" target="_blank" rel="noopener">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+                Table 5 vs Bayesian
+              </a>
+              <a class="btn-report" href="assets/classifier_02_classification_distribution.html" target="_blank" rel="noopener">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+                Classification Distribution
+              </a>
+              <a class="btn-report" href="assets/classifier_03_case_level_outcomes.html" target="_blank" rel="noopener">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
+                Case-Level Outcomes
+              </a>
+            </div>
+          </div>
         </div>
       </div>
 
