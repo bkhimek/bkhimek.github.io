@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CAPN3/DMD Classifier — Table 5 vs Bayesian Points</title>
+<script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+<style>
+  :root {
+    --benign: #2e7d32;
+    --likely-benign: #66bb6a;
+    --vus: #9e9e9e;
+    --likely-path: #fb8c00;
+    --path: #c62828;
+    --ink: #1f2430;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 32px 24px 48px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: #ffffff;
+    max-width: 980px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  h1 {
+    font-size: 1.5rem;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  p.lede {
+    color: var(--muted);
+    font-size: 0.95rem;
+    max-width: 760px;
+    margin: 0 0 20px;
+    line-height: 1.5;
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin: 18px 0 6px;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  .legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  #chart { width: 100%; }
+  .callout {
+    margin-top: 24px;
+    padding: 14px 18px;
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--likely-path);
+    border-radius: 6px;
+    background: #fffaf3;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: #4b4436;
+  }
+  .callout strong { color: var(--ink); }
+  footer {
+    margin-top: 28px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    border-top: 1px solid var(--line);
+    padding-top: 12px;
+  }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<h1>Table 5 vs Bayesian Points — where the two ACMG combining systems agree, and where they don't</h1>
+<p class="lede">
+  Every one of the classifier's 29 curated point-mutation fixtures, scored independently by both the
+  original 2015 categorical rule table (Richards et al.) and the 2020 Bayesian points reformulation
+  (Tavtigian et al.). Circles mark the Table&nbsp;5 result, diamonds mark the Bayesian result — a line
+  connects the two only where they disagree. Hover any marker for the variant ID, points, and reasoning.
+</p>
+
+<div class="legend">
+  <span><i class="dot" style="background:var(--path)"></i>Pathogenic</span>
+  <span><i class="dot" style="background:var(--likely-path)"></i>Likely Pathogenic</span>
+  <span><i class="dot" style="background:var(--vus)"></i>Uncertain Significance</span>
+  <span><i class="dot" style="background:var(--likely-benign)"></i>Likely Benign</span>
+  <span><i class="dot" style="background:var(--benign)"></i>Benign</span>
+</div>
+
+<div id="chart"></div>
+
+<div class="callout">
+  <strong>Four permanent, regression-tested divergences</strong> — <code>CAPN3_c.1939G&gt;T</code>,
+  <code>DMD_SYNTH_PATHOGENIC_01</code>, <code>DMD_c.2302C&gt;T</code>, and <code>DMD_c.8944C&gt;T</code> —
+  all share the same root cause: one Very&nbsp;Strong criterion plus one Supporting/Moderate criterion
+  clears the Bayesian point threshold, but that exact combination was never one of Table&nbsp;5's
+  hand-enumerated rules. A fifth instance of the same shape appeared at <strong>CAPN3_c.550del</strong>
+  (batch 25) when real functional-assay evidence pushed it to 9 Bayesian points against a Table&nbsp;5 VUS —
+  and resolved itself three batches later (batch 28) when two real published homozygous observations
+  gave it PM3 at Strong strength, satisfying Table&nbsp;5's own rule directly. Both systems now agree:
+  Pathogenic, 13 points — matching the variant's real ClinVar classification.
+</div>
+
+<footer>
+  Source: hand-derived golden cases in
+  <a href="https://github.com/bkhimek/CAPN3-DMD-variant-classifier/blob/main/validation/golden_cases/variant_golden_cases.yaml">variant_golden_cases.yaml</a>
+  and
+  <a href="https://github.com/bkhimek/CAPN3-DMD-variant-classifier/blob/main/validation/golden_cases/variant_golden_cases_bayesian.yaml">variant_golden_cases_bayesian.yaml</a>,
+  CAPN3/DMD ACMG/AMP Variant Classifier, closed complete Batch 30 (2026-08-02).
+</footer>
+
+<script>
+const TIER = { BENIGN: -2, LIKELY_BENIGN: -1, VUS: 0, LIKELY_PATHOGENIC: 1, PATHOGENIC: 2 };
+const TIER_LABEL = { "-2": "Benign", "-1": "Likely Benign", "0": "VUS", "1": "Likely Pathogenic", "2": "Pathogenic" };
+const TIER_COLOR = { "-2": "#2e7d32", "-1": "#66bb6a", "0": "#9e9e9e", "1": "#fb8c00", "2": "#c62828" };
+
+// order = display order, top row first (most severe / featured divergences first)
+const data = [
+  { id: "CAPN3_c.550del",                 t5: "PATHOGENIC",        bp: "PATHOGENIC",        pts: 13, note: "Resolved divergence — real PM3 evidence added batch 28; matches real ClinVar Pathogenic call." },
+  { id: "DMD_c.2302C>T",                  t5: "LIKELY_PATHOGENIC", bp: "PATHOGENIC",         pts: 10, note: "Real fixture. PVS1 Very Strong + PM2 Moderate = 10 pts; wired into two real case-level fixtures." },
+  { id: "DMD_c.8944C>T",                  t5: "LIKELY_PATHOGENIC", bp: "PATHOGENIC",         pts: 10, note: "Real fixture, same divergence shape as DMD_c.2302C>T." },
+  { id: "CAPN3_c.1939G>T",                t5: "VUS",               bp: "LIKELY_PATHOGENIC",  pts: 9,  note: "The flagship divergence case — real ClinVar Pathogenic variant (Variation ID 217153)." },
+  { id: "DMD_SYNTH_PATHOGENIC_01",        t5: "LIKELY_PATHOGENIC", bp: "PATHOGENIC",         pts: 10, note: "Synthetic fixture, same shape, first found of the four permanent divergences." },
+  { id: "CAPN3_SYNTH_PATHOGENIC_01",      t5: "PATHOGENIC",        bp: "PATHOGENIC",         pts: 10, note: "Agree — Pathogenic via different combining paths." },
+  { id: "CAPN3_SYNTH_PATHOGENIC_02",      t5: "PATHOGENIC",        bp: "PATHOGENIC",         pts: 10, note: "Agree — Pathogenic." },
+  { id: "CAPN3_SYNTH_PS1_01",             t5: "LIKELY_PATHOGENIC", bp: "LIKELY_PATHOGENIC",  pts: 6,  note: "Agree — Likely Pathogenic." },
+  { id: "CAPN3_c.1132T>C",                t5: "VUS",               bp: "VUS",                pts: 1,  note: "PM2 Supporting alone — below the 2-criterion minimum." },
+  { id: "CAPN3_c.1342C>T",                t5: "VUS",               bp: "VUS",                pts: 4,  note: "PM2 + PP3 + PM5 = 4 points, short of the Likely Pathogenic floor." },
+  { id: "CAPN3_c.1343G>A",                t5: "VUS",               bp: "VUS",                pts: 2,  note: "PM2 + PP3 = 2 points." },
+  { id: "CAPN3_c.1401_1403del",           t5: "VUS",               bp: "VUS",                pts: 2,  note: "PM2 + PM4 = 2 points." },
+  { id: "CAPN3_c.1A>G",                   t5: "VUS",               bp: "VUS",                pts: 1,  note: "Start-loss variant; PVS1 is manual review, not MET." },
+  { id: "CAPN3_c.2050+1G>A",              t5: "VUS",               bp: "VUS",                pts: 0,  note: "No criterion MET; splice donor variant, PVS1 manual review." },
+  { id: "CAPN3_c.2120A>G",                t5: "VUS",               bp: "VUS",                pts: 1,  note: "PP3 Supporting alone." },
+  { id: "CAPN3_c.2257G>A",                t5: "VUS",               bp: "VUS",                pts: -4, note: "BS1 Strong alone — below the 2-criterion minimum, stays VUS despite negative points." },
+  { id: "CAPN3_c.598_612del",             t5: "VUS",               bp: "VUS",                pts: 3,  note: "PM2 + PM4 = 3 points." },
+  { id: "CAPN3_c.946-1G>A",               t5: "VUS",               bp: "VUS",                pts: 1,  note: "PM2 Supporting alone; splice acceptor variant." },
+  { id: "CAPN3_SYNTH_PVS1_STARTLOSS_NO_ALT_01", t5: "VUS",         bp: "VUS",                pts: 8,  note: "PVS1 Very Strong alone — 1 criterion, below the 2-criterion minimum." },
+  { id: "CAPN3_SYNTH_PVS1_STARTLOSS_SUPPORTING_01", t5: "VUS",     bp: "VUS",                pts: 2,  note: "PVS1 Supporting + PM2 Supporting = 2 points." },
+  { id: "CAPN3_SYNTH_PVS1_SPLICE_RNA_01", t5: "VUS",               bp: "VUS",                pts: 8,  note: "PVS1 Very Strong alone — 1 criterion, below the 2-criterion minimum." },
+  { id: "CAPN3_SYNTH_PM3_MODERATE_01",    t5: "VUS",               bp: "VUS",                pts: 2,  note: "PM3 Moderate alone." },
+  { id: "CAPN3_SYNTH_PM3_CIS_OVERRIDE_01",t5: "VUS",               bp: "VUS",                pts: 0,  note: "PM3 cis-cooccurrence override forces NOT_MET." },
+  { id: "DMD_c.10103A>G",                 t5: "VUS",               bp: "VUS",                pts: 3,  note: "PM2 Moderate + PP3 Supporting = 3 points." },
+  { id: "DMD_c.11041A>T",                 t5: "VUS",               bp: "VUS",                pts: 0,  note: "NMD-escaping nonsense variant; PVS1 manual review." },
+  { id: "DMD_c.5163G>C",                  t5: "VUS",               bp: "VUS",                pts: -1, note: "BP4 Supporting alone — ACGS 2024's own worked example of the 2-criterion minimum." },
+  { id: "DMD_c.93+1G>A",                  t5: "VUS",               bp: "VUS",                pts: 2,  note: "PM2 Moderate alone; splice donor variant." },
+  { id: "CAPN3_SYNTH_LIKELY_BENIGN_01",   t5: "BENIGN",            bp: "BENIGN",             pts: null, note: "BA1 Stand-Alone bypasses point-summing in both systems." },
+  { id: "DMD_c.5234G>A",                  t5: "BENIGN",            bp: "BENIGN",             pts: null, note: "BA1 Stand-Alone bypasses point-summing in both systems." },
+];
+
+const ids = data.map(d => d.id);
+const t5x = data.map(d => TIER[d.t5]);
+const bpx = data.map(d => TIER[d.bp]);
+
+// connecting line segments (only meaningfully visible where t5 != bp)
+const lineX = [], lineY = [];
+data.forEach(d => {
+  lineX.push(TIER[d.t5], TIER[d.bp], null);
+  lineY.push(d.id, d.id, null);
+});
+
+const traceLines = {
+  x: lineX, y: lineY, mode: "lines",
+  line: { color: "#d0d5dd", width: 1.5 },
+  hoverinfo: "skip", showlegend: false, type: "scatter"
+};
+
+const traceT5 = {
+  x: t5x, y: ids, mode: "markers", type: "scatter", name: "Table 5 (categorical)",
+  marker: { symbol: "circle", size: 11, color: t5x.map(v => TIER_COLOR[v]), line: { color: "#fff", width: 1 } },
+  text: data.map(d => `<b>${d.id}</b><br>Table 5: ${TIER_LABEL[TIER[d.t5]]}<br>${d.note}`),
+  hovertemplate: "%{text}<extra></extra>"
+};
+
+const traceBP = {
+  x: bpx, y: ids, mode: "markers", type: "scatter", name: "Bayesian points",
+  marker: { symbol: "diamond", size: 10, color: bpx.map(v => TIER_COLOR[v]), line: { color: "#fff", width: 1 } },
+  text: data.map(d => `<b>${d.id}</b><br>Bayesian: ${TIER_LABEL[TIER[d.bp]]}${d.pts !== null ? " ("+d.pts+" pts)" : ""}<br>${d.note}`),
+  hovertemplate: "%{text}<extra></extra>"
+};
+
+const layout = {
+  height: 950,
+  margin: { l: 230, r: 30, t: 10, b: 60 },
+  xaxis: {
+    tickvals: [-2, -1, 0, 1, 2],
+    ticktext: ["Benign", "Likely Benign", "VUS", "Likely Pathogenic", "Pathogenic"],
+    zeroline: false, gridcolor: "#f0f1f3", range: [-2.6, 2.6]
+  },
+  yaxis: {
+    type: "category",
+    categoryorder: "array",
+    categoryarray: ids,
+    autorange: "reversed",
+    automargin: true,
+    tickfont: { size: 11, family: "monospace" }
+  },
+  legend: { orientation: "h", y: 1.06, x: 0 },
+  plot_bgcolor: "#fff", paper_bgcolor: "#fff",
+  font: { family: "-apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif", color: "#1f2430" }
+};
+
+Plotly.newPlot("chart", [traceLines, traceT5, traceBP], layout, { responsive: true, displaylogo: false });
+</script>
+
+</body>
+</html>

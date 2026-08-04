@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CAPN3/DMD Classifier — Case-Level Outcomes</title>
+<style>
+  :root {
+    --ink: #1f2430; --muted: #6b7280; --line: #e5e7eb;
+    --explained: #2e7d32; --explained-bg: #eaf5eb;
+    --insufficient: #546e7a; --insufficient-bg: #eef1f2;
+    --review: #b26a00; --review-bg: #fff4e0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 32px 24px 48px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink); background: #fff;
+    max-width: 980px; margin-left: auto; margin-right: auto;
+  }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; letter-spacing: -0.01em; }
+  p.lede { color: var(--muted); font-size: 0.95rem; max-width: 760px; margin: 0 0 20px; line-height: 1.5; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
+  thead th {
+    text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--line);
+    cursor: pointer; user-select: none; color: var(--muted); font-weight: 600;
+    font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+  thead th:hover { color: var(--ink); }
+  thead th .arrow { font-size: 0.7rem; opacity: 0.5; margin-left: 3px; }
+  tbody td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tbody tr:hover { background: #fafafa; }
+  code { font-family: "SF Mono", Menlo, monospace; font-size: 0.82em; }
+  .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 999px;
+    font-size: 0.76rem; font-weight: 600; white-space: nowrap;
+  }
+  .badge.EXPLAINED { color: var(--explained); background: var(--explained-bg); }
+  .badge.INSUFFICIENT { color: var(--insufficient); background: var(--insufficient-bg); }
+  .badge.MANUAL_REVIEW { color: var(--review); background: var(--review-bg); }
+  .note { color: var(--muted); font-size: 0.83rem; }
+  .callout {
+    margin: 24px 0; padding: 14px 18px; border: 1px solid var(--line);
+    border-left: 3px solid var(--review); border-radius: 6px; background: #fffaf3;
+    font-size: 0.88rem; line-height: 1.55; color: #4b4436;
+  }
+  .callout strong { color: var(--ink); }
+  footer { margin-top: 24px; font-size: 0.78rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<h1>Case-Level Outcomes — does the genotype explain the phenotype?</h1>
+<p class="lede">
+  All 11 curated <code>ClinicalCase</code> fixtures: whether a patient's genotype, evaluated under the
+  correct inheritance logic for their gene, is judged to explain their diagnosis. Click a column header
+  to sort.
+</p>
+
+<table id="tbl">
+  <thead>
+    <tr>
+      <th data-key="case">Case</th>
+      <th data-key="gene">Gene</th>
+      <th data-key="inheritance">Inheritance</th>
+      <th data-key="phase">Phase / configuration</th>
+      <th data-key="status">Result</th>
+      <th data-key="note">Why</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<div class="callout">
+  <strong>The key divergence in this table:</strong> <code>CASE_CAPN3_BIALLELIC_CIS</code> (autosomal
+  recessive, cis) resolves to <span class="badge INSUFFICIENT">INSUFFICIENT</span> — a genuinely
+  wild-type second autosomal copy is always active, so it's real, confident evidence the recessive
+  mechanism doesn't apply. <code>CASE_DMD_XX_BIALLELIC_CIS</code> (X-linked, cis) resolves instead to
+  <span class="badge MANUAL_REVIEW">MANUAL_REVIEW</span> — the equivalent wild-type X copy isn't
+  guaranteed to be transcriptionally active in every cell, so X-inactivation mosaicism keeps that case
+  genuinely uncertain rather than confidently excluded. Same phase relationship, deliberately different
+  answer, because the underlying chromosome biology is different.
+</div>
+
+<footer>
+  Source: hand-derived golden cases in
+  <a href="https://github.com/bkhimek/CAPN3-DMD-variant-classifier/blob/main/validation/golden_cases/case_interpretation_golden_cases.yaml">case_interpretation_golden_cases.yaml</a>,
+  CAPN3/DMD ACMG/AMP Variant Classifier, closed complete Batch 30 (2026-08-02).
+</footer>
+
+<script>
+const rows = [
+  { case: "CASE_CAPN3_BIALLELIC_TRANS", gene: "CAPN3", inheritance: "Autosomal recessive", phase: "Trans", status: "EXPLAINED", note: "Two independently pathogenic alleles, phase confirmed — the clean positive AR case." },
+  { case: "CASE_CAPN3_BIALLELIC_CIS", gene: "CAPN3", inheritance: "Autosomal recessive", phase: "Cis", status: "INSUFFICIENT", note: "Same two variants, same chromosome copy — a genuinely unaffected second copy rules the mechanism out." },
+  { case: "CASE_CAPN3_PHASE_UNKNOWN", gene: "CAPN3", inheritance: "Autosomal recessive", phase: "Unknown", status: "MANUAL_REVIEW", note: "Phase not established — could genuinely be either outcome." },
+  { case: "CASE_CAPN3_SINGLE_VARIANT", gene: "CAPN3", inheritance: "Autosomal recessive", phase: "Single variant", status: "INSUFFICIENT", note: "One variant only, however strong its own evidence, can't explain a recessive disease alone." },
+  { case: "CASE_DMD_HEMIZYGOUS_MALE", gene: "DMD", inheritance: "X-linked", phase: "Hemizygous (synthetic)", status: "EXPLAINED", note: "One convincing variant is sufficient — only one X chromosome present." },
+  { case: "CASE_DMD_FEMALE_CARRIER", gene: "DMD", inheritance: "X-linked", phase: "Single variant, XX (synthetic)", status: "MANUAL_REVIEW", note: "Same variant, karyotypic sex XX — X-inactivation makes carrier phenotype genuinely unpredictable." },
+  { case: "CASE_DMD_HEMIZYGOUS_MALE_REAL", gene: "DMD", inheritance: "X-linked", phase: "Hemizygous (real variant)", status: "EXPLAINED", note: "Real ClinVar variant DMD_c.2302C>T — same reasoning, now end-to-end real." },
+  { case: "CASE_DMD_FEMALE_CARRIER_REAL", gene: "DMD", inheritance: "X-linked", phase: "Single variant, XX (real variant)", status: "MANUAL_REVIEW", note: "Grounded in Brioschi et al. 2012 — X-inactivation skewing does not reliably predict carrier phenotype." },
+  { case: "CASE_DMD_HEMIZYGOUS_MALE_VUS_REAL", gene: "DMD", inheritance: "X-linked", phase: "Hemizygous, VUS variant", status: "MANUAL_REVIEW", note: "Real, messy case — the engine's answer independently matches this patient's actual unresolved diagnosis." },
+  { case: "CASE_DMD_XX_BIALLELIC_TRANS", gene: "DMD", inheritance: "X-linked", phase: "Biallelic XX, trans", status: "EXPLAINED", note: "Both X copies carry a qualifying variant — no functional DMD copy for X-inactivation to preferentially spare." },
+  { case: "CASE_DMD_XX_BIALLELIC_CIS", gene: "DMD", inheritance: "X-linked", phase: "Biallelic XX, cis", status: "MANUAL_REVIEW", note: "The genuinely wild-type second X isn't always transcriptionally active — real uncertainty, not a modeling gap." },
+];
+
+let sortKey = null, sortDir = 1;
+const tbody = document.querySelector("#tbl tbody");
+
+function render() {
+  const list = [...rows];
+  if (sortKey) {
+    list.sort((a, b) => (a[sortKey] > b[sortKey] ? 1 : a[sortKey] < b[sortKey] ? -1 : 0) * sortDir);
+  }
+  tbody.innerHTML = list.map(r => `
+    <tr>
+      <td><code>${r.case}</code></td>
+      <td>${r.gene}</td>
+      <td>${r.inheritance}</td>
+      <td>${r.phase}</td>
+      <td><span class="badge ${r.status}">${r.status.replace("_"," ")}</span></td>
+      <td class="note">${r.note}</td>
+    </tr>
+  `).join("");
+}
+
+document.querySelectorAll("thead th").forEach(th => {
+  th.addEventListener("click", () => {
+    const key = th.dataset.key;
+    sortDir = (sortKey === key) ? sortDir * -1 : 1;
+    sortKey = key;
+    render();
+  });
+});
+
+render();
+</script>
+
+</body>
+</html>
