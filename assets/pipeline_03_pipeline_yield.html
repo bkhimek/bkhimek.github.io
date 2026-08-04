@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CAPN3/DMD Pipeline — Pipeline Yield</title>
+<script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+<style>
+  :root { --ink: #1f2430; --muted: #6b7280; --line: #e5e7eb; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 32px 24px 48px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink); background: #fff;
+    max-width: 980px; margin-left: auto; margin-right: auto;
+  }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; letter-spacing: -0.01em; }
+  h2 { font-size: 1.02rem; margin: 30px 0 4px; }
+  p.lede { color: var(--muted); font-size: 0.95rem; max-width: 760px; margin: 0 0 20px; line-height: 1.5; }
+  p.sub { color: var(--muted); font-size: 0.86rem; margin: 0 0 14px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 14px 0 8px; }
+  .card { border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; }
+  .card .n { font-size: 1.4rem; font-weight: 700; }
+  .card .l { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+  #chart { width: 100%; }
+  footer { margin-top: 24px; font-size: 0.78rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<h1>Pipeline Yield — from remote reads to an annotated, benchmarked call set</h1>
+<p class="lede">
+  Every module was verified against its own real output before the next one ran. This is that
+  verification trail: read-level QC through alignment and deduplication, then variant-level yield
+  through calling, concordance, and annotation — all for the same CAPN3 (chr15) + DMD (chrX) padded
+  regions, region-extracted directly from GIAB's public HG002 BAM.
+</p>
+
+<h2>Read-level (EXTRACT_REGION → BWA_ALIGN → SORT_MARKDUP)</h2>
+<p class="sub">336,549 read pairs extracted directly over HTTP range requests — no full-genome download.</p>
+<div class="cards" id="cards"></div>
+
+<h2>Variant-level (GATK_CALL / DEEPVARIANT_CALL → CROSS_CHECK_VCFS → annotation)</h2>
+<div id="chart"></div>
+
+<footer>
+  Source: per-module confirmation numbers in the CAPN3/DMD Variant Calling Pipeline README
+  (<a href="https://github.com/bkhimek/CAPN3-DMD-variant-calling-pipeline/blob/main/README.md">github.com/bkhimek/CAPN3-DMD-variant-calling-pipeline</a>),
+  Status: Complete, all 9 modules verified end-to-end. Companion reports:
+  Cross-Caller Concordance, Benchmark Scorecard.
+</footer>
+
+<script>
+const cardsEl = document.getElementById("cards");
+const cards = [
+  { n: "336,549", l: "read pairs extracted (673,098 reads)" },
+  { n: "99.76%", l: "of reads mapped to chr15/chrX" },
+  { n: "99.22%", l: "properly paired" },
+  { n: "0.95%", l: "flagged as PCR/optical duplicates (6,370 reads)" },
+];
+cards.forEach(c => {
+  const div = document.createElement("div");
+  div.className = "card";
+  div.innerHTML = `<div class="n">${c.n}</div><div class="l">${c.l}</div>`;
+  cardsEl.appendChild(div);
+});
+
+const stages = [
+  "GATK HaplotypeCaller — variants called",
+  "DeepVariant — variants called",
+  "Concordant (GATK ∩ DeepVariant)",
+  "Annotated final call set (VEP + gnomAD v4.1)"
+];
+const counts = [2318, 3170, 2271, 2271];
+const colors = ["#1f77b4", "#6a51a3", "#2e7d32", "#00897b"];
+const notes = [
+  "702 on chr15, 1,616 on chrX",
+  "837 on chr15, 2,333 on chrX — different caller, different algorithm, larger count is expected",
+  "The pipeline's highest-confidence set — see Cross-Caller Concordance report",
+  "Same 2,271 concordant calls, annotated with transcript consequence (VEP) and population frequency (gnomAD v4.1) — feeds CAPN3-DMD-variant-classifier's VariantEvidenceBundle"
+];
+
+const trace = {
+  x: counts, y: stages, type: "bar", orientation: "h",
+  marker: { color: colors },
+  text: counts.map(c => c.toLocaleString()), textposition: "outside",
+  hovertext: notes,
+  hovertemplate: "<b>%{y}</b><br>%{x} variants<br>%{hovertext}<extra></extra>"
+};
+
+const layout = {
+  height: 320,
+  margin: { l: 260, r: 60, t: 10, b: 40 },
+  xaxis: { title: "Variant count", gridcolor: "#f0f1f3", rangemode: "tozero" },
+  yaxis: { automargin: true },
+  plot_bgcolor: "#fff", paper_bgcolor: "#fff",
+  font: { family: "-apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif", color: "#1f2430" }
+};
+
+Plotly.newPlot("chart", [trace], layout, { responsive: true, displaylogo: false });
+</script>
+
+</body>
+</html>

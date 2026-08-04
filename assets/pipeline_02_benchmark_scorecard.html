@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CAPN3/DMD Pipeline — Benchmark Scorecard</title>
+<script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+<style>
+  :root { --ink: #1f2430; --muted: #6b7280; --line: #e5e7eb; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 32px 24px 48px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink); background: #fff;
+    max-width: 980px; margin-left: auto; margin-right: auto;
+  }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; letter-spacing: -0.01em; }
+  p.lede { color: var(--muted); font-size: 0.95rem; max-width: 760px; margin: 0 0 20px; line-height: 1.5; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 22px 0 30px; }
+  .card { border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; }
+  .card .n { font-size: 1.5rem; font-weight: 700; }
+  .card .l { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+  #chart { width: 100%; }
+  footer { margin-top: 20px; font-size: 0.78rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<h1>Benchmark Scorecard — recall and precision against GIAB HG002, by caller and variant type</h1>
+<p class="lede">
+  "1.0 / 1.0 recall and precision" is the headline number, but the counts behind it are what actually
+  earns trust: this is hap.py's true-positive, false-positive, and false-negative tally for each caller,
+  split by SNP and INDEL, restricted to the padded CAPN3/DMD regions and benchmarked against the GIAB
+  HG002 NISTv4.2.1 truth set.
+</p>
+
+<div class="cards" id="cards"></div>
+<div id="chart"></div>
+
+<footer>
+  Source: <code>HAPPY_BENCHMARK</code> module output, CAPN3/DMD Variant Calling Pipeline README
+  (<a href="https://github.com/bkhimek/CAPN3-DMD-variant-calling-pipeline/blob/main/README.md">github.com/bkhimek/CAPN3-DMD-variant-calling-pipeline</a>),
+  Status: Complete, all 9 modules verified end-to-end.
+</footer>
+
+<script>
+const cardsEl = document.getElementById("cards");
+const cards = [
+  { n: "612", l: "GIAB truth-set variants in region (both runs match)" },
+  { n: "1.0 / 1.0", l: "recall / precision, both callers, SNP + INDEL" },
+  { n: "0", l: "false positives, either caller" },
+  { n: "0", l: "false negatives, either caller" },
+];
+cards.forEach(c => {
+  const div = document.createElement("div");
+  div.className = "card";
+  div.innerHTML = `<div class="n">${c.n}</div><div class="l">${c.l}</div>`;
+  cardsEl.appendChild(div);
+});
+
+const groups = ["GATK — SNP", "GATK — INDEL", "DeepVariant — SNP", "DeepVariant — INDEL"];
+const tp = [545, 67, 545, 67];
+const fp = [0, 0, 0, 0];
+const fn = [0, 0, 0, 0];
+
+const traceTP = { x: groups, y: tp, name: "True positives", type: "bar", marker: { color: "#2e7d32" }, text: tp.map(String), textposition: "outside" };
+const traceFP = { x: groups, y: fp, name: "False positives", type: "bar", marker: { color: "#c62828" }, text: fp.map(String), textposition: "outside" };
+const traceFN = { x: groups, y: fn, name: "False negatives", type: "bar", marker: { color: "#fb8c00" }, text: fn.map(String), textposition: "outside" };
+
+const layout = {
+  barmode: "group",
+  height: 460,
+  margin: { l: 50, r: 20, t: 20, b: 60 },
+  yaxis: { title: "Variant count", gridcolor: "#f0f1f3", rangemode: "tozero" },
+  legend: { orientation: "h", y: 1.14, x: 0 },
+  plot_bgcolor: "#fff", paper_bgcolor: "#fff",
+  font: { family: "-apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif", color: "#1f2430" }
+};
+
+Plotly.newPlot("chart", [traceTP, traceFP, traceFN], layout, { responsive: true, displaylogo: false });
+</script>
+
+</body>
+</html>
