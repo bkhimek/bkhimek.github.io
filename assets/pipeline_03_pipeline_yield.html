@@ -70,7 +70,7 @@ const stages = [
   "GATK HaplotypeCaller — variants called",
   "DeepVariant — variants called",
   "Concordant (GATK ∩ DeepVariant)",
-  "Annotated final call set (VEP + gnomAD v4.1)"
+  "Annotated final call set — same calls, VEP + gnomAD v4.1 added"
 ];
 const counts = [2318, 3170, 2271, 2271];
 const colors = ["#1f77b4", "#6a51a3", "#2e7d32", "#00897b"];
@@ -93,7 +93,13 @@ const layout = {
   height: 320,
   margin: { l: 260, r: 60, t: 10, b: 40 },
   xaxis: { title: "Variant count", gridcolor: "#f0f1f3", rangemode: "tozero" },
-  yaxis: { automargin: true },
+  yaxis: {
+    automargin: true,
+    type: "category",
+    categoryorder: "array",
+    categoryarray: stages,
+    autorange: "reversed"
+  },
   plot_bgcolor: "#fff", paper_bgcolor: "#fff",
   font: { family: "-apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif", color: "#1f2430" }
 };

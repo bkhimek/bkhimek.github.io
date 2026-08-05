@@ -180,14 +180,29 @@ const traceT5 = {
   x: t5x, y: ids, mode: "markers", type: "scatter", name: "Table 5 (categorical)",
   marker: { symbol: "circle", size: 11, color: t5x.map(v => TIER_COLOR[v]), line: { color: "#fff", width: 1 } },
   text: data.map(d => `<b>${d.id}</b><br>Table 5: ${TIER_LABEL[TIER[d.t5]]}<br>${d.note}`),
-  hovertemplate: "%{text}<extra></extra>"
+  hovertemplate: "%{text}<extra></extra>", showlegend: false
 };
 
 const traceBP = {
   x: bpx, y: ids, mode: "markers", type: "scatter", name: "Bayesian points",
   marker: { symbol: "diamond", size: 10, color: bpx.map(v => TIER_COLOR[v]), line: { color: "#fff", width: 1 } },
   text: data.map(d => `<b>${d.id}</b><br>Bayesian: ${TIER_LABEL[TIER[d.bp]]}${d.pts !== null ? " ("+d.pts+" pts)" : ""}<br>${d.note}`),
-  hovertemplate: "%{text}<extra></extra>"
+  hovertemplate: "%{text}<extra></extra>", showlegend: false
+};
+
+// Legend-only dummy traces: color here would otherwise show the first row's
+// tier color (misleadingly implying "Table 5 = red circle"), so these use a
+// neutral color to make clear that shape — not color — is what the legend means.
+// Color on the real markers above encodes tier severity instead (see color key).
+const legendT5 = {
+  x: [null], y: [null], mode: "markers", type: "scatter", name: "Table 5 (categorical)",
+  marker: { symbol: "circle", size: 11, color: "#4b5563" },
+  hoverinfo: "skip", showlegend: true
+};
+const legendBP = {
+  x: [null], y: [null], mode: "markers", type: "scatter", name: "Bayesian points",
+  marker: { symbol: "diamond", size: 10, color: "#4b5563" },
+  hoverinfo: "skip", showlegend: true
 };
 
 const layout = {
@@ -211,7 +226,7 @@ const layout = {
   font: { family: "-apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif", color: "#1f2430" }
 };
 
-Plotly.newPlot("chart", [traceLines, traceT5, traceBP], layout, { responsive: true, displaylogo: false });
+Plotly.newPlot("chart", [traceLines, traceT5, traceBP, legendT5, legendBP], layout, { responsive: true, displaylogo: false });
 </script>
 
 </body>

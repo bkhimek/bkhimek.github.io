@@ -46,6 +46,11 @@
   actually disagree on. Only 94 of the 899 are real PASS-filtered calls unique to DeepVariant. Both
   callers' totals reconcile exactly: 2,318&nbsp;=&nbsp;47&nbsp;+&nbsp;2,271, and
   3,170&nbsp;=&nbsp;899&nbsp;+&nbsp;2,271.
+  <br /><br />
+  <strong>Reading the diagram:</strong> the "Concordant calls" node looks larger than its 2,271 label
+  because Sankey diagrams total every flow into a node — and the same 2,271 calls arrive twice, once
+  counted from GATK's side and once from DeepVariant's side. Its true value is 2,271, not the ~4,500
+  its height alone would suggest.
 </div>
 
 <footer>
@@ -82,7 +87,15 @@ const data = [{
     value:  [2271, 47, 2271, 899, 805, 94],
     color: ["rgba(46,125,50,0.35)", "rgba(251,140,0,0.35)", "rgba(46,125,50,0.35)",
             "rgba(158,158,158,0.35)", "rgba(198,40,40,0.35)", "rgba(0,137,123,0.35)"],
-    hovertemplate: "%{value} calls<extra></extra>"
+    customdata: [
+      "2,271 concordant calls, counted from GATK's side",
+      "47 calls unique to GATK",
+      "2,271 concordant calls, counted from DeepVariant's side (same calls as above — this is why the Concordant node's height looks like ~4,500)",
+      "899 DeepVariant calls with no GATK match, before investigating why",
+      "805 of those 899 are RefCall/NoCall bookkeeping records, not real calls",
+      "94 of those 899 are genuine PASS-filtered calls unique to DeepVariant"
+    ],
+    hovertemplate: "%{customdata}<extra></extra>"
   }
 }];
 

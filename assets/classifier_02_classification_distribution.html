@@ -51,7 +51,6 @@
 const tiers = ["Pathogenic", "Likely Pathogenic", "VUS", "Likely Benign", "Benign"];
 const table5 = [3, 4, 20, 0, 2];
 const bayesian = [6, 2, 19, 0, 2];
-const colors = { "Pathogenic": "#c62828", "Likely Pathogenic": "#fb8c00", "VUS": "#9e9e9e", "Likely Benign": "#66bb6a", "Benign": "#2e7d32" };
 
 const cardsEl = document.getElementById("cards");
 const totalNote = [
@@ -67,14 +66,16 @@ totalNote.forEach(c => {
   cardsEl.appendChild(div);
 });
 
+const SYS_COLOR = { table5: "#4C72B0", bayesian: "#8B5FBF" };
+
 const traceT5 = {
   x: tiers, y: table5, name: "Table 5 (categorical)", type: "bar",
-  marker: { color: tiers.map(t => colors[t]), opacity: 0.55, line: { color: tiers.map(t => colors[t]), width: 2 } },
+  marker: { color: SYS_COLOR.table5 },
   text: table5.map(String), textposition: "outside"
 };
 const traceBP = {
   x: tiers, y: bayesian, name: "Bayesian points", type: "bar",
-  marker: { color: tiers.map(t => colors[t]), opacity: 1 },
+  marker: { color: SYS_COLOR.bayesian },
   text: bayesian.map(String), textposition: "outside"
 };
 
