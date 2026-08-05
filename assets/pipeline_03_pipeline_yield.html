@@ -85,14 +85,15 @@ const trace = {
   x: counts, y: stages, type: "bar", orientation: "h",
   marker: { color: colors },
   text: counts.map(c => c.toLocaleString()), textposition: "outside",
+  cliponaxis: false,
   hovertext: notes,
   hovertemplate: "<b>%{y}</b><br>%{x} variants<br>%{hovertext}<extra></extra>"
 };
 
 const layout = {
   height: 320,
-  margin: { l: 260, r: 60, t: 10, b: 40 },
-  xaxis: { title: "Variant count", gridcolor: "#f0f1f3", rangemode: "tozero" },
+  margin: { l: 260, r: 90, t: 10, b: 40 },
+  xaxis: { title: "Variant count", gridcolor: "#f0f1f3", range: [0, Math.max(...counts) * 1.18] },
   yaxis: {
     automargin: true,
     type: "category",
