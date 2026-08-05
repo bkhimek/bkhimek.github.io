@@ -1328,9 +1328,9 @@ Content-Type: text/plain; charset=utf-8
           <details class="diagram-toggle">
             <summary>View Workflow Diagram</summary>
             <div class="diagram-wrap">
-<svg viewBox="0 0 860 500" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" role="img">
+<svg viewBox="0 0 1080 500" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" role="img">
 <title>CAPN3-DMD-variant-classifier Workflow</title>
-<desc>ACMG/AMP evidence bundle evaluated against twelve criteria, including a CNV deletion/duplication module, combined by two independent systems, cross-checked, then reasoned about at the case level.</desc>
+<desc>ACMG/AMP evidence bundle evaluated against twelve criteria, with a separate CNV deletion/duplication module branching off in parallel, combined by two independent systems, cross-checked, then reasoned about at the case level.</desc>
 <defs>
 <marker id="arr-acmg" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
 <path d="M0,0 L0,6 L8,3 z" fill="#2E4057"/>
@@ -1339,13 +1339,16 @@ Content-Type: text/plain; charset=utf-8
 <path d="M0,0 L0,6 L8,3 z" fill="#555"/>
 </marker>
 </defs>
-<rect width="860" height="500" fill="#F4F6F8" rx="10"/>
-<text x="430" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E4057">CAPN3-DMD-variant-classifier</text>
-<text x="430" y="46" text-anchor="middle" font-size="10" fill="#777">29 point + 5 CNV + 11 case-level fixtures · 250/250 tests · twelve ACMG/AMP criteria</text>
+<rect width="1080" height="500" fill="#F4F6F8" rx="10"/>
+<text x="560" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E4057">CAPN3-DMD-variant-classifier</text>
+<text x="560" y="46" text-anchor="middle" font-size="10" fill="#777">29 point + 5 CNV + 11 case-level fixtures · 250/250 tests · twelve ACMG/AMP criteria</text>
 <rect x="280" y="58" width="300" height="40" rx="6" fill="#2E4057"/>
 <text x="430" y="74" text-anchor="middle" font-size="12" font-weight="bold" fill="white">VariantEvidenceBundle</text>
 <text x="430" y="89" text-anchor="middle" font-size="9" fill="#A8BFD0">curated evidence, or fed by the calling pipeline</text>
 <line x1="430" y1="98" x2="430" y2="114" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-acmg)"/>
+<!-- CNV branch: splits off directly from the evidence bundle, since CNVs never go through the point-mutation evaluators -->
+<line x1="430" y1="105" x2="875" y2="105" stroke="#2E4057" stroke-width="1.5"/>
+<line x1="875" y1="105" x2="875" y2="184" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-acmg)"/>
 <rect x="250" y="114" width="360" height="40" rx="6" fill="#2E4057"/>
 <text x="430" y="130" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Twelve ACMG/AMP Criteria Evaluators</text>
 <text x="430" y="145" text-anchor="middle" font-size="9" fill="#A8BFD0">population frequency · protein effect · computational scores</text>
@@ -1357,20 +1360,32 @@ Content-Type: text/plain; charset=utf-8
 <text x="260" y="199" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">① Classic (Table 5)</text>
 <rect x="495" y="184" width="210" height="22" rx="4" fill="#D8E4EE"/>
 <text x="600" y="199" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">② Bayesian Points</text>
+<rect x="770" y="184" width="210" height="22" rx="4" fill="#D8E4EE"/>
+<text x="875" y="199" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">③ CNV (DMD structural variants)</text>
 <rect x="155" y="216" width="210" height="36" rx="5" fill="#2E4057"/>
 <text x="260" y="232" text-anchor="middle" font-size="11" font-weight="bold" fill="white">TABLE5_COMBINE</text>
 <text x="260" y="245" text-anchor="middle" font-size="9" fill="#A8BFD0">Richards et al. 2015</text>
 <rect x="495" y="216" width="210" height="36" rx="5" fill="#2E4057"/>
 <text x="600" y="232" text-anchor="middle" font-size="11" font-weight="bold" fill="white">BAYESIAN_COMBINE</text>
 <text x="600" y="245" text-anchor="middle" font-size="9" fill="#A8BFD0">Tavtigian et al. 2020</text>
+<rect x="770" y="216" width="210" height="36" rx="5" fill="#2E4057"/>
+<text x="875" y="232" text-anchor="middle" font-size="11" font-weight="bold" fill="white">CNV_SCORING</text>
+<text x="875" y="245" text-anchor="middle" font-size="9" fill="#A8BFD0">Riggs 2020, via ClassifyCNV</text>
 <line x1="260" y1="252" x2="260" y2="280" stroke="#2E4057" stroke-width="1.5"/>
 <line x1="260" y1="280" x2="310" y2="280" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-acmg)"/>
 <line x1="600" y1="252" x2="600" y2="280" stroke="#2E4057" stroke-width="1.5"/>
 <line x1="600" y1="280" x2="550" y2="280" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-acmg)"/>
+<line x1="875" y1="252" x2="875" y2="294" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-acmg)"/>
 <rect x="310" y="294" width="240" height="40" rx="5" fill="#1A6B45"/>
 <text x="430" y="311" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Cross-checked classification</text>
 <text x="430" y="326" text-anchor="middle" font-size="8.5" fill="#A8D5B8">Pathogenic → Benign · 2 systems agree</text>
+<rect x="770" y="294" width="210" height="40" rx="5" fill="#1A6B45"/>
+<text x="875" y="311" text-anchor="middle" font-size="11" font-weight="bold" fill="white">CNV classification</text>
+<text x="875" y="326" text-anchor="middle" font-size="8.5" fill="#A8D5B8">VUS → Pathogenic · Section 2 (dosage)</text>
 <line x1="430" y1="334" x2="430" y2="350" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-acmg)"/>
+<line x1="875" y1="334" x2="875" y2="345" stroke="#2E4057" stroke-width="1.5"/>
+<line x1="875" y1="345" x2="550" y2="345" stroke="#2E4057" stroke-width="1.5"/>
+<line x1="550" y1="345" x2="550" y2="350" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-acmg)"/>
 <rect x="280" y="350" width="300" height="40" rx="6" fill="#2E4057"/>
 <text x="430" y="366" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Case-Level Reasoning</text>
 <text x="430" y="381" text-anchor="middle" font-size="9" fill="#A8BFD0">AR (CAPN3) · X-linked (DMD) inheritance</text>
