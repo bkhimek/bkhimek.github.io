@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Batch 31: The BRCA1 Extension — CAPN3/DMD/BRCA1 Variant Classifier</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy:    #2E4057;
+    --navy-d:  #1e2d3d;
+    --teal:    #14998D;
+    --teal-l:  #1ab8aa;
+    --teal-xl: #d0f0ed;
+    --amber:   #c98a2e;
+    --amber-l: #e0a94f;
+    --amber-xl:#f2ddb0;
+    --text:    #e8edf2;
+    --text-m:  #b0bec8;
+    --text-d:  #7c8a99;
+    --bg:      #111d27;
+    --card:    #1c2e3e;
+    --card-2:  #22374a;
+    --border:  #2a3f54;
+    --red:     #c9524a;
+    --red-l:   #e07b73;
+    --green:   #2f9e6e;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 16px;
+    padding: 0 0 4rem;
+  }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+  header {
+    padding: 3rem 2rem 2rem;
+    background: linear-gradient(160deg, var(--navy-d) 0%, var(--bg) 65%);
+    border-bottom: 1px solid var(--border);
+  }
+  .wrap { max-width: 920px; margin: 0 auto; }
+  .back-link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    color: var(--text-m); text-decoration: none; font-size: 0.85rem;
+    margin-bottom: 1.5rem; transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--teal-l); }
+  .eyebrow {
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--teal);
+    margin-bottom: 0.75rem;
+  }
+  h1 {
+    font-size: clamp(1.6rem, 3.4vw, 2.3rem);
+    color: #fff; margin-bottom: 0.6rem; line-height: 1.2;
+  }
+  .lede {
+    color: var(--text-m); max-width: 680px; font-size: 1.02rem;
+  }
+  main { max-width: 920px; margin: 0 auto; padding: 0 2rem; }
+  section.panel {
+    margin-top: 2.75rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.75rem 1.75rem 2rem;
+  }
+  .panel-head { margin-bottom: 1.25rem; }
+  .panel-num {
+    display: inline-block; font-size: 0.7rem; font-weight: 700;
+    color: var(--teal); letter-spacing: 0.1em; margin-bottom: 0.4rem;
+  }
+  .panel-title { font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: 0.4rem; }
+  .panel-sub { color: var(--text-m); font-size: 0.92rem; max-width: 640px; }
+
+  /* Panel 1: audit grid */
+  .legend { display: flex; flex-wrap: wrap; gap: 1.25rem; margin: 1rem 0 1.4rem; font-size: 0.82rem; color: var(--text-m); }
+  .legend-item { display: flex; align-items: center; gap: 0.45rem; }
+  .swatch { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+  .sw-unchanged { background: var(--text-d); }
+  .sw-code { background: var(--teal); }
+  .sw-curation { background: var(--amber); }
+  .audit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 0.6rem;
+  }
+  .aud-cell {
+    border-radius: 7px; padding: 0.7rem 0.6rem 0.6rem;
+    border: 1px solid var(--border);
+    background: var(--card-2);
+  }
+  .aud-cell .crit { font-weight: 700; font-size: 0.92rem; color: #fff; }
+  .aud-cell .state { font-size: 0.72rem; margin-top: 0.3rem; }
+  .aud-cell.unchanged { border-left: 3px solid var(--text-d); }
+  .aud-cell.unchanged .state { color: var(--text-d); }
+  .aud-cell.code { border-left: 3px solid var(--teal); background: rgba(20,153,141,0.08); }
+  .aud-cell.code .state { color: var(--teal-l); }
+  .aud-cell.curation { border-left: 3px solid var(--amber); background: rgba(201,138,46,0.08); }
+  .aud-cell.curation .state { color: var(--amber-l); }
+  .audit-tally { display: flex; gap: 1.5rem; margin-top: 1.25rem; flex-wrap: wrap; }
+  .tally-item { font-size: 0.85rem; color: var(--text-m); }
+  .tally-item b { color: #fff; font-size: 1.05rem; }
+
+  /* Panel 2: PM2 guard test */
+  .test-flow { display: flex; flex-direction: column; gap: 0; margin-bottom: 1.5rem; }
+  .flow-step {
+    display: flex; gap: 1rem; align-items: flex-start;
+    padding: 0.9rem 0; border-bottom: 1px dashed var(--border);
+  }
+  .flow-step:last-child { border-bottom: none; }
+  .flow-dot {
+    width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700; color: #fff; margin-top: 2px;
+  }
+  .dot-neutral { background: var(--navy); }
+  .dot-fail { background: var(--red); }
+  .dot-pass { background: var(--green); }
+  .flow-body .flow-label { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; margin-bottom: 0.2rem; }
+  .flow-fail .flow-label { color: var(--red-l); }
+  .flow-pass .flow-label { color: var(--green); }
+  .flow-neutral .flow-label { color: var(--text-d); }
+  .flow-text { color: var(--text-m); font-size: 0.9rem; }
+  code {
+    font-family: 'Consolas', 'SF Mono', monospace;
+    background: rgba(255,255,255,0.06);
+    padding: 0.1em 0.4em;
+    border-radius: 4px;
+    font-size: 0.85em;
+    color: var(--teal-l);
+  }
+  table.fixture-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; font-size: 0.87rem; }
+  table.fixture-table th, table.fixture-table td { text-align: left; padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--border); }
+  table.fixture-table th { color: var(--text-d); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  table.fixture-table td.before { color: var(--red-l); }
+  table.fixture-table td.after { color: var(--green); }
+  .arrow-inline { color: var(--text-d); margin: 0 0.4em; }
+
+  /* Panel 3: BA1/BS1 */
+  .af-chart { display: flex; align-items: flex-end; gap: 2.2rem; height: 160px; margin: 1.5rem 0 0.5rem; padding: 0 1.5rem; position: relative; }
+  .af-threshold-line {
+    position: absolute; left: 0.5rem; right: 0.5rem; top: 62px;
+    border-top: 2px dashed var(--text-d);
+  }
+  .af-threshold-label {
+    position: absolute; right: 0.5rem; top: 44px;
+    font-size: 0.68rem; color: var(--text-d); background: var(--card); padding: 0 0.4em;
+  }
+  .af-bar-wrap { display: flex; flex-direction: column; align-items: center; flex: 1; height: 100%; justify-content: flex-end; position: relative; }
+  .af-bar { width: 56px; border-radius: 5px 5px 0 0; }
+  .af-bar-raw { background: var(--red); height: 72%; }
+  .af-bar-corrected { background: var(--green); height: 34%; }
+  .af-value { font-size: 0.78rem; color: var(--text-m); margin-top: 0.6rem; text-align: center; }
+  .af-value b { display: block; color: #fff; font-size: 0.85rem; }
+  .af-note { font-size: 0.72rem; color: var(--text-d); margin-top: 0.15rem; }
+  .quote-block {
+    border-left: 3px solid var(--amber);
+    background: rgba(201,138,46,0.07);
+    padding: 0.9rem 1.1rem;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.9rem;
+    color: var(--text-m);
+    font-style: italic;
+    margin-top: 1.4rem;
+  }
+  .order-fact {
+    display: flex; align-items: center; gap: 0.6rem;
+    margin-top: 1.4rem; font-size: 0.87rem; color: var(--text-m);
+    background: var(--card-2); border: 1px solid var(--border);
+    padding: 0.8rem 1rem; border-radius: 7px;
+  }
+  .order-fact .step-badge {
+    background: var(--navy); color: #fff; font-size: 0.72rem; font-weight: 700;
+    padding: 0.15em 0.55em; border-radius: 4px; flex-shrink: 0;
+  }
+  footer { max-width: 920px; margin: 3rem auto 0; padding: 0 2rem; color: var(--text-d); font-size: 0.8rem; }
+
+  @media (max-width: 700px) {
+    header { padding: 2.25rem 1.25rem 1.5rem; }
+    main { padding: 0 1.25rem; }
+    footer { padding: 0 1.25rem; }
+    section.panel { padding: 1.4rem 1.25rem 1.6rem; margin-top: 2rem; }
+    .audit-grid { grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); gap: 0.5rem; }
+    .af-chart { gap: 1.2rem; padding: 0 0.5rem; height: 190px; }
+    .af-threshold-label { font-size: 0.62rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="back-link" href="../index.html">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back to portfolio
+    </a>
+    <div class="eyebrow">CAPN3 / DMD / BRCA1 — ACMG/AMP Variant Classifier</div>
+    <h1>Batch 31: The BRCA1 Extension</h1>
+    <p class="lede">Adding BRCA1 was treated as a generalization test, not a data-entry exercise: every one of the twelve existing evaluators was audited against BRCA1's real ClinGen ENIGMA VCEP spec before any code was written. The audit found two real problems — and they turned out to need genuinely different kinds of fixes.</p>
+  </div>
+</header>
+
+<main>
+
+  <!-- Panel 1: audit grid -->
+  <section class="panel">
+    <h2 class="sr-only">Audit of all twelve ACMG/AMP evaluators against BRCA1's real specification, showing which needed changes and what kind</h2>
+    <div class="panel-head">
+      <div class="panel-num">01 — THE AUDIT</div>
+      <div class="panel-title">Twelve evaluators, three outcomes</div>
+      <div class="panel-sub">Not a binary pass/fail. Two evaluators needed attention — but "needed attention" split into two categories that look identical from the outside and are not the same thing.</div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><span class="swatch sw-unchanged"></span>Unchanged — needed nothing</div>
+      <div class="legend-item"><span class="swatch sw-code"></span>Code fix — evaluator logic changed</div>
+      <div class="legend-item"><span class="swatch sw-curation"></span>Data-curation fix — evaluator untouched, fixture data corrected</div>
+    </div>
+
+    <div class="audit-grid">
+      <div class="aud-cell unchanged"><div class="crit">PVS1</div><div class="state">Unchanged</div></div>
+      <div class="aud-cell unchanged"><div class="crit">PS1</div><div class="state">Unchanged</div></div>
+      <div class="aud-cell unchanged"><div class="crit">PM3</div><div class="state">Unchanged</div></div>
+      <div class="aud-cell code"><div class="crit">PM2</div><div class="state">Code fix</div></div>
+      <div class="aud-cell unchanged"><div class="crit">PM4</div><div class="state">Unchanged</div></div>
+      <div class="aud-cell unchanged"><div class="crit">PM5</div><div class="state">Unchanged</div></div>
+      <div class="aud-cell unchanged"><div class="crit">PS3</div><div class="state">Unchanged</div></div>
+      <div class="aud-cell unchanged"><div class="crit">BS3</div><div class="state">Unchanged</div></div>
+      <div class="aud-cell unchanged"><div class="crit">PP3</div><div class="state">Unchanged</div></div>
+      <div class="aud-cell unchanged"><div class="crit">BP4</div><div class="state">Unchanged</div></div>
+      <div class="aud-cell curation"><div class="crit">BA1</div><div class="state">Data-curation fix</div></div>
+      <div class="aud-cell curation"><div class="crit">BS1</div><div class="state">Data-curation fix</div></div>
+    </div>
+
+    <div class="audit-tally">
+      <div class="tally-item"><b>9</b> unchanged</div>
+      <div class="tally-item"><b>1</b> code fix (PM2)</div>
+      <div class="tally-item"><b>2</b> data-curation fixes (BA1, BS1)</div>
+      <div class="tally-item"><b>11 / 12</b> needed zero evaluator code changes</div>
+    </div>
+  </section>
+
+  <!-- Panel 2: PM2 -->
+  <section class="panel">
+    <h2 class="sr-only">How a guard test caught PM2 incorrectly firing on BRCA1 indel variants, and the gene-gated code fix that followed</h2>
+    <div class="panel-head">
+      <div class="panel-num">02 — PM2: CODE FIX</div>
+      <div class="panel-title">The safety net catching something, not just the patch</div>
+      <div class="panel-sub">BRCA1's real spec says PM2 doesn't apply to insertion/deletion variants. The original plan assumed that could be handled by fixture choice alone. It couldn't — and a guard test is what proved it.</div>
+    </div>
+
+    <div class="test-flow">
+      <div class="flow-step flow-neutral">
+        <div class="flow-dot dot-neutral">1</div>
+        <div class="flow-body">
+          <div class="flow-label">Guard test written</div>
+          <div class="flow-text"><code>test_brca1_fixtures_do_not_exercise_pm4_pm5_or_unenforced_pm2_indel_gaps</code> — asserting no curated BRCA1 fixture accidentally exercises PM4, PM5, or an unenforced PM2-indel call.</div>
+        </div>
+      </div>
+      <div class="flow-step flow-fail">
+        <div class="flow-dot dot-fail">✕</div>
+        <div class="flow-body">
+          <div class="flow-label">Test fails on PM2</div>
+          <div class="flow-text">PM4/PM5 stayed inert through fixture-shape avoidance alone, as planned. PM2 didn't: two real, cited Ashkenazi-founder frameshift fixtures needed <code>population_evidence</code> anyway, for their own BA1/BS1 handling — so PM2 always ran a real frequency comparison, contradicting the spec's "does not apply" rule.</div>
+        </div>
+      </div>
+      <div class="flow-step flow-pass">
+        <div class="flow-dot dot-pass">✓</div>
+        <div class="flow-body">
+          <div class="flow-label">Gene-gated fix, test passes</div>
+          <div class="flow-text">One small, additive, opt-in config key — <code>pm2_excludes_indel_delins: true</code>, set only for BRCA1. Checked before any retrieval-status branch. CAPN3/DMD provably unaffected.</div>
+        </div>
+      </div>
+    </div>
+
+    <table class="fixture-table">
+      <thead><tr><th>Fixture</th><th>PM2 result before</th><th></th><th>PM2 result after</th></tr></thead>
+      <tbody>
+        <tr><td>BRCA1_c.68_69delAG</td><td class="before">NOT_MET</td><td><span class="arrow-inline">→</span></td><td class="after">NOT_APPLICABLE</td></tr>
+        <tr><td>BRCA1_c.5266dup</td><td class="before">NOT_MET</td><td><span class="arrow-inline">→</span></td><td class="after">NOT_APPLICABLE</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Panel 3: BA1/BS1 -->
+  <section class="panel">
+    <h2 class="sr-only">How BRCA1's founder-population BA1 and BS1 evaluators were kept correct through fixture data curation rather than a code change</h2>
+    <div class="panel-head">
+      <div class="panel-num">03 — BA1 / BS1: DATA-CURATION FIX</div>
+      <div class="panel-title">A different kind of "not for free"</div>
+      <div class="panel-sub"><code>ba1.py</code> and <code>bs1.py</code> have zero BRCA1- or batch-31-specific code — no new branch, no new config key. What needed fixing was which number got curated into the fixture, not the evaluator that reads it.</div>
+    </div>
+
+    <div class="af-chart">
+      <div class="af-threshold-line"></div>
+      <div class="af-threshold-label">BS1 threshold — 1 × 10⁻⁴</div>
+      <div class="af-bar-wrap">
+        <div class="af-bar af-bar-raw"></div>
+        <div class="af-value"><b>1.185 × 10⁻⁴</b>raw gnomAD total AF<div class="af-note">185delAG, before correction</div></div>
+      </div>
+      <div class="af-bar-wrap">
+        <div class="af-bar af-bar-corrected"></div>
+        <div class="af-value"><b>Below threshold</b>Grpmax Filtering AF<div class="af-note">excludes Ashkenazi Jewish + other small founder groups</div></div>
+      </div>
+    </div>
+
+    <div class="order-fact">
+      <span class="step-badge">WHY IT MATTERED</span>
+      Both evaluators compare <code>overall_af</code> against the gene's threshold <em>before</em> ever consulting <code>ancestry_specific_max_af</code> — so curating only the ancestry field as founder-excluded, the original plan, would not have worked. The raw total alone already crossed BS1's threshold.
+    </div>
+
+    <div class="quote-block">
+      "BA1/BS1's founder-frequency handling needed the right value curated into <code>overall_af</code> for BRCA1's two Ashkenazi-founder fixtures, not a code or config change — the evaluators themselves were already correct and untouched."
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div>CAPN3/DMD/BRCA1 ACMG/AMP Variant Classifier · github.com/bkhimek/CAPN3-DMD-variant-classifier</div>
+</footer>
+
+</body>
+</html>
