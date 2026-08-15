@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CAPN3/DMD Pipeline — FASTQ QC: Raw vs Trimmed</title>
+<script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+<style>
+  :root { --ink: #1f2430; --muted: #6b7280; --line: #e5e7eb; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 32px 24px 48px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink); background: #fff;
+    max-width: 980px; margin-left: auto; margin-right: auto;
+  }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; letter-spacing: -0.01em; }
+  h2 { font-size: 1.02rem; margin: 30px 0 4px; }
+  p.lede { color: var(--muted); font-size: 0.95rem; max-width: 760px; margin: 0 0 20px; line-height: 1.5; }
+  p.sub { color: var(--muted); font-size: 0.86rem; margin: 0 0 14px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 14px 0 8px; }
+  .card { border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; }
+  .card .n { font-size: 1.4rem; font-weight: 700; }
+  .card .l { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+  #chart1, #chart2 { width: 100%; }
+  .callout {
+    margin-top: 16px; padding: 14px 18px; border: 1px solid var(--line);
+    border-left: 3px solid #1f77b4; border-radius: 6px; background: #f4f8fc;
+    font-size: 0.88rem; line-height: 1.55; color: #2c3e50;
+  }
+  .callout strong { color: var(--ink); }
+  footer { margin-top: 24px; font-size: 0.78rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<h1>FASTQ QC: Raw vs Trimmed — what fastp actually removed, and what changed downstream</h1>
+<p class="lede">
+  <code>FASTQ_QC</code> ran twice: once on <code>EXTRACT_REGION</code>'s raw output, once on
+  <code>TRIM_READS</code>'s (fastp) output — same FastQC + MultiQC modules, same regions, so the
+  before/after is a direct comparison. The question trimming has to answer isn't "did quality go up"
+  (it should, trivially) but "did it throw away real signal along with the noise" — the alignment and
+  benchmark numbers below confirm it didn't.
+</p>
+
+<h2>Read yield and quality — before vs after fastp</h2>
+<div class="cards" id="cards1"></div>
+<div id="chart1"></div>
+
+<div class="callout">
+  <strong>96.65% of reads survived trimming</strong> — 673,098 in, 650,510 out. Of the 22,588 removed,
+  22,424 were low-quality reads and 164 had too many ambiguous (N) bases; none were dropped for being
+  too short, too long, or pure adapter dimer. Separately, 2,188 reads (0.33%) had a genuine Illumina
+  TruSeq adapter fragment trimmed off rather than the whole read discarded. Q20 rose from 96.81% to
+  97.99% and Q30 from 91.83% to 93.54% — the filtering targeted the low-quality tail, not a random slice
+  of the data.
+</div>
+
+<h2>FastQC module outcomes — before vs after</h2>
+<p class="sub">Both runs: 0% module failure rate across FastQC's full check suite. Trimming didn't introduce any new hard failures — only one new WARN.</p>
+<div id="chart2"></div>
+
+<div class="callout">
+  <strong>"Sequence Length Distribution" WARN appears only post-trim</strong> — expected and benign:
+  fastp trims variable amounts per read rather than a fixed number of bases, so post-trim reads no
+  longer have a single uniform length, which is exactly what that FastQC check flags. It is not a
+  quality signal. "Per sequence GC content" WARNs in both runs for the same reason it did before
+  trimming — a scoped two-locus extraction is not expected to match FastQC's whole-genome background
+  GC model.
+  <br /><br />
+  <strong>Downstream, nothing regressed.</strong> Post-trim: BWA_ALIGN mapping rose to 99.997% (properly
+  paired 99.82%), SORT_MARKDUP duplication rate dropped slightly to 0.92%, and HAPPY_BENCHMARK still
+  scored a clean 1.0 / 1.0 recall and precision for both callers and both variant types against the
+  GIAB HG002 truth set (612 truth variants, unchanged) — see the Benchmark Scorecard report.
+</div>
+
+<footer>
+  Source: <code>FASTQ_QC</code> (FastQC + MultiQC) and <code>TRIM_READS</code> (fastp) module output,
+  CAPN3/DMD Variant Calling Pipeline README
+  (<a href="https://github.com/bkhimek/CAPN3-DMD-variant-calling-pipeline/blob/main/README.md">github.com/bkhimek/CAPN3-DMD-variant-calling-pipeline</a>),
+  Status: Complete, all 11 modules verified end-to-end. Companion reports: Cross-Caller Concordance,
+  Benchmark Scorecard, Pipeline Yield.
+</footer>
+
+<script>
+const cardsEl1 = document.getElementById("cards1");
+const cards1 = [
+  { n: "336,549 → 325,255", l: "read pairs (673,098 → 650,510 reads)" },
+  { n: "96.65%", l: "of reads survived trimming" },
+  { n: "148.0 → 146.95 bp", l: "average read length" },
+  { n: "91.83% → 93.54%", l: "Q30 bases" },
+];
+cards1.forEach(c => {
+  const div = document.createElement("div");
+  div.className = "card";
+  div.innerHTML = `<div class="n">${c.n}</div><div class="l">${c.l}</div>`;
+  cardsEl1.appendChild(div);
+});
+
+const groups = ["Q20 rate", "Q30 rate", "R1 duplication", "R2 duplication"];
+const before = [96.81, 91.83, 3.4489, 3.1421];
+const after = [97.99, 93.54, 3.36, 3.22];
+
+const traceBefore = { x: groups, y: before, name: "Raw", type: "bar", marker: { color: "#9e9e9e" }, text: before.map(v => v.toFixed(2) + "%"), textposition: "outside" };
+const traceAfter = { x: groups, y: after, name: "Trimmed", type: "bar", marker: { color: "#1f77b4" }, text: after.map(v => v.toFixed(2) + "%"), textposition: "outside" };
+
+const layout1 = {
+  barmode: "group",
+  height: 420,
+  margin: { l: 50, r: 20, t: 20, b: 60 },
+  yaxis: { title: "Percent", gridcolor: "#f0f1f3", rangemode: "tozero", range: [0, 105] },
+  legend: { orientation: "h", y: 1.14, x: 0 },
+  plot_bgcolor: "#fff", paper_bgcolor: "#fff",
+  font: { family: "-apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif", color: "#1f2430" }
+};
+
+Plotly.newPlot("chart1", [traceBefore, traceAfter], layout1, { responsive: true, displaylogo: false });
+
+const checks = ["Basic Statistics", "Per base seq quality", "Per tile seq quality", "Per seq quality scores",
+  "Per base seq content", "Per seq GC content", "Per base N content", "Seq Length Distribution",
+  "Seq Duplication Levels", "Overrepresented seqs", "Adapter Content"];
+const rawStatus =    [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1];
+const trimmedStatus = [1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1];
+// 1 = PASS, 0 = WARN (0% FAIL either run)
+
+const toZ = (row) => row.map(v => v);
+const heatmapZ = [toZ(rawStatus), toZ(trimmedStatus)];
+
+const trace2 = {
+  z: heatmapZ,
+  x: checks,
+  y: ["Raw", "Trimmed"],
+  type: "heatmap",
+  colorscale: [[0, "#fb8c00"], [1, "#2e7d32"]],
+  showscale: false,
+  xgap: 3, ygap: 3,
+  hovertemplate: "%{y} — %{x}<br>%{customdata}<extra></extra>",
+  customdata: [rawStatus.map(v => v ? "PASS" : "WARN"), trimmedStatus.map(v => v ? "PASS" : "WARN")]
+};
+
+const layout2 = {
+  height: 220,
+  margin: { l: 70, r: 20, t: 10, b: 140 },
+  xaxis: { tickangle: -45, automargin: true },
+  yaxis: { automargin: true },
+  plot_bgcolor: "#fff", paper_bgcolor: "#fff",
+  font: { family: "-apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif", color: "#1f2430", size: 11 }
+};
+
+Plotly.newPlot("chart2", [trace2], layout2, { responsive: true, displaylogo: false });
+</script>
+
+</body>
+</html>
