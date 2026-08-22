@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeT-RM Validation Scorecard — PGx Interpretation Pipeline</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.32.0/plotly.min.js"></script>
+<style>
+  :root {
+    --navy: #2E4057; --navy-d: #1e2d3d; --teal: #14998D; --teal-l: #1ab8aa;
+    --text: #e8edf2; --text-m: #b0bec8; --bg: #111d27; --card: #1c2e3e; --border: #2a3f54;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--text); padding: 2rem 1.5rem 3rem;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; }
+  .eyebrow {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 0.5rem;
+  }
+  h1 { font-size: 1.5rem; margin: 0 0 0.5rem; color: #fff; }
+  .sub { color: var(--text-m); font-size: 0.92rem; max-width: 760px; line-height: 1.6; margin-bottom: 1.75rem; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.25rem 0.5rem; }
+  .stat-row { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.75rem; }
+  .stat {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 0.85rem 1.1rem; text-align: center; min-width: 130px; flex: 1;
+  }
+  .stat b { display: block; font-size: 1.4rem; color: var(--teal-l); }
+  .stat span { font-size: 0.74rem; color: var(--text-m); }
+  .foot { color: var(--text-m); font-size: 0.78rem; margin-top: 1.25rem; line-height: 1.6; }
+  .foot a { color: var(--teal-l); }
+  .legend-note {
+    font-size: 0.78rem; color: var(--text-m); margin-top: 0.75rem; padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Interactive Report · PGx Interpretation Pipeline</div>
+  <h1>GeT-RM Validation Scorecard</h1>
+  <p class="sub">
+    All five gene modules validated against 38 real CDC/GeT-RM reference-material samples — physical DNA samples with independently verified consensus genotypes (Coriell Institute), not synthetic test fixtures. Bars show what actually happened per sample, not just a pass/fail rate: this pipeline is designed to report ambiguity and known scope limits explicitly rather than resolve them by guessing, so "correct" includes samples where the honest answer was "ambiguous" or "out of scope." Hover a segment for the specific Coriell sample IDs.
+  </p>
+
+  <div class="stat-row">
+    <div class="stat"><b>38 / 38</b><span>samples produced the documented, correct behavior</span></div>
+    <div class="stat"><b>30</b><span>exact diplotype/phenotype matches</span></div>
+    <div class="stat"><b>4</b><span>correctly reported as ambiguous (true answer was the primary candidate)</span></div>
+    <div class="stat"><b>4</b><span>real samples confirming a documented scope limit</span></div>
+  </div>
+
+  <div class="card">
+    <div id="chart" style="width:100%; height:430px;"></div>
+    <div class="legend-note">
+      Sources: Pratt VM et al. 2022 (PMID 35850928, TPMT/NUDT15) · Gaedigk A et al. 2024 (PMID 39032822, DPYD) · Pratt VM et al. 2010 (PMID 20889555, CYP2C19) · Pratt VM et al. 2016 (PMID 26621101, SLCO1B1) — all via CDC's public-domain GeT-RM consensus tables / Coriell's GeT-RM PGx Search tool.
+    </div>
+  </div>
+
+  <p class="foot">
+    Full sample-by-sample detail, including the exact genotype comparisons and the reasoning behind every "ambiguous" and "documented limitation" call, is in <code>docs/VALIDATION.md</code> in the <a href="https://github.com/bkhimek/pgx-interpretation-pipeline" target="_blank" rel="noopener">project repository</a>.
+  </p>
+</div>
+
+<script>
+const genes = ["NUDT15", "SLCO1B1", "CYP2C19", "DPYD", "TPMT"];
+
+// [exact, ambiguous-correct, correctly-declined, correct-despite-incomplete, documented-limitation]
+const counts = {
+  exact:            [4, 7, 8, 7, 4],
+  ambiguous:        [0, 2, 0, 0, 2],
+  declined:         [0, 0, 0, 1, 0],
+  incomplete:       [1, 0, 0, 0, 0],
+  limitation:       [2, 0, 0, 0, 0]
+};
+
+const sampleIds = {
+  exact: [
+    "HG00524, NA18992, NA18564, HG00599 (*3/*3 phenotype-level)",
+    "NA07029, NA12336, NA11839, NA17679, NA19819, NA06991, NA10847",
+    "GM12244, GM12273, GM17052, GM09301, GM17248, GM16689, GM16688, GM17203",
+    "HG00185, NA20901, HG00332, NA12248, NA06991, HG00129, NA20362",
+    "HG00133, HG01083, HG00589, NA18855"
+  ],
+  ambiguous: [
+    "",
+    "HG00276, NA06993 (*1/*15 primary, *37/*5 alternative)",
+    "",
+    "",
+    "NA12753, NA15245 (*1/*3A primary, *3B/*3C alternative)"
+  ],
+  declined: ["", "", "", "HG00118 (two independent DPYD loci at once)", ""],
+  incomplete: ["HG00437 (*1/*5 → phenotype correct, *5 invisible to module)", "", "", "", ""],
+  limitation: ["NA19079 (*2/*5), HG01359 (*1/*4) — module's documented one-locus scope exposed", "", "", "", ""]
+};
+
+const series = [
+  { key: "exact", name: "Exact match", color: "#14998D" },
+  { key: "ambiguous", name: "Correctly reported ambiguous", color: "#5AB6E8" },
+  { key: "declined", name: "Correctly declined (multi-locus, out of scope)", color: "#C9A24B" },
+  { key: "incomplete", name: "Phenotype correct, diplotype incomplete", color: "#E8955A" },
+  { key: "limitation", name: "Documented scope limitation confirmed", color: "#9B7FD1" }
+];
+
+const traces = series.map(s => ({
+  x: counts[s.key],
+  y: genes,
+  name: s.name,
+  type: "bar",
+  orientation: "h",
+  marker: { color: s.color },
+  customdata: sampleIds[s.key],
+  hovertemplate: "<b>%{y}</b> — " + s.name + ": <b>%{x}</b><br>%{customdata}<extra></extra>"
+}));
+
+Plotly.newPlot("chart", traces, {
+  barmode: "stack",
+  paper_bgcolor: "rgba(0,0,0,0)",
+  plot_bgcolor: "rgba(0,0,0,0)",
+  font: { color: "#e8edf2", family: "Segoe UI, sans-serif", size: 12 },
+  margin: { l: 90, r: 20, t: 10, b: 40 },
+  xaxis: { title: "Reference samples", gridcolor: "#2a3f54", zeroline: false },
+  yaxis: { automargin: true },
+  legend: { orientation: "h", y: -0.22, font: { size: 11 }, traceorder: "normal" },
+  hoverlabel: { bgcolor: "#1c2e3e", bordercolor: "#2a3f54", font: { color: "#e8edf2" } }
+}, { responsive: true, displayModeBar: false });
+</script>
+</body>
+</html>

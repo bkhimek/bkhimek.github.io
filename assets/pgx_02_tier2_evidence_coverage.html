@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tier 2 Evidence Coverage — PGx Interpretation Pipeline</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.32.0/plotly.min.js"></script>
+<style>
+  :root {
+    --navy: #2E4057; --teal: #14998D; --teal-l: #1ab8aa;
+    --text: #e8edf2; --text-m: #b0bec8; --bg: #111d27; --card: #1c2e3e; --border: #2a3f54;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--text); padding: 2rem 1.5rem 3rem;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; }
+  .eyebrow {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 0.5rem;
+  }
+  h1 { font-size: 1.5rem; margin: 0 0 0.5rem; color: #fff; }
+  .sub { color: var(--text-m); font-size: 0.92rem; max-width: 760px; line-height: 1.6; margin-bottom: 1.75rem; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; }
+  .callout {
+    background: rgba(20,153,141,0.08); border: 1px solid rgba(20,153,141,0.3); border-radius: 8px;
+    padding: 0.9rem 1.1rem; font-size: 0.85rem; color: var(--text-m); margin-top: 1.25rem; line-height: 1.6;
+  }
+  .callout b { color: var(--teal-l); }
+  .foot { color: var(--text-m); font-size: 0.78rem; margin-top: 1.25rem; line-height: 1.6; }
+  .foot a { color: var(--teal-l); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Interactive Report · PGx Interpretation Pipeline</div>
+  <h1>Tier 2 Evidence Coverage — Gene → Drug Recommendation Map</h1>
+  <p class="sub">
+    Every recommendation traces to a specific, versioned CPIC/ClinPGx guideline — this diagram shows which of the five genes feed which of the seven drug recommendations this pipeline currently implements, including its two structurally distinct extension patterns: one gene driving more than one drug recommendation, and a recommendation computed jointly from two genes' phenotypes at once. Click a node to trace its flows; hover a link for the underlying guideline table.
+  </p>
+
+  <div class="card">
+    <div id="chart" style="width:100%; height:480px;"></div>
+  </div>
+
+  <div class="callout">
+    <b>Two extension patterns proven here, not just five separate lookups.</b> CYP2C19 is this project's first gene with more than one drug pairing — the same phenotype implies opposite clinical urgency for clopidogrel (activation) versus voriconazole (clearance). TPMT and NUDT15 are this project's first <i>compound</i> recommendation: when both genes' phenotypes are available together, <code>evidence.recommend_compound_thiopurine()</code> uses CPIC's joint dosing tables instead of either gene's solo table — selectable per drug via <code>cli.py --thiopurine-drug</code>.
+  </div>
+
+  <p class="foot">
+    See <code>pgx_interpreter/evidence.py</code> and <code>docs/GENE_SCOPE.md</code> in the <a href="https://github.com/bkhimek/pgx-interpretation-pipeline" target="_blank" rel="noopener">project repository</a> for the full guideline citations and versioning behind every link below.
+  </p>
+</div>
+
+<script>
+const labels = [
+  "TPMT", "NUDT15", "DPYD", "SLCO1B1", "CYP2C19",                 // gene nodes 0-4
+  "azathioprine", "mercaptopurine", "thioguanine",                // thiopurines 5-7
+  "fluorouracil", "simvastatin", "clopidogrel", "voriconazole"    // 8-11
+];
+
+const nodeColor = [
+  "#14998D", "#14998D", "#14998D", "#14998D", "#14998D",
+  "#5AB6E8", "#5AB6E8", "#5AB6E8",
+  "#C9A24B", "#E8955A", "#9B7FD1", "#9B7FD1"
+];
+
+// source, target, value (value = illustrative weight, not sample counts)
+const links = {
+  source: [0,0,0, 1,1,1, 2, 3, 4,4],
+  target: [5,6,7, 5,6,7, 8, 9, 10,11],
+  value:  [3,3,3, 3,3,3, 4, 4, 4,4],
+  color: [
+    "rgba(20,153,141,0.35)","rgba(20,153,141,0.35)","rgba(20,153,141,0.35)",
+    "rgba(20,153,141,0.35)","rgba(20,153,141,0.35)","rgba(20,153,141,0.35)",
+    "rgba(201,162,75,0.35)",
+    "rgba(232,149,90,0.35)",
+    "rgba(155,127,209,0.35)","rgba(155,127,209,0.35)"
+  ],
+  label: [
+    "TPMT solo azathioprine table (CPIC Table 4)",
+    "TPMT solo mercaptopurine table (CPIC Table 2)",
+    "TPMT solo thioguanine table (CPIC Table 3)",
+    "NUDT15 solo azathioprine table (CPIC Table 4)",
+    "NUDT15 solo mercaptopurine table (CPIC Table 2)",
+    "NUDT15 solo thioguanine table (CPIC Table 3)",
+    "Compound TPMT+NUDT15 table active when both genes present",
+    "DPYD fluoropyrimidine toxicity guidance (CPIC)",
+    "SLCO1B1 statin-induced myopathy guidance (CPIC)",
+    "CYP2C19 antiplatelet activation guidance (CPIC)",
+    "CYP2C19 antifungal clearance guidance (CPIC)"
+  ]
+};
+
+Plotly.newPlot("chart", [{
+  type: "sankey",
+  orientation: "h",
+  arrangement: "snap",
+  node: {
+    pad: 18,
+    thickness: 16,
+    line: { color: "#111d27", width: 1 },
+    label: labels,
+    color: nodeColor,
+    hovertemplate: "<b>%{label}</b><extra></extra>"
+  },
+  link: {
+    source: links.source,
+    target: links.target,
+    value: links.value,
+    color: links.color,
+    hovertemplate: "%{customdata}<extra></extra>",
+    customdata: links.label
+  }
+}], {
+  paper_bgcolor: "rgba(0,0,0,0)",
+  plot_bgcolor: "rgba(0,0,0,0)",
+  font: { color: "#e8edf2", family: "Segoe UI, sans-serif", size: 13 },
+  margin: { l: 10, r: 10, t: 10, b: 10 }
+}, { responsive: true, displayModeBar: false });
+</script>
+</body>
+</html>
