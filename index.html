@@ -1616,6 +1616,188 @@
         </div>
       </div>
 
+      <!-- Project 8 -->
+      <div class="project-card">
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div>
+              <div class="card-org">COLO829 / COLO829BL</div>
+              <div class="card-title">Somatic Genomics Pipeline</div>
+            </div>
+            <a class="card-github" href="https://github.com/bkhimek/COLO829-somatic-pipeline" target="_blank" rel="noopener">
+              <svg class="icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              GitHub
+            </a>
+          </div>
+          <p class="card-desc">
+            Tumour-normal somatic variant calling pipeline built around GATK Mutect2, benchmarked against a real published truth set for the COLO829/COLO829BL melanoma reference cell line pair. Reads are QC'd and aligned before contamination estimation and an interval-sharded Mutect2 call set — rebuilt as a genome-scale scatter/gather architecture after an unsharded run hit a real memory ceiling — is benchmarked with som.py and extended with CNVkit copy-number calling. A final module annotates PASS calls with SnpEff and queries CIViC's live clinical-evidence API, carrying a called variant through to real oncology evidence rather than stopping at a filtered VCF. Run against real ENA-extracted sequencing reads, the pipeline independently recovered three of COLO829's own documented driver mutations — BRAF V600E, a CDKN2A frameshift, and a UV-signature TERT promoter mutation — with zero false positives against the benchmark truth set.
+          </p>
+          <div class="card-metrics">
+            <div class="metric"><b>8/8</b> PASS calls confirmed true positive (zero false positives, NYGC truth set)</div>
+            <div class="metric"><b>3</b> real driver mutations independently matched: BRAF V600E · CDKN2A · TERT</div>
+            <div class="metric"><b>132</b> real CIViC evidence rows retrieved live for BRAF V600E</div>
+            <div class="metric">Interval-sharded Mutect2 — genome-scale scatter/gather rebuilt after a real OOM</div>
+            <div class="metric">Real ENA-extracted tumour/normal reads (not synthetic), HiSeq X Ten WGS</div>
+            <div class="metric">som.py benchmarking + CNVkit copy-number calling alongside variant calling</div>
+            <div class="metric">Two Nextflow profiles: 8-gene melanoma driver panel + full genome</div>
+          </div>
+          <div class="card-tags">
+            <span class="tag">Nextflow DSL2</span>
+            <span class="tag">GATK Mutect2</span>
+            <span class="tag">CNVkit</span>
+            <span class="tag">SnpEff</span>
+            <span class="tag">CIViC</span>
+            <span class="tag">som.py</span>
+            <span class="tag">BWA-MEM2</span>
+            <span class="tag">Docker</span>
+            <span class="tag">Python</span>
+          </div>
+          <details class="diagram-toggle">
+            <summary>View Workflow Diagram</summary>
+            <div class="diagram-wrap">
+<svg viewBox="0 0 860 660" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" role="img">
+  <title>COLO829 Somatic Genomics Pipeline Workflow</title>
+  <desc>Tumour-normal reads through QC, alignment and dedup, then contamination estimation and interval-sharded Mutect2 calling to a PASS-call gate, forking into copy-number calling, truth-set benchmarking, and SnpEff/CIViC clinical-evidence annotation, converging on the real-data milestone.</desc>
+
+  <defs>
+    <marker id="arr-co829" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#2E4057"/>
+    </marker>
+    <marker id="arr2-co829" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#555"/>
+    </marker>
+  </defs>
+
+  <rect width="860" height="660" fill="#F4F6F8" rx="10"/>
+
+  <text x="430" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E4057">COLO829 Somatic Genomics Pipeline</text>
+  <text x="430" y="46" text-anchor="middle" font-size="10" fill="#777">BRAF · CDKN2A · TERT drivers confirmed on real data · Nextflow DSL2 · Docker</text>
+
+  <!-- INPUT -->
+  <rect x="280" y="58" width="300" height="40" rx="6" fill="#2E4057"/>
+  <text x="430" y="74" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Real tumour + normal FASTQ (ENA)</text>
+  <text x="430" y="89" text-anchor="middle" font-size="9" fill="#A8BFD0">COLO829 / COLO829BL · HiSeq X Ten WGS, gene-panel extracted</text>
+  <line x1="430" y1="98" x2="430" y2="114" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-co829)"/>
+
+  <!-- FASTQC -->
+  <rect x="290" y="114" width="280" height="36" rx="5" fill="#2E4057"/>
+  <text x="430" y="130" text-anchor="middle" font-size="11" font-weight="bold" fill="white">FASTQC_MULTIQC</text>
+  <text x="430" y="143" text-anchor="middle" font-size="9" fill="#A8BFD0">raw QC — tumour + normal</text>
+  <line x1="430" y1="150" x2="430" y2="166" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-co829)"/>
+
+  <!-- ALIGN -->
+  <rect x="290" y="166" width="280" height="36" rx="5" fill="#2E4057"/>
+  <text x="430" y="182" text-anchor="middle" font-size="10" font-weight="bold" fill="white">BWA_MEM2_ALIGN + SORT_MARKDUP</text>
+  <text x="430" y="195" text-anchor="middle" font-size="9" fill="#A8BFD0">dedup → analysis-ready BAMs</text>
+  <line x1="430" y1="202" x2="430" y2="218" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-co829)"/>
+
+  <!-- CONTAMINATION -->
+  <rect x="290" y="218" width="280" height="36" rx="5" fill="#2E4057"/>
+  <text x="430" y="234" text-anchor="middle" font-size="9.5" font-weight="bold" fill="white">GET_PILEUP_SUMMARIES + CALCULATE_CONTAMINATION</text>
+  <text x="430" y="247" text-anchor="middle" font-size="9" fill="#A8BFD0">cross-sample contamination estimate</text>
+  <line x1="430" y1="254" x2="430" y2="270" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-co829)"/>
+
+  <!-- MUTECT2 -->
+  <rect x="290" y="270" width="280" height="36" rx="5" fill="#2E4057"/>
+  <text x="430" y="286" text-anchor="middle" font-size="10" font-weight="bold" fill="white">SPLIT_INTERVALS → N × MUTECT2 → MERGE</text>
+  <text x="430" y="299" text-anchor="middle" font-size="8.5" fill="#A8BFD0">interval scatter/gather, rebuilt after single-call OOM</text>
+  <line x1="430" y1="306" x2="430" y2="322" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-co829)"/>
+
+  <!-- GATE -->
+  <rect x="230" y="322" width="400" height="40" rx="6" fill="#1A6B45"/>
+  <text x="430" y="341" text-anchor="middle" font-size="12" font-weight="bold" fill="white">FILTER_MUTECT_CALLS — 8 PASS calls</text>
+  <text x="430" y="356" text-anchor="middle" font-size="9" fill="#A8D5B8">of 276 candidate records · gene-panel scope (dev profile)</text>
+
+  <!-- Fork into 3 -->
+  <line x1="430" y1="362" x2="430" y2="375" stroke="#2E4057" stroke-width="1.5"/>
+  <line x1="155" y1="375" x2="705" y2="375" stroke="#2E4057" stroke-width="1.5"/>
+  <line x1="155" y1="375" x2="155" y2="392" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-co829)"/>
+  <line x1="430" y1="375" x2="430" y2="392" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-co829)"/>
+  <line x1="705" y1="375" x2="705" y2="392" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-co829)"/>
+
+  <!-- Stream headers -->
+  <rect x="40" y="392" width="230" height="22" rx="4" fill="#D8E4EE"/>
+  <text x="155" y="407" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">① Copy-Number Calling</text>
+
+  <rect x="315" y="392" width="230" height="22" rx="4" fill="#D8E4EE"/>
+  <text x="430" y="407" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">② Truth-Set Benchmarking</text>
+
+  <rect x="590" y="392" width="230" height="22" rx="4" fill="#D8E4EE"/>
+  <text x="705" y="407" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">③ Oncology-Evidence Annotation</text>
+
+  <!-- STREAM 1: CNVkit -->
+  <rect x="40" y="414" width="230" height="36" rx="5" fill="#2E4057"/>
+  <text x="155" y="430" text-anchor="middle" font-size="10" font-weight="bold" fill="white">CNVKIT_BATCH → CNVKIT_CALL</text>
+  <text x="155" y="443" text-anchor="middle" font-size="8.5" fill="#A8BFD0">tumour vs. normal coverage ratio</text>
+  <line x1="155" y1="450" x2="155" y2="464" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-co829)"/>
+
+  <rect x="40" y="464" width="230" height="40" rx="5" fill="#1A6B45"/>
+  <text x="155" y="481" text-anchor="middle" font-size="10.5" font-weight="bold" fill="white">Genome-wide CN segments</text>
+  <text x="155" y="495" text-anchor="middle" font-size="8" fill="#A8D5B8">panel-only coverage — disclosed scope limit</text>
+
+  <!-- STREAM 2: Benchmarking -->
+  <rect x="315" y="414" width="230" height="36" rx="5" fill="#2E4057"/>
+  <text x="430" y="430" text-anchor="middle" font-size="11" font-weight="bold" fill="white">SOMPY_BENCHMARK</text>
+  <text x="430" y="443" text-anchor="middle" font-size="9" fill="#A8BFD0">vs. NYGC published truth set</text>
+  <line x1="430" y1="450" x2="430" y2="464" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-co829)"/>
+
+  <rect x="315" y="464" width="230" height="40" rx="5" fill="#1A6B45"/>
+  <text x="430" y="481" text-anchor="middle" font-size="10.5" font-weight="bold" fill="white">8/8 PASS calls = true positive</text>
+  <text x="430" y="495" text-anchor="middle" font-size="8" fill="#A8D5B8">0 false positives · precision 1.0, all classes</text>
+
+  <!-- STREAM 3: Annotation -->
+  <rect x="590" y="414" width="230" height="36" rx="5" fill="#2E4057"/>
+  <text x="705" y="430" text-anchor="middle" font-size="9.5" font-weight="bold" fill="white">SNPEFF_ANNOTATE → CIVIC_ANNOTATE</text>
+  <text x="705" y="443" text-anchor="middle" font-size="8" fill="#A8BFD0">protein HGVS.p → live CIViC query</text>
+  <line x1="705" y1="450" x2="705" y2="464" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-co829)"/>
+
+  <rect x="590" y="464" width="230" height="40" rx="5" fill="#1A6B45"/>
+  <text x="705" y="481" text-anchor="middle" font-size="10.5" font-weight="bold" fill="white">132 CIViC evidence rows</text>
+  <text x="705" y="495" text-anchor="middle" font-size="8" fill="#A8D5B8">BRAF V600E · real curated clinical evidence</text>
+
+  <!-- Converge -->
+  <line x1="155" y1="504" x2="155" y2="540" stroke="#555" stroke-width="1.5"/>
+  <line x1="155" y1="540" x2="360" y2="540" stroke="#555" stroke-width="1.5" marker-end="url(#arr2-co829)"/>
+  <line x1="430" y1="504" x2="430" y2="554" stroke="#555" stroke-width="1.5" marker-end="url(#arr2-co829)"/>
+  <line x1="705" y1="504" x2="705" y2="540" stroke="#555" stroke-width="1.5"/>
+  <line x1="705" y1="540" x2="500" y2="540" stroke="#555" stroke-width="1.5" marker-end="url(#arr2-co829)"/>
+
+  <!-- Final milestone -->
+  <rect x="230" y="554" width="400" height="48" rx="7" fill="#6B3FA0"/>
+  <text x="430" y="573" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Real-data milestone</text>
+  <text x="430" y="589" text-anchor="middle" font-size="8.5" fill="#D8C4F0">BRAF V600E · CDKN2A · TERT — cross-checked against Cellosaurus &amp; OncoKB</text>
+
+  <!-- Legend -->
+  <rect x="140" y="624" width="12" height="10" rx="2" fill="#2E4057"/>
+  <text x="156" y="633" font-size="9" fill="#555">Analysis step</text>
+  <rect x="280" y="624" width="12" height="10" rx="2" fill="#1A6B45"/>
+  <text x="296" y="633" font-size="9" fill="#555">Key output</text>
+  <rect x="400" y="624" width="12" height="10" rx="2" fill="#6B3FA0"/>
+  <text x="416" y="633" font-size="9" fill="#555">Real-data milestone</text>
+</svg>
+            </div>
+          </details>
+          <div class="card-reports">
+            <div class="card-reports-label">Interactive Reports</div>
+            <div class="card-reports-links">
+              <a class="btn-report" href="assets/colo829_01_variant_validation_scorecard.html" target="_blank" rel="noopener">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+                Variant Validation Scorecard
+              </a>
+              <a class="btn-report" href="assets/colo829_02_driver_mutation_af_profile.html" target="_blank" rel="noopener">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
+                Driver Mutation AF Profile
+              </a>
+              <a class="btn-report" href="assets/colo829_03_civic_evidence_coverage.html" target="_blank" rel="noopener">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm1 15h-2v-2h2zm0-4h-2V7h2z"/></svg>
+                CIViC Evidence Coverage
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -1681,6 +1863,17 @@
           <span class="skill-pill">PharmVar</span>
           <span class="skill-pill">CPIC/ClinPGx</span>
           <span class="skill-pill">GeT-RM benchmarking</span>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <div class="skill-group-title">Cancer / Somatic Genomics</div>
+        <div class="skill-pills">
+          <span class="skill-pill">GATK Mutect2</span>
+          <span class="skill-pill">CNVkit</span>
+          <span class="skill-pill">SnpEff</span>
+          <span class="skill-pill">CIViC</span>
+          <span class="skill-pill">som.py</span>
         </div>
       </div>
 
