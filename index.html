@@ -752,64 +752,65 @@
         </div>
       </div>
 
-      <!-- Project: Diagnostic Validation -->
+      <!-- Project: C. trachomatis Multiplex Assay Design -->
       <div class="project-card">
         <div class="card-accent"></div>
         <div class="card-body">
           <div class="card-top">
             <div>
-              <div class="card-org">Diagnostic Validation · Regulatory Genomics</div>
-              <div class="card-title">Inclusivity / Exclusivity Pipeline</div>
+              <div class="card-org">Chlamydia trachomatis · Assay Design</div>
+              <div class="card-title">Validated Workflow for Diagnostic Target Selection</div>
             </div>
             <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-              <a class="card-github" href="https://github.com/bkhimek/N_gonorrhoeae-diagnostic-pipeline" target="_blank" rel="noopener">
+              <a class="card-github" href="https://github.com/bkhimek/C_trachomatis_inclusivity_exclusivity" target="_blank" rel="noopener">
                 <svg class="icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-                GitHub · N. gonorrhoeae
+                GitHub · C. trachomatis
               </a>
             </div>
           </div>
           <div style="display:flex; gap:0.4rem; flex-wrap:wrap; margin-bottom:1rem;">
-            <span style="background:rgba(20,153,141,0.15); border:1px solid var(--teal); border-radius:4px; padding:0.25em 0.65em; font-size:0.72rem; font-weight:700; color:var(--teal-l); letter-spacing:0.04em;">Regulatory</span>
-            <span style="background:rgba(20,153,141,0.15); border:1px solid var(--teal); border-radius:4px; padding:0.25em 0.65em; font-size:0.72rem; font-weight:700; color:var(--teal-l); letter-spacing:0.04em;">FDA 510(k)</span>
-            <span style="background:rgba(20,153,141,0.15); border:1px solid var(--teal); border-radius:4px; padding:0.25em 0.65em; font-size:0.72rem; font-weight:700; color:var(--teal-l); letter-spacing:0.04em;">CE-IVDR</span>
+            <span style="background:rgba(20,153,141,0.15); border:1px solid var(--teal); border-radius:4px; padding:0.25em 0.65em; font-size:0.72rem; font-weight:700; color:var(--teal-l); letter-spacing:0.04em;">Multiplex qPCR/TaqMan</span>
+            <span style="background:rgba(20,153,141,0.15); border:1px solid var(--teal); border-radius:4px; padding:0.25em 0.65em; font-size:0.72rem; font-weight:700; color:var(--teal-l); letter-spacing:0.04em;">In-silico Design</span>
           </div>
           <p class="card-desc">
-            Automated, containerised Nextflow pipeline producing regulatory-grade evidence of diagnostic target specificity — directly usable in FDA 510(k) and CE-IVDR submissions. The pipeline is pathogen-agnostic: supply annotated genomes and an exclusivity database, and it outputs per-gene PASS/REJECT decisions with full traceability.
+            Reproducible target-selection workflow for a multiplex qPCR/TaqMan assay for <em>C. trachomatis</em>. Genome QC and tiering are performed before target discovery, ensuring that consensus sequences and inclusivity assessments are built only from high-confidence assemblies. Four chromosomal loci (mutL, aroB, PSD2, and group_306) were independently validated as candidate targets alongside the multicopy diagnostic plasmid, which provides the higher-sensitivity target. The proposed duplex pairs one chromosomal locus with the plasmid target, combining genomic redundancy with sensitivity.
+          </p>
+          <p class="card-desc">
+            The workflow integrates pan-genome analysis, sequence conservation and inclusivity screening, exclusivity BLAST, quantitative Tm-gap assessment, and three-way structural QC of primer–probe sets, producing a fully screened candidate panel for downstream experimental validation.
           </p>
           <div class="card-metrics" style="margin-bottom:0.75rem;">
             <div style="width:100%; font-size:0.78rem; font-weight:600; color:var(--text-m); margin-bottom:0.4rem;">
-              <em>S. pyogenes</em> — <a href="https://github.com/bkhimek/diagnostic-inclusivity-exclusivity-pipeline" target="_blank" rel="noopener" style="color:var(--teal); text-decoration:none;">diagnostic-inclusivity-exclusivity-pipeline</a>
+              <em>Chromosomal targets</em> — mutL · aroB · PSD2 · group_306
             </div>
-            <div class="metric"><b>375</b> genomes (inclusivity)</div>
-            <div class="metric"><b>1,307</b>-genome exclusivity panel</div>
-            <div class="metric"><b>463/494</b> genes passed (94%)</div>
-            <div class="metric">&gt;<b>27%</b> divergence from nearest neighbour</div>
+            <div class="metric"><b>125</b> genomes (97 primary / 10 review / 18 excluded)</div>
+            <div class="metric"><b>874</b> core genes (Panaroo pan-genome)</div>
+            <div class="metric"><b>692/874</b> exclusivity-clean</div>
+            <div class="metric"><b>4</b> targets · <b>7</b> oligo sets</div>
           </div>
           <div class="card-metrics">
             <div style="width:100%; font-size:0.78rem; font-weight:600; color:var(--text-m); margin-bottom:0.4rem;">
-              <em>N. gonorrhoeae</em> — <a href="https://github.com/bkhimek/N_gonorrhoeae-diagnostic-pipeline" target="_blank" rel="noopener" style="color:var(--teal); text-decoration:none;">N_gonorrhoeae-diagnostic-pipeline</a>
+              <em>Plasmid target</em> — Primary + Reserve windows
             </div>
-            <div class="metric"><b>283</b> genomes assessed</div>
-            <div class="metric"><b>polA</b> primary target (910 bp unique region)</div>
-            <div class="metric"><b>norR</b> primary target (713 bp unique region)</div>
-            <div class="metric">Interval-merging algorithm</div>
+            <div class="metric"><b>34</b> plasmid-bearing genomes</div>
+            <div class="metric">Circular-alignment artifact caught &amp; fixed (7,606 bp)</div>
+            <div class="metric"><b>2</b> candidate windows · <b>6</b> oligos</div>
+            <div class="metric">Tm gap <b>6.08–8.07°C</b> across all 9 sets (≥5°C floor)</div>
           </div>
           <div class="card-tags" style="margin-top:1.25rem;">
-            <span class="tag">Nextflow DSL2</span>
             <span class="tag">Panaroo</span>
-            <span class="tag">BLAST+</span>
             <span class="tag">MAFFT</span>
-            <span class="tag">Primer3</span>
-            <span class="tag">Interval merging</span>
-            <span class="tag">Docker</span>
+            <span class="tag">fastANI</span>
+            <span class="tag">primer3-py</span>
+            <span class="tag">NCBI BLAST</span>
+            <span class="tag">Three-way dimer QC</span>
             <span class="tag">Python</span>
           </div>
           <details class="diagram-toggle">
             <summary>View Workflow Diagram</summary>
             <div class="diagram-wrap">
               <svg viewBox="0 0 860 600" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" role="img">
-  <title>Diagnostic Validation Pipeline Workflow</title>
-  <desc>Two parallel streams — N. gonorrhoeae (283 genomes) and S. pyogenes (375 genomes) — each processed through Prokka, Panaroo, inclusivity filter, exclusivity BLAST, and interval merging to yield validated diagnostic targets.</desc>
+  <title>C. trachomatis Multiplex Assay Design Workflow</title>
+  <desc>Two parallel streams from the same organism — chromosomal targets (125 genomes) and the diagnostic plasmid (34 genomes) — each processed through pan-genome/consensus analysis, exclusivity screening, Primer3 design, and three-way structural QC, converging into one locked multiplex panel.</desc>
 
   <defs>
     <marker id="arr-dv" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
@@ -824,88 +825,88 @@
   <rect width="860" height="600" fill="#F4F6F8" rx="10"/>
 
   <!-- Title -->
-  <text x="430" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E4057">Diagnostic Validation Pipeline</text>
-  <text x="430" y="46" text-anchor="middle" font-size="10" fill="#777">Inclusivity · Exclusivity · Interval Merging · nt_prok database · Primer3</text>
+  <text x="430" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E4057">C. trachomatis Multiplex Assay Design</text>
+  <text x="430" y="46" text-anchor="middle" font-size="10" fill="#777">Inclusivity · Exclusivity · Tm-Gap Rule · Three-Way Dimer QC · Primer3</text>
 
   <!-- Shared method label -->
-  <text x="430" y="70" text-anchor="middle" font-size="9" fill="#999">Same methodology applied to two species panels</text>
+  <text x="430" y="70" text-anchor="middle" font-size="9" fill="#999">Two genomic compartments, one QC standard</text>
 
   <!-- Stream headers -->
   <rect x="75" y="82" width="320" height="22" rx="4" fill="#D8E4EE"/>
-  <text x="235" y="97" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">① N. gonorrhoeae Panel</text>
+  <text x="235" y="97" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">① Chromosomal Targets</text>
 
   <rect x="465" y="82" width="320" height="22" rx="4" fill="#D8E4EE"/>
-  <text x="625" y="97" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">② S. pyogenes Panel</text>
+  <text x="625" y="97" text-anchor="middle" font-size="9" font-weight="bold" fill="#2E4057">② Plasmid Target</text>
 
-  <!-- STREAM 1: N. gonorrhoeae -->
+  <!-- STREAM 1: Chromosomal -->
   <rect x="75" y="112" width="320" height="36" rx="6" fill="#2E4057"/>
-  <text x="235" y="128" text-anchor="middle" font-size="12" font-weight="bold" fill="white">283 N. gonorrhoeae Genomes</text>
-  <text x="235" y="141" text-anchor="middle" font-size="9" fill="#A8BFD0">NCBI RefSeq · FA1090 reference</text>
+  <text x="235" y="128" text-anchor="middle" font-size="12" font-weight="bold" fill="white">125 C. trachomatis Genomes</text>
+  <text x="235" y="141" text-anchor="middle" font-size="9" fill="#A8BFD0">NCBI RefSeq · genome-QC tiered</text>
   <line x1="235" y1="148" x2="235" y2="162" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
 
   <rect x="75" y="162" width="320" height="36" rx="5" fill="#2E4057"/>
-  <text x="235" y="178" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Prokka Annotation</text>
-  <text x="235" y="191" text-anchor="middle" font-size="9" fill="#A8BFD0">GFF · protein FASTA · CDS features</text>
+  <text x="235" y="178" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Genome QC &amp; Tiering</text>
+  <text x="235" y="191" text-anchor="middle" font-size="9" fill="#A8BFD0">97 primary · 10 quality-review · 18 excluded</text>
   <line x1="235" y1="198" x2="235" y2="212" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
 
   <rect x="75" y="212" width="320" height="36" rx="5" fill="#2E4057"/>
   <text x="235" y="228" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Panaroo Pan-genome</text>
-  <text x="235" y="241" text-anchor="middle" font-size="9" fill="#A8BFD0">Core genes ≥99% presence</text>
+  <text x="235" y="241" text-anchor="middle" font-size="9" fill="#A8BFD0">904 clusters → 874 core (≥99%)</text>
   <line x1="235" y1="248" x2="235" y2="262" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
 
   <rect x="75" y="262" width="320" height="36" rx="5" fill="#2E4057"/>
-  <text x="235" y="278" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Inclusivity Filter</text>
-  <text x="235" y="291" text-anchor="middle" font-size="9" fill="#A8BFD0">≥98% intra-species identity · all 283 strains</text>
+  <text x="235" y="278" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Exclusivity BLAST</text>
+  <text x="235" y="291" text-anchor="middle" font-size="9" fill="#A8BFD0">692/874 core genes exclusivity-clean</text>
   <line x1="235" y1="298" x2="235" y2="312" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
 
   <rect x="75" y="312" width="320" height="36" rx="5" fill="#2E4057"/>
-  <text x="235" y="328" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Exclusivity BLAST</text>
-  <text x="235" y="341" text-anchor="middle" font-size="9" fill="#A8BFD0">vs. nt_prok · non-Neisseria exclusivity panel</text>
+  <text x="235" y="328" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Primer3 Design</text>
+  <text x="235" y="341" text-anchor="middle" font-size="9" fill="#A8BFD0">Tm-gap ≥5°C rule · real-computed Tm</text>
   <line x1="235" y1="348" x2="235" y2="362" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
 
   <rect x="75" y="362" width="320" height="36" rx="5" fill="#2E4057"/>
-  <text x="235" y="378" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Interval Merging</text>
-  <text x="235" y="391" text-anchor="middle" font-size="9" fill="#A8BFD0">Unique region detection · Primer3</text>
+  <text x="235" y="378" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Three-Way Dimer + Structure QC</text>
+  <text x="235" y="391" text-anchor="middle" font-size="9" fill="#A8BFD0">primer3-py hairpin/homo/heterodimer</text>
   <line x1="235" y1="398" x2="235" y2="412" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
 
   <rect x="75" y="412" width="320" height="36" rx="5" fill="#1A6B45"/>
-  <text x="235" y="428" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Targets: polA · norR</text>
-  <text x="235" y="441" text-anchor="middle" font-size="9" fill="#A8D5B8">Species-specific · 150–400 bp amplicons</text>
+  <text x="235" y="428" text-anchor="middle" font-size="11" font-weight="bold" fill="white">mutL · aroB · PSD2 · group_306</text>
+  <text x="235" y="441" text-anchor="middle" font-size="9" fill="#A8D5B8">4 targets · 7 oligo sets</text>
 
-  <!-- STREAM 2: S. pyogenes -->
+  <!-- STREAM 2: Plasmid -->
   <rect x="465" y="112" width="320" height="36" rx="6" fill="#2E4057"/>
-  <text x="625" y="128" text-anchor="middle" font-size="12" font-weight="bold" fill="white">375 S. pyogenes Genomes</text>
-  <text x="625" y="141" text-anchor="middle" font-size="9" fill="#A8BFD0">NCBI RefSeq · complete assemblies</text>
+  <text x="625" y="128" text-anchor="middle" font-size="12" font-weight="bold" fill="white">34 Plasmid-Bearing Genomes</text>
+  <text x="625" y="141" text-anchor="middle" font-size="9" fill="#A8BFD0">Circular contig, 7,415–7,510 bp</text>
   <line x1="625" y1="148" x2="625" y2="162" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
 
   <rect x="465" y="162" width="320" height="36" rx="5" fill="#2E4057"/>
-  <text x="625" y="178" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Prokka Annotation</text>
-  <text x="625" y="191" text-anchor="middle" font-size="9" fill="#A8BFD0">GFF · protein FASTA · CDS features</text>
+  <text x="625" y="178" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Rotation-Corrected Alignment</text>
+  <text x="625" y="191" text-anchor="middle" font-size="9" fill="#A8BFD0">Fixed 2×-length MAFFT artifact</text>
   <line x1="625" y1="198" x2="625" y2="212" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
 
   <rect x="465" y="212" width="320" height="36" rx="5" fill="#2E4057"/>
-  <text x="625" y="228" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Panaroo Pan-genome</text>
-  <text x="625" y="241" text-anchor="middle" font-size="9" fill="#A8BFD0">Core genes ≥99% presence</text>
+  <text x="625" y="228" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Consensus Build</text>
+  <text x="625" y="241" text-anchor="middle" font-size="9" fill="#A8BFD0">7,606 bp corrected consensus</text>
   <line x1="625" y1="248" x2="625" y2="262" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
 
   <rect x="465" y="262" width="320" height="36" rx="5" fill="#2E4057"/>
-  <text x="625" y="278" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Inclusivity Filter</text>
-  <text x="625" y="291" text-anchor="middle" font-size="9" fill="#A8BFD0">≥98% intra-species identity · all 375 strains</text>
+  <text x="625" y="278" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Primer3 Design</text>
+  <text x="625" y="291" text-anchor="middle" font-size="9" fill="#A8BFD0">Same Tm-gap ≥5°C standard</text>
   <line x1="625" y1="298" x2="625" y2="312" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
 
   <rect x="465" y="312" width="320" height="36" rx="5" fill="#2E4057"/>
-  <text x="625" y="328" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Exclusivity BLAST</text>
-  <text x="625" y="341" text-anchor="middle" font-size="9" fill="#A8BFD0">vs. nt_prok · 1,307-genome non-pyogenes panel</text>
+  <text x="625" y="328" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Three-Way Dimer + Structure QC</text>
+  <text x="625" y="341" text-anchor="middle" font-size="9" fill="#A8BFD0">Same primer3-py standard</text>
   <line x1="625" y1="348" x2="625" y2="362" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
 
   <rect x="465" y="362" width="320" height="36" rx="5" fill="#2E4057"/>
-  <text x="625" y="378" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Interval Merging</text>
-  <text x="625" y="391" text-anchor="middle" font-size="9" fill="#A8BFD0">Unique region detection · Primer3</text>
+  <text x="625" y="378" text-anchor="middle" font-size="11" font-weight="bold" fill="white">BLAST Specificity</text>
+  <text x="625" y="391" text-anchor="middle" font-size="9" fill="#A8BFD0">Human genome + core_nt · pair-level rule</text>
   <line x1="625" y1="398" x2="625" y2="412" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
 
   <rect x="465" y="412" width="320" height="36" rx="5" fill="#1A6B45"/>
-  <text x="625" y="428" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Targets: mvaS · mtnN · truA</text>
-  <text x="625" y="441" text-anchor="middle" font-size="9" fill="#A8D5B8">463 candidates · top exclusivity-validated loci</text>
+  <text x="625" y="428" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Primary + Reserve Windows</text>
+  <text x="625" y="441" text-anchor="middle" font-size="9" fill="#A8D5B8">One plasmid · 2 candidate windows · 6 oligos</text>
 
   <!-- Converge lines -->
   <line x1="235" y1="448" x2="235" y2="515" stroke="#555" stroke-width="1.5"/>
@@ -916,8 +917,8 @@
 
   <!-- Summary output -->
   <rect x="240" y="523" width="380" height="48" rx="7" fill="#1A6B45"/>
-  <text x="430" y="542" text-anchor="middle" font-size="13" font-weight="bold" fill="white">Validated Diagnostic Targets</text>
-  <text x="430" y="558" text-anchor="middle" font-size="9" fill="#A8D5B8">658 genomes · 1,307-genome exclusivity panel · species-specific amplicons</text>
+  <text x="430" y="542" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Validated Diagnostic Candidate Targets</text>
+  <text x="430" y="558" text-anchor="middle" font-size="9" fill="#A8D5B8">5 candidates validated · Tm gap 6.08–8.07°C · pairs 1 chromosomal + plasmid</text>
 
   <!-- Legend -->
   <rect x="50" y="582" width="12" height="10" rx="2" fill="#2E4057"/>
