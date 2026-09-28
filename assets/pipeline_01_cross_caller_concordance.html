@@ -31,43 +31,43 @@
 
 <h1>Cross-Caller Concordance — GATK vs DeepVariant, before and after digging in</h1>
 <p class="lede">
-  GATK HaplotypeCaller and DeepVariant were run independently against the same aligned, deduplicated
-  CAPN3/DMD reads and cross-checked with <code>bcftools isec</code>. The raw numbers look like a real
-  disagreement — 2,318 vs 3,170 calls, only 2,271 shared. Following the flow below shows what that
-  apparent 899-call gap actually is.
+  GATK HaplotypeCaller and DeepVariant were run independently against the same aligned, deduplicated,
+  fastp-trimmed CAPN3/DMD reads and cross-checked with <code>bcftools isec</code>. The raw numbers look
+  like a real disagreement — 2,314 vs 2,906 calls, only 2,267 shared. Following the flow below shows
+  what that apparent 639-call gap actually is.
 </p>
 
 <div id="chart"></div>
 
 <div class="callout">
-  <strong>90% of the apparent disagreement wasn't disagreement.</strong> DeepVariant reports a record
-  for every candidate site it examines, not only confident calls — so most of its 899 "private" records
+  <strong>86% of the apparent disagreement wasn't disagreement.</strong> DeepVariant reports a record
+  for every candidate site it examines, not only confident calls — so most of its 639 "private" records
   are <code>RefCall</code>/<code>NoCall</code> bookkeeping, not genuine variant calls the two tools
-  actually disagree on. Only 94 of the 899 are real PASS-filtered calls unique to DeepVariant. Both
-  callers' totals reconcile exactly: 2,318&nbsp;=&nbsp;47&nbsp;+&nbsp;2,271, and
-  3,170&nbsp;=&nbsp;899&nbsp;+&nbsp;2,271.
+  actually disagree on. Only 89 of the 639 are real PASS-filtered calls unique to DeepVariant. Both
+  callers' totals reconcile exactly: 2,314&nbsp;=&nbsp;47&nbsp;+&nbsp;2,267, and
+  2,906&nbsp;=&nbsp;639&nbsp;+&nbsp;2,267.
   <br /><br />
-  <strong>Reading the diagram:</strong> the "Concordant calls" node looks larger than its 2,271 label
-  because Sankey diagrams total every flow into a node — and the same 2,271 calls arrive twice, once
-  counted from GATK's side and once from DeepVariant's side. Its true value is 2,271, not the ~4,500
+  <strong>Reading the diagram:</strong> the "Concordant calls" node looks larger than its 2,267 label
+  because Sankey diagrams total every flow into a node — and the same 2,267 calls arrive twice, once
+  counted from GATK's side and once from DeepVariant's side. Its true value is 2,267, not the ~4,530
   its height alone would suggest.
 </div>
 
 <footer>
   Source: <code>CROSS_CHECK_VCFS</code> module output, CAPN3/DMD Variant Calling Pipeline README
   (<a href="https://github.com/bkhimek/CAPN3-DMD-variant-calling-pipeline/blob/main/README.md">github.com/bkhimek/CAPN3-DMD-variant-calling-pipeline</a>),
-  Status: Complete, all 9 modules verified end-to-end.
+  Status: Complete, all 11 modules verified end-to-end.
 </footer>
 
 <script>
 const labels = [
-  "GATK HaplotypeCaller (2,318)",
-  "DeepVariant (3,170)",
-  "Concordant calls (2,271)",
+  "GATK HaplotypeCaller (2,314)",
+  "DeepVariant (2,906)",
+  "Concordant calls (2,267)",
   "GATK-only (47)",
-  "DeepVariant private, raw isec (899)",
-  "RefCall / NoCall bookkeeping (805)",
-  "Genuine DeepVariant-only calls (94)"
+  "DeepVariant private, raw isec (639)",
+  "RefCall / NoCall bookkeeping (550)",
+  "Genuine DeepVariant-only calls (89)"
 ];
 const colors = ["#1f77b4", "#6a51a3", "#2e7d32", "#fb8c00", "#9e9e9e", "#c62828", "#00897b"];
 
@@ -84,16 +84,16 @@ const data = [{
   link: {
     source: [0, 0, 1, 1, 4, 4],
     target: [2, 3, 2, 4, 5, 6],
-    value:  [2271, 47, 2271, 899, 805, 94],
+    value:  [2267, 47, 2267, 639, 550, 89],
     color: ["rgba(46,125,50,0.35)", "rgba(251,140,0,0.35)", "rgba(46,125,50,0.35)",
             "rgba(158,158,158,0.35)", "rgba(198,40,40,0.35)", "rgba(0,137,123,0.35)"],
     customdata: [
-      "2,271 concordant calls, counted from GATK's side",
+      "2,267 concordant calls, counted from GATK's side",
       "47 calls unique to GATK",
-      "2,271 concordant calls, counted from DeepVariant's side (same calls as above — this is why the Concordant node's height looks like ~4,500)",
-      "899 DeepVariant calls with no GATK match, before investigating why",
-      "805 of those 899 are RefCall/NoCall bookkeeping records, not real calls",
-      "94 of those 899 are genuine PASS-filtered calls unique to DeepVariant"
+      "2,267 concordant calls, counted from DeepVariant's side (same calls as above — this is why the Concordant node's height looks like ~4,530)",
+      "639 DeepVariant calls with no GATK match, before investigating why",
+      "550 of those 639 are RefCall/NoCall bookkeeping records, not real calls",
+      "89 of those 639 are genuine PASS-filtered calls unique to DeepVariant"
     ],
     hovertemplate: "%{customdata}<extra></extra>"
   }
