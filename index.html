@@ -353,8 +353,8 @@
           <span class="stat-label">Genomes processed across projects</span>
         </div>
         <div class="stat-card">
-          <span class="stat-num">3</span>
-          <span class="stat-label">Priority pathogens profiled</span>
+          <span class="stat-num">4</span>
+          <span class="stat-label">Pathogens profiled</span>
         </div>
         <div class="stat-card">
           <span class="stat-num">DSL2</span>
@@ -773,16 +773,20 @@
             <span style="background:rgba(20,153,141,0.15); border:1px solid var(--teal); border-radius:4px; padding:0.25em 0.65em; font-size:0.72rem; font-weight:700; color:var(--teal-l); letter-spacing:0.04em;">In-silico Design</span>
           </div>
           <p class="card-desc">
-            Reproducible target-selection workflow for a multiplex qPCR/TaqMan assay for <em>C. trachomatis</em>. Genome QC and tiering are performed before target discovery, ensuring that consensus sequences and inclusivity assessments are built only from high-confidence assemblies. Four chromosomal loci (mutL, aroB, PSD2, and group_306) were independently validated as candidate targets alongside the multicopy diagnostic plasmid, which provides the higher-sensitivity target. The proposed duplex pairs one chromosomal locus with the plasmid target, combining genomic redundancy with sensitivity.
+            Reproducible target-selection workflow for a multiplex qPCR/TaqMan assay for <em>C. trachomatis</em>. Genome QC and tiering are performed before target discovery, ensuring that consensus sequences and inclusivity assessments are built only from high-confidence assemblies. A provenance audit traced 149 GenBank-only genomes to a single study of engineered laboratory strains; these were excluded from the diagnostic reference set, which was rebuilt from 125 complete RefSeq assemblies that were independently verified and tiered.
           </p>
           <p class="card-desc">
-            The workflow integrates pan-genome analysis, sequence conservation and inclusivity screening, exclusivity BLAST, quantitative Tm-gap assessment, and three-way structural QC of primer–probe sets, producing a fully screened candidate panel for downstream experimental validation.
+            Four chromosomal loci (mutL, aroB, PSD2, and group_306) were independently evaluated as candidate targets alongside the multicopy diagnostic plasmid, which serves as the higher-sensitivity target. The proposed duplex pairs one chromosomal locus with the plasmid target, combining genomic redundancy with sensitivity.
+          </p>
+          <p class="card-desc">
+            The workflow integrates pan-genome analysis, sequence-conservation and inclusivity screening, exclusivity BLAST, quantitative Tm-gap assessment, and three-way structural QC of primer–probe sets, producing a computationally screened candidate panel for downstream experimental validation.
           </p>
           <div class="card-metrics" style="margin-bottom:0.75rem;">
             <div style="width:100%; font-size:0.78rem; font-weight:600; color:var(--text-m); margin-bottom:0.4rem;">
               <em>Chromosomal targets</em> — mutL · aroB · PSD2 · group_306
             </div>
             <div class="metric"><b>125</b> genomes (97 primary / 10 review / 18 excluded)</div>
+            <div class="metric"><b>149</b> GenBank-only engineered-strain genomes rejected</div>
             <div class="metric"><b>874</b> core genes (Panaroo pan-genome)</div>
             <div class="metric"><b>692/874</b> exclusivity-clean</div>
             <div class="metric"><b>4</b> targets · <b>7</b> oligo sets</div>
@@ -841,7 +845,7 @@
   <!-- STREAM 1: Chromosomal -->
   <rect x="75" y="112" width="320" height="36" rx="6" fill="#2E4057"/>
   <text x="235" y="128" text-anchor="middle" font-size="12" font-weight="bold" fill="white">125 C. trachomatis Genomes</text>
-  <text x="235" y="141" text-anchor="middle" font-size="9" fill="#A8BFD0">NCBI RefSeq · genome-QC tiered</text>
+  <text x="235" y="141" text-anchor="middle" font-size="9" fill="#A8BFD0">RefSeq only · 149 engineered GenBank genomes rejected</text>
   <line x1="235" y1="148" x2="235" y2="162" stroke="#2E4057" stroke-width="1.5" marker-end="url(#arr-dv)"/>
 
   <rect x="75" y="162" width="320" height="36" rx="5" fill="#2E4057"/>
