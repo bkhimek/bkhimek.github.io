@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Krzysztof Gizynski — Molecular Biology & Computational Biology Portfolio</title>
+  <title>Krzysztof Gizynski — Independent Scientific Consultant | Molecular Diagnostics &amp; Computational Biology</title>
+  <meta name="description" content="Independent scientific consultancy in molecular diagnostics, microbial genomics and computational biology: diagnostic target selection, assay-development support and reproducible genomics workflows.">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -79,7 +80,7 @@
     .hero-name span { color: var(--teal); }
     .hero-sub {
       font-size: clamp(1rem, 2.5vw, 1.25rem);
-      color: var(--text-m); max-width: 600px; margin-bottom: 2.5rem;
+      color: var(--text-m); max-width: 680px; margin-bottom: 2.5rem;
     }
     .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
     .btn {
@@ -97,6 +98,39 @@
       border: 1px solid var(--teal);
     }
     .btn-outline:hover { background: rgba(20,153,141,0.1); transform: translateY(-1px); }
+
+
+    /* ── HERO FOCUS LINE ── */
+    .hero-focus {
+      font-size: clamp(0.85rem, 2vw, 1rem); font-weight: 600;
+      letter-spacing: 0.04em; color: var(--teal-l); margin-bottom: 1.25rem;
+    }
+
+    /* ── SECTION INTRO ── */
+    .section-intro { color: var(--text-m); max-width: 680px; margin: -1.5rem 0 2.5rem; }
+
+    /* ── SERVICES ── */
+    #services { background: var(--bg); }
+    .services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .service-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.75rem;
+    }
+    .service-title { font-size: 1.1rem; font-weight: 700; color: var(--white); margin-bottom: 0.5rem; }
+    .service-lead { color: var(--text-m); font-size: 0.9rem; margin-bottom: 1rem; }
+    .service-list { list-style: none; }
+    .service-list li {
+      position: relative; padding-left: 1.1rem; margin-bottom: 0.5rem;
+      color: var(--text-m); font-size: 0.9rem;
+    }
+    .service-list li::before {
+      content: ''; position: absolute; left: 0; top: 0.65em;
+      width: 6px; height: 6px; border-radius: 50%; background: var(--teal);
+    }
+    .services-note { color: var(--text-m); font-size: 0.82rem; margin-top: 1.5rem; max-width: 760px; }
+    .contact-note { color: var(--text-m); font-size: 0.82rem; margin: 1.5rem 0 0 !important; }
+    .contact-note a, .services-note a { color: var(--teal); text-decoration: none; }
+    .contact-note a:hover, .services-note a:hover { color: var(--teal-l); }
 
     /* ── SECTIONS ── */
     section { padding: 5rem 2rem; }
@@ -139,7 +173,7 @@
     .stat-label { font-size: 0.8rem; color: var(--text-m); margin-top: 0.4rem; }
 
     /* ── PROJECTS ── */
-    #projects { background: var(--bg); }
+    #projects { background: var(--navy-d); }
     .projects-grid { display: grid; gap: 1.5rem; }
     .project-card {
       background: var(--card); border: 1px solid var(--border);
@@ -206,7 +240,7 @@
     }
 
     /* ── SKILLS ── */
-    #skills { background: var(--navy-d); }
+    #skills { background: var(--bg); }
     .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.25rem; }
     .skill-group {
       background: var(--card); border: 1px solid var(--border);
@@ -225,7 +259,7 @@
     }
 
     /* ── CONTACT ── */
-    #contact { background: var(--bg); }
+    #contact { background: var(--navy-d); }
     .contact-card {
       background: var(--card); border: 1px solid var(--border);
       border-radius: 12px; padding: 3rem 2.5rem;
@@ -243,15 +277,15 @@
       background: var(--teal); color: var(--white);
     }
     .contact-link.email:hover { background: var(--teal-l); }
-    .contact-link.github {
+    .contact-link.github, .contact-link.linkedin {
       background: transparent; color: var(--text-m);
       border: 1px solid var(--border);
     }
-    .contact-link.github:hover { border-color: var(--teal); color: var(--teal); }
+    .contact-link.github:hover, .contact-link.linkedin:hover { border-color: var(--teal); color: var(--teal); }
 
     /* ── FOOTER ── */
     footer {
-      background: var(--navy-d); border-top: 1px solid var(--border);
+      background: var(--bg); border-top: 1px solid var(--border);
       padding: 1.5rem 2rem; text-align: center;
       color: var(--text-m); font-size: 0.8rem;
     }
@@ -292,9 +326,11 @@
     @media (max-width: 700px) {
       nav { padding: 0 1rem; }
       .nav-links { gap: 1rem; }
-      .nav-links li:nth-child(n+4) { display: none; }
+      .nav-links { gap: 0.9rem; } .nav-links a { font-size: 0.8rem; }
       section { padding: 3.5rem 1.25rem; }
       .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .services-grid { grid-template-columns: 1fr; }
+      .section-intro { margin-top: -1.75rem; }
       .stat-grid { grid-template-columns: 1fr 1fr; }
       .card-top { flex-direction: column; }
       #hero { padding: 90px 1.25rem 3rem; }
@@ -309,8 +345,8 @@
   <a class="nav-brand" href="#hero">KG</a>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#skills">Skills</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#projects">Case Studies</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
 </nav>
@@ -318,14 +354,15 @@
 <!-- ── HERO ── -->
 <section id="hero">
   <div class="hero-inner">
-    <div class="hero-tag">Molecular & Computational Biologist</div>
+    <div class="hero-tag">Independent Scientific Consultancy</div>
     <h1 class="hero-name">Krzysztof<br><span>Gizynski</span></h1>
+    <p class="hero-focus">Molecular Diagnostics · Microbial Genomics · Computational Biology</p>
     <p class="hero-sub">
-      Experience in molecular diagnostics, assay development, and computational biology. This portfolio brings together selected projects exploring diagnostic assay design, bioinformatics, AI-assisted scientific workflows, and computational methods for molecular biology.
+      I help biotechnology and diagnostics teams select and evaluate diagnostic targets, support molecular assay development, and build reproducible genomics workflows — combining experimental experience with computational analysis.
     </p>
     <div class="hero-cta">
-      <a class="btn btn-primary" href="#projects">View Projects</a>
-      <a class="btn btn-outline" href="#contact">Get in Touch</a>
+      <a class="btn btn-primary" href="#contact">Discuss a Project</a>
+      <a class="btn btn-outline" href="#projects">Explore Case Studies</a>
     </div>
   </div>
 </section>
@@ -334,17 +371,17 @@
 <section id="about">
   <div class="section-inner">
     <div class="section-label">About</div>
-    <h2 class="section-title">Genomics, End to End</h2>
+    <h2 class="section-title">Connecting Molecular Diagnostics and Computational Biology</h2>
     <div class="about-grid">
       <div class="about-text">
         <p>
           I am a <span class="highlight">molecular biologist</span> with a microbiology background and industry experience in molecular diagnostics, assay development and biotechnology.
         </p>
         <p>
-          Alongside laboratory research and product development, I have increasingly worked in <span class="highlight">computational biology</span>, developing reproducible bioinformatics workflows for microbial genomics and diagnostic applications. Recent work extends this to human clinical genomics: variant calling, ACMG/AMP classification, pharmacogenomics and somatic tumour–normal analysis.
+          Alongside that work, I have built independent <span class="highlight">computational biology</span> projects: reproducible bioinformatics workflows for microbial genomics and diagnostic applications, extended more recently to human clinical genomics — variant calling, ACMG/AMP classification, pharmacogenomics and somatic tumour–normal analysis.
         </p>
         <p>
-          This website brings together selected projects, case studies and technical notes from both areas.
+          Having worked on both sides, I can connect what an assay has to do in practice with what the sequence data can and cannot show. The case studies below are self-directed projects, with code on GitHub, that show how I work.
         </p>
       </div>
       <div class="stat-grid">
@@ -385,11 +422,52 @@
   </div>
 </section>
 
+<!-- ── SERVICES ── -->
+<section id="services">
+  <div class="section-inner">
+    <div class="section-label">Services</div>
+    <h2 class="section-title">How I Can Help</h2>
+    <p class="section-intro">
+      I work with biotechnology, diagnostics and life-science teams on problems where molecular-biology insight and reproducible computational analysis both matter.
+    </p>
+    <div class="services-grid">
+      <div class="service-card">
+        <h3 class="service-title">Molecular Diagnostics &amp; Microbial Genomics</h3>
+        <p class="service-lead">Computational support for diagnostic assay design and pathogen genomics.</p>
+        <ul class="service-list">
+          <li>Diagnostic target selection and evaluation</li>
+          <li>Inclusivity and exclusivity analysis</li>
+          <li>Assay-development support, including in-silico primer/probe design and QC</li>
+          <li>AMR profiling and pathogen typing</li>
+          <li>Phylogenomics and genome-collection curation</li>
+        </ul>
+      </div>
+      <div class="service-card">
+        <h3 class="service-title">Clinical Genomics &amp; Pipeline Development</h3>
+        <p class="service-lead">Reproducible, benchmarked analysis workflows for human genomic data.</p>
+        <ul class="service-list">
+          <li>Germline and somatic variant-calling workflows</li>
+          <li>Benchmarking against reference truth sets (GIAB, GeT-RM)</li>
+          <li>ACMG/AMP interpretation workflows</li>
+          <li>Pharmacogenomics workflows</li>
+          <li>Nextflow pipelines and containerised, reproducible analysis</li>
+        </ul>
+      </div>
+    </div>
+    <p class="services-note">
+      My work is computational and advisory. I do not provide clinical interpretation of patient results or regulated diagnostic reporting. Engagements are scoped project by project — <a href="#contact">get in touch</a> to discuss yours.
+    </p>
+  </div>
+</section>
+
 <!-- ── PROJECTS ── -->
 <section id="projects">
   <div class="section-inner">
-    <div class="section-label">Projects</div>
+    <div class="section-label">Selected Work</div>
     <h2 class="section-title">Case Studies</h2>
+    <p class="section-intro">
+      Independent projects that show the methods behind the services above. Each links to its code on GitHub.
+    </p>
     <div class="projects-grid">
 
       <!-- Project 1 -->
@@ -407,7 +485,7 @@
             </a>
           </div>
           <p class="card-desc">
-            End-to-end Nextflow DSL2 pipeline characterising antimicrobial resistance across 283 clinical strains. Integrates AMRFinderPlus resistance profiling with a custom alignment-based mutation caller (penA, gyrA, parC, mtrR, porB) and promoter-variant detection, core-genome phylogeny via Parsnp, and an interactive Dash dashboard linking resistance phenotypes to phylogenetic context for rapid clinical interpretation.
+            End-to-end Nextflow DSL2 pipeline characterising antimicrobial resistance across 283 clinical strains. Integrates AMRFinderPlus resistance profiling with a custom alignment-based mutation caller (penA, gyrA, parC, mtrR, porB) and promoter-variant detection, core-genome phylogeny via Parsnp, and an interactive Dash dashboard linking resistance phenotypes to phylogenetic context for exploratory analysis and antimicrobial-resistance surveillance.
           </p>
           <div class="card-metrics">
             <div class="metric"><b>283</b> strains</div>
@@ -1818,8 +1896,8 @@
 <!-- ── SKILLS ── -->
 <section id="skills">
   <div class="section-inner">
-    <div class="section-label">Skills</div>
-    <h2 class="section-title">Technical Stack</h2>
+    <div class="section-label">Capabilities</div>
+    <h2 class="section-title">Technical Capabilities</h2>
     <div class="skills-grid">
 
       <div class="skill-group">
@@ -1926,25 +2004,26 @@
     <h2 class="section-title">Get in Touch</h2>
     <div class="contact-card">
       <p>
-        If you'd like to discuss any of the projects featured here, exchange ideas, or connect regarding computational biology, molecular diagnostics or bioinformatics, I'd be pleased to hear from you.
+        If you have a diagnostics, genomics or bioinformatics problem you would like to discuss, or want to talk through any of the case studies, I'd be glad to hear from you. A short description of the question and your timeline is enough to start.
       </p>
       <div class="contact-links">
+        <a class="contact-link email" href="mailto:krzysztof.gizynski@kgbioscience.com">
+          <svg class="icon" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v.217l-8 4.8-8-4.8V4zm0 1.383v6.634l5.803-3.558L0 5.383zm6.761 4.158L.2 13.5A2 2 0 0 0 2 14h12a2 2 0 0 0 1.8-.5l-6.561-3.96L8 10.4l-1.239-.859zM16 12.017V5.383l-5.803 3.076L16 12.017z"/></svg>
+          krzysztof.gizynski@kgbioscience.com
+        </a>
         <a class="contact-link linkedin" href="https://www.linkedin.com/in/krzysztof-gizynski-735b1a107/" target="_blank" rel="noopener">
           <svg class="icon" viewBox="0 0 16 16"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>
           linkedin.com/in/krzysztof-gizynski
         </a>
-        <a class="contact-link github" href="https://github.com/bkhimek" target="_blank" rel="noopener">
-          <svg class="icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-          github.com/bkhimek
-        </a>
       </div>
+      <p class="contact-note">How I handle your information: <a href="privacy.html">Privacy Notice</a></p>
     </div>
   </div>
 </section>
 
 <!-- ── FOOTER ── -->
 <footer>
-  <p>© 2026 Krzysztof Gizynski &nbsp;·&nbsp; <a href="https://github.com/bkhimek" target="_blank" rel="noopener">github.com/bkhimek</a></p>
+  <p>© 2026 Krzysztof Gizynski &nbsp;·&nbsp; <a href="privacy.html">Privacy Notice</a> &nbsp;·&nbsp; <a href="https://github.com/bkhimek" target="_blank" rel="noopener">github.com/bkhimek</a></p>
 </footer>
 
 </body>
