@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nanopore Metagenomics — Species Scorecard</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{--navy:#2E4057;--navy-d:#1e2d3d;--teal:#14998D;--teal-l:#1ab8aa;--teal-xl:#d0f0ed;--slate:#4a6680;--text:#e8edf2;--text-m:#b0bec8;--bg:#111d27;--card:#1c2e3e;--border:#2a3f54;--green:#1A6B45;--green-l:#3fae7c;--amber:#B5651D;--amber-l:#e0a050;--red-l:#d9776b;}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;padding:2rem 1.25rem 4rem;}
+  .wrap{max-width:1000px;margin:0 auto;}
+  header{margin-bottom:2rem;}
+  .eyebrow{font-size:0.75rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal-l);margin-bottom:0.5rem;}
+  h1{font-size:1.7rem;color:#fff;margin-bottom:0.4rem;}
+  .sub{color:var(--text-m);font-size:0.95rem;max-width:720px;}
+  .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin:2rem 0;}
+  .stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1rem;text-align:center;}
+  .stat b{display:block;font-size:1.9rem;color:var(--teal-l);}
+  .stat.warn b{color:var(--amber-l);}
+  .stat span{font-size:0.78rem;color:var(--text-m);}
+  .panel{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.75rem;}
+  .panel h2{font-size:1.05rem;color:#fff;margin-bottom:0.4rem;}
+  .panel .lead{font-size:0.82rem;color:var(--text-m);margin-bottom:1rem;}
+  table{width:100%;border-collapse:collapse;font-size:0.83rem;}
+  th{text-align:left;color:var(--text-m);font-weight:600;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.04em;padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);}
+  td{padding:0.55rem 0.6rem;border-bottom:1px solid rgba(42,63,84,0.6);vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  .pill{display:inline-block;font-size:0.68rem;font-weight:700;padding:0.15em 0.55em;border-radius:999px;letter-spacing:0.03em;}
+  .pill-met{background:rgba(63,174,124,0.18);color:var(--green-l);}
+  .pill-not{background:rgba(224,160,80,0.18);color:var(--amber-l);}
+  .note{font-size:0.78rem;color:var(--text-m);margin-top:0.9rem;}
+  .ctrl{display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:1.1rem;align-items:center;}
+  .ctrl .lab{font-size:0.75rem;color:var(--text-m);margin-right:0.3rem;}
+  .ctrl button{background:transparent;border:1px solid var(--border);color:var(--text-m);border-radius:6px;padding:0.3rem 0.75rem;font-size:0.78rem;cursor:pointer;font-family:inherit;}
+  .ctrl button:hover{border-color:var(--teal);color:var(--text);}
+  .ctrl button.on{background:rgba(20,153,141,0.18);border-color:var(--teal);color:var(--teal-xl);}
+  .ctrl button:focus-visible{outline:2px solid var(--teal-l);outline-offset:2px;}
+  .bars{display:flex;flex-direction:column;gap:0.8rem;}
+  .bar-row{display:grid;grid-template-columns:230px 1fr 70px;align-items:center;gap:0.8rem;}
+  .bar-label{font-size:0.78rem;color:var(--text-m);}
+  .bar-label i{font-style:italic;}
+  .bar-track{position:relative;background:rgba(255,255,255,0.06);border-radius:5px;height:18px;overflow:visible;display:flex;}
+  .seg{height:100%;transition:width .35s ease;}
+  .seg:first-child{border-radius:5px 0 0 5px;} .seg:last-child{border-radius:0 5px 5px 0;} .seg:only-child{border-radius:5px;}
+  .bar-val{font-size:0.78rem;color:var(--text);text-align:right;font-variant-numeric:tabular-nums;}
+  .refline{position:absolute;top:-4px;bottom:-4px;width:0;border-left:2px dashed #fff;opacity:.85;}
+  .refline span{position:absolute;top:-17px;left:-30px;width:60px;text-align:center;font-size:0.65rem;color:#fff;}
+  .chart-legend{display:flex;gap:1.2rem;margin-top:1.4rem;font-size:0.75rem;color:var(--text-m);flex-wrap:wrap;}
+  .chart-legend span{display:inline-flex;align-items:center;gap:0.4rem;}
+  .sw{width:11px;height:11px;border-radius:3px;display:inline-block;}
+  .c-ok{background:var(--green-l);} .c-lin{background:var(--amber-l);} .c-bad{background:var(--red-l);} .c-teal{background:linear-gradient(90deg,var(--teal),var(--teal-l));} .c-grey{background:var(--slate);}
+  .tip{position:fixed;pointer-events:none;background:#0b141b;border:1px solid var(--border);color:var(--text);font-size:0.75rem;padding:0.4rem 0.6rem;border-radius:6px;max-width:260px;opacity:0;transition:opacity .1s;z-index:10;}
+  a.back{display:inline-block;margin-top:0.5rem;color:var(--teal-l);font-size:0.85rem;text-decoration:none;}
+  a.back:hover{text-decoration:underline;}
+  @media(max-width:640px){.bar-row{grid-template-columns:1fr 60px;} .bar-label{grid-column:1/-1;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Nanopore Metagenomics Benchmark</div>
+    <h1>Species Scorecard</h1>
+    <p class="sub">Kraken2 species calls on a Nanopore run of a defined gut mock community (17 species, 21 strains), scored once on the held-out evaluation pool against the theoretical composition, with a sequencing-depth series and the confidence-threshold arms.</p>
+  </header>
+
+  <div class="stat-row">
+    <div class="stat"><b>0.966</b><span>Species F1, evaluation pool (14 TP &middot; 1 FP &middot; 0 FN)</span></div>
+    <div class="stat"><b>14/17</b><span>Species evaluable (&ge; 20 expected reads)</span></div>
+    <div class="stat"><b>1</b><span>False positive: <i>Homo sapiens</i> (818 reads)</span></div>
+    <div class="stat"><b>0.168</b><span>Bray-Curtis distance to the theoretical composition</span></div>
+  </div>
+
+  <div class="panel">
+    <h2>Observed against expected reads, per species</h2>
+    <p class="lead">Kraken2 PlusPF-8, evaluation pool. A bar reaching the dashed line means the observed read count matched the theoretical composition. Grey bars are species with fewer than 20 expected reads, which could not be evaluated. Choose a sequencing depth to see how the picture changes (mean of 5 random subsamples; 1.0 Gb is the full pool).</p>
+    <div class="ctrl" role="group" aria-label="Sequencing depth">
+      <span class="lab">Depth:</span>
+      <button type="button" data-d="0.100">0.1 Gb</button>
+      <button type="button" data-d="0.250">0.25 Gb</button>
+      <button type="button" data-d="0.500">0.5 Gb</button>
+      <button type="button" data-d="1.000" class="on">1.0 Gb (full pool)</button>
+      <span class="lab" style="margin-left:1rem">Sort:</span>
+      <button type="button" data-s="exp" class="on">Expected abundance</button>
+      <button type="button" data-s="oe">Observed / expected</button>
+    </div>
+    <div class="stat-row" style="margin:0 0 1.25rem" id="dsum"></div>
+    <div class="bars" id="bars"></div>
+    <div class="chart-legend">
+      <span><i class="sw c-teal"></i>Evaluable species</span>
+      <span><i class="sw c-grey"></i>Not evaluable (&lt; 20 expected reads)</span>
+    </div>
+    <p class="note">Roseburia hominis (0.41) and Bifidobacterium adolescentis (0.22) fall below 1, and Limosilactobacillus fermentum (1.66) sits above it. Several causes are mixed here. L. fermentum reads are short (about 2 kb against 7 to 9 kb for most species), so its read share exceeds its DNA share. Exploratory work on the development pool found the Roseburia deficit already present in the mapped reads (the sequenced sample itself), whereas the classifier loses reads mainly for <i>E. coli</i> and <i>B. adolescentis</i> (the 8 GB database). The ratios are stable across depths. The expected composition is the theoretical one, because the sequenced kit lot could not be confirmed.</p>
+  </div>
+
+  <div class="panel">
+    <h2>Confidence threshold: F1 on the evaluation pool</h2>
+    <p class="lead">Kraken2 confidence thresholds were registered as arms, chosen on the development pool and scored once on evaluation. Nanopore reads rarely reach high k-mer confidence, so the default (0) was best.</p>
+    <div class="bars" id="conf"></div>
+    <p class="note">At confidence 0.2 and 0.4 nothing is classified, so F1 is 0. Values from the registered confidence-arm summary.</p>
+  </div>
+
+  <a class="back" href="https://github.com/bkhimek/nanopore-metagenomics-benchmark" target="_blank" rel="noopener">View the repository on GitHub &rarr;</a>
+</div>
+<div class="tip" id="tip" role="tooltip"></div>
+<script>
+const DATA = {"species": [{"name": "Faecalibacterium prausnitzii", "dna": 14.0, "exp": 25900.0, "obs": 32081, "oe": 1.24, "ev": true, "dom": "Bacteria"}, {"name": "Veillonella rogosae", "dna": 14.0, "exp": 25900.0, "obs": 22751, "oe": 0.88, "ev": true, "dom": "Bacteria"}, {"name": "Roseburia hominis", "dna": 14.0, "exp": 25900.0, "obs": 10714, "oe": 0.41, "ev": true, "dom": "Bacteria"}, {"name": "Bacteroides fragilis", "dna": 14.0, "exp": 25900.0, "obs": 24825, "oe": 0.96, "ev": true, "dom": "Bacteria"}, {"name": "Escherichia coli", "dna": 14.0, "exp": 25900.0, "obs": 14818, "oe": 0.57, "ev": true, "dom": "Bacteria"}, {"name": "Prevotella corporis", "dna": 6.0, "exp": 11100.0, "obs": 10472, "oe": 0.94, "ev": true, "dom": "Bacteria"}, {"name": "Bifidobacterium adolescentis", "dna": 6.0, "exp": 11100.0, "obs": 2477, "oe": 0.22, "ev": true, "dom": "Bacteria"}, {"name": "Fusobacterium nucleatum", "dna": 6.0, "exp": 11100.0, "obs": 8476, "oe": 0.76, "ev": true, "dom": "Bacteria"}, {"name": "Limosilactobacillus fermentum", "dna": 6.0, "exp": 11100.0, "obs": 18459, "oe": 1.66, "ev": true, "dom": "Bacteria"}, {"name": "Clostridioides difficile", "dna": 1.5, "exp": 2775.0, "obs": 2770, "oe": 1.0, "ev": true, "dom": "Bacteria"}, {"name": "Akkermansia muciniphila", "dna": 1.5, "exp": 2775.0, "obs": 2618, "oe": 0.94, "ev": true, "dom": "Bacteria"}, {"name": "Candida albicans", "dna": 1.5, "exp": 2775.0, "obs": 2694, "oe": 0.97, "ev": true, "dom": "Fungi"}, {"name": "Saccharomyces cerevisiae", "dna": 1.4, "exp": 2590.0, "obs": 1901, "oe": 0.73, "ev": true, "dom": "Fungi"}, {"name": "Methanobrevibacter smithii", "dna": 0.1, "exp": 185.0, "obs": 163, "oe": 0.88, "ev": true, "dom": "Archaea"}, {"name": "Salmonella enterica", "dna": 0.01, "exp": 18.5, "obs": 59, "oe": 3.19, "ev": false, "dom": "Bacteria"}, {"name": "Enterococcus faecalis", "dna": 0.001, "exp": 1.9, "obs": 0, "oe": 0.0, "ev": false, "dom": "Bacteria"}, {"name": "Clostridium perfringens", "dna": 0.0, "exp": 0.2, "obs": 1, "oe": 5.41, "ev": false, "dom": "Bacteria"}], "depth": {"0.100": {"Faecalibacterium prausnitzii": {"ev": "5/5", "det": "5/5", "oe": 1.242}, "Veillonella rogosae": {"ev": "5/5", "det": "5/5", "oe": 0.862}, "Roseburia hominis": {"ev": "5/5", "det": "5/5", "oe": 0.412}, "Bacteroides fragilis": {"ev": "5/5", "det": "5/5", "oe": 0.966}, "Escherichia coli": {"ev": "5/5", "det": "5/5", "oe": 0.572}, "Prevotella corporis": {"ev": "5/5", "det": "5/5", "oe": 0.978}, "Bifidobacterium adolescentis": {"ev": "5/5", "det": "5/5", "oe": 0.208}, "Fusobacterium nucleatum": {"ev": "5/5", "det": "5/5", "oe": 0.746}, "Limosilactobacillus fermentum": {"ev": "5/5", "det": "5/5", "oe": 1.666}, "Clostridioides difficile": {"ev": "5/5", "det": "5/5", "oe": 0.994}, "Akkermansia muciniphila": {"ev": "5/5", "det": "5/5", "oe": 0.958}, "Candida albicans": {"ev": "5/5", "det": "5/5", "oe": 0.96}, "Saccharomyces cerevisiae": {"ev": "5/5", "det": "5/5", "oe": 0.726}, "Methanobrevibacter smithii": {"ev": "0/5", "det": "n/a", "oe": 0.866}, "Salmonella enterica": {"ev": "0/5", "det": "n/a", "oe": 3.174}, "Enterococcus faecalis": {"ev": "0/5", "det": "n/a", "oe": 0.0}, "Clostridium perfringens": {"ev": "0/5", "det": "n/a", "oe": 0.0}}, "0.250": {"Faecalibacterium prausnitzii": {"ev": "5/5", "det": "5/5", "oe": 1.244}, "Veillonella rogosae": {"ev": "5/5", "det": "5/5", "oe": 0.876}, "Roseburia hominis": {"ev": "5/5", "det": "5/5", "oe": 0.414}, "Bacteroides fragilis": {"ev": "5/5", "det": "5/5", "oe": 0.952}, "Escherichia coli": {"ev": "5/5", "det": "5/5", "oe": 0.572}, "Prevotella corporis": {"ev": "5/5", "det": "5/5", "oe": 0.94}, "Bifidobacterium adolescentis": {"ev": "5/5", "det": "5/5", "oe": 0.214}, "Fusobacterium nucleatum": {"ev": "5/5", "det": "5/5", "oe": 0.758}, "Limosilactobacillus fermentum": {"ev": "5/5", "det": "5/5", "oe": 1.676}, "Clostridioides difficile": {"ev": "5/5", "det": "5/5", "oe": 1.036}, "Akkermansia muciniphila": {"ev": "5/5", "det": "5/5", "oe": 0.946}, "Candida albicans": {"ev": "5/5", "det": "5/5", "oe": 0.976}, "Saccharomyces cerevisiae": {"ev": "5/5", "det": "5/5", "oe": 0.738}, "Methanobrevibacter smithii": {"ev": "5/5", "det": "4/5", "oe": 0.854}, "Salmonella enterica": {"ev": "0/5", "det": "n/a", "oe": 3.052}, "Enterococcus faecalis": {"ev": "0/5", "det": "n/a", "oe": 0.0}, "Clostridium perfringens": {"ev": "0/5", "det": "n/a", "oe": 8.754}}, "0.500": {"Faecalibacterium prausnitzii": {"ev": "5/5", "det": "5/5", "oe": 1.238}, "Veillonella rogosae": {"ev": "5/5", "det": "5/5", "oe": 0.884}, "Roseburia hominis": {"ev": "5/5", "det": "5/5", "oe": 0.408}, "Bacteroides fragilis": {"ev": "5/5", "det": "5/5", "oe": 0.958}, "Escherichia coli": {"ev": "5/5", "det": "5/5", "oe": 0.576}, "Prevotella corporis": {"ev": "5/5", "det": "5/5", "oe": 0.944}, "Bifidobacterium adolescentis": {"ev": "5/5", "det": "5/5", "oe": 0.226}, "Fusobacterium nucleatum": {"ev": "5/5", "det": "5/5", "oe": 0.764}, "Limosilactobacillus fermentum": {"ev": "5/5", "det": "5/5", "oe": 1.66}, "Clostridioides difficile": {"ev": "5/5", "det": "5/5", "oe": 1.006}, "Akkermansia muciniphila": {"ev": "5/5", "det": "5/5", "oe": 0.936}, "Candida albicans": {"ev": "5/5", "det": "5/5", "oe": 0.966}, "Saccharomyces cerevisiae": {"ev": "5/5", "det": "5/5", "oe": 0.734}, "Methanobrevibacter smithii": {"ev": "5/5", "det": "5/5", "oe": 0.864}, "Salmonella enterica": {"ev": "0/5", "det": "n/a", "oe": 3.044}, "Enterococcus faecalis": {"ev": "0/5", "det": "n/a", "oe": 0.0}, "Clostridium perfringens": {"ev": "0/5", "det": "n/a", "oe": 8.754}}, "1.000": {"Faecalibacterium prausnitzii": {"ev": "1/1", "det": "1/1", "oe": 1.24}, "Veillonella rogosae": {"ev": "1/1", "det": "1/1", "oe": 0.88}, "Roseburia hominis": {"ev": "1/1", "det": "1/1", "oe": 0.41}, "Bacteroides fragilis": {"ev": "1/1", "det": "1/1", "oe": 0.96}, "Escherichia coli": {"ev": "1/1", "det": "1/1", "oe": 0.57}, "Prevotella corporis": {"ev": "1/1", "det": "1/1", "oe": 0.94}, "Bifidobacterium adolescentis": {"ev": "1/1", "det": "1/1", "oe": 0.22}, "Fusobacterium nucleatum": {"ev": "1/1", "det": "1/1", "oe": 0.76}, "Limosilactobacillus fermentum": {"ev": "1/1", "det": "1/1", "oe": 1.66}, "Clostridioides difficile": {"ev": "1/1", "det": "1/1", "oe": 1.0}, "Akkermansia muciniphila": {"ev": "1/1", "det": "1/1", "oe": 0.94}, "Candida albicans": {"ev": "1/1", "det": "1/1", "oe": 0.97}, "Saccharomyces cerevisiae": {"ev": "1/1", "det": "1/1", "oe": 0.73}, "Methanobrevibacter smithii": {"ev": "1/1", "det": "1/1", "oe": 0.88}, "Salmonella enterica": {"ev": "0/1", "det": "n/a", "oe": 3.19}, "Enterococcus faecalis": {"ev": "0/1", "det": "n/a", "oe": 0.0}, "Clostridium perfringens": {"ev": "0/1", "det": "n/a", "oe": 5.41}}}, "summ": {"0.100": {"f1": 0.9525, "ev": "13", "fp": 1.4, "n": "5", "reads": 18298.4, "bc": 0.171}, "0.250": {"f1": 0.9581, "ev": "14", "fp": 1.0, "n": "5", "reads": 45889.6, "bc": 0.1692}, "0.500": {"f1": 0.9655, "ev": "14", "fp": 1.0, "n": "5", "reads": 91318.0, "bc": 0.1682}, "1.000": {"f1": 0.9655, "ev": "14", "fp": 1.0, "n": "1", "reads": 185000.0, "bc": 0.1681}}, "conf": [{"c": "0", "f1": 0.966, "cl": 94.2}, {"c": "0.05", "f1": 0.929, "cl": 57.5}, {"c": "0.1", "f1": 0.6, "cl": 0.4}, {"c": "0.2", "f1": 0.0, "cl": 0.0}, {"c": "0.4", "f1": 0.0, "cl": 0.0}]};
+const tip=document.getElementById('tip');
+function showTip(e,t){tip.textContent=t;tip.style.opacity=1;tip.style.left=Math.min(e.clientX+14,window.innerWidth-280)+'px';tip.style.top=(e.clientY+14)+'px';}
+function hideTip(){tip.style.opacity=0;}
+
+let dk='1.000', sk='exp';
+const bars=document.getElementById('bars');
+const MAXV=3.5;
+function renderBars(){
+  const s=DATA.summ[dk];
+  document.getElementById('dsum').innerHTML=
+   '<div class="stat"><b>'+s.f1.toFixed(3)+'</b><span>Mean F1 ('+s.n+' run'+(s.n==1?'':'s')+')</span></div>'+
+   '<div class="stat"><b>'+s.ev+'</b><span>Evaluable species</span></div>'+
+   '<div class="stat"><b>'+s.fp.toFixed(1)+'</b><span>Mean false positives</span></div>'+
+   '<div class="stat"><b>'+Math.round(s.reads).toLocaleString()+'</b><span>'+(dk==='1.000'?'Reads analysed':'Reads in the subsample')+'</span></div>';
+  const rows=DATA.species.map(x=>{const d=DATA.depth[dk][x.name];const evn=parseInt(d.ev.split('/')[0]);return Object.assign({},x,{oe:d.oe,evn:evn,evt:d.ev,det:d.det});});
+  rows.sort((a,b)=>sk==='exp'?(b.exp-a.exp)||a.name.localeCompare(b.name):b.oe-a.oe);
+  bars.innerHTML='';
+  const ref=100/MAXV;
+  rows.forEach(r=>{
+    const row=document.createElement('div');row.className='bar-row';
+    const lab=document.createElement('div');lab.className='bar-label';lab.innerHTML='<i>'+r.name+'</i> &middot; '+(r.dna<0.01?'<0.01':r.dna)+'%';
+    const tr=document.createElement('div');tr.className='bar-track';
+    const f=document.createElement('div');f.className='seg '+(r.evn>0?'c-teal':'c-grey');
+    f.style.width=Math.min(r.oe,MAXV)/MAXV*100+'%';tr.appendChild(f);
+    const l=document.createElement('div');l.className='refline';l.style.left=ref+'%';tr.appendChild(l);
+    const msg=r.name+': '+r.oe.toFixed(2)+' observed / expected'+(r.evn>0?' (evaluable in '+r.evt+' runs, detected in '+r.det+')':' (not evaluable: fewer than 20 expected reads)')+(r.oe>MAXV?'; bar clipped':'');
+    tr.addEventListener('mousemove',e=>showTip(e,msg));tr.addEventListener('mouseleave',hideTip);tr.setAttribute('aria-label',msg);
+    const v=document.createElement('div');v.className='bar-val';v.textContent=r.oe.toFixed(2);
+    row.append(lab,tr,v);bars.appendChild(row);
+  });
+}
+document.querySelectorAll('[data-d]').forEach(b=>b.addEventListener('click',()=>{dk=b.dataset.d;document.querySelectorAll('[data-d]').forEach(x=>x.classList.toggle('on',x===b));renderBars();}));
+document.querySelectorAll('[data-s]').forEach(b=>b.addEventListener('click',()=>{sk=b.dataset.s;document.querySelectorAll('[data-s]').forEach(x=>x.classList.toggle('on',x===b));renderBars();}));
+renderBars();
+const cf=document.getElementById('conf');
+DATA.conf.forEach(c=>{
+  const row=document.createElement('div');row.className='bar-row';
+  row.innerHTML='<div class="bar-label">Confidence '+c.c+'</div><div class="bar-track"><div class="seg c-teal" style="width:'+c.f1*100+'%"></div></div><div class="bar-val">'+c.f1.toFixed(3)+'</div>';
+  const tr=row.querySelector('.bar-track');const m='Confidence '+c.c+': F1 '+c.f1.toFixed(3)+', '+c.cl+'% of reads classified';
+  tr.addEventListener('mousemove',e=>showTip(e,m));tr.addEventListener('mouseleave',hideTip);tr.setAttribute('aria-label',m);
+  cf.appendChild(row);
+});
+
+</script>
+</body>
+</html>
