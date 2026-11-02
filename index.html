@@ -175,6 +175,11 @@
     /* ── PROJECTS ── */
     #projects { background: var(--navy-d); }
     .projects-grid { display: grid; gap: 1.5rem; }
+    .group-label { margin-top: 1.25rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
+    .group-label:first-child { margin-top: 0; }
+    .group-label .gl-num { color: var(--teal); font-weight: 700; font-size: 0.75rem; letter-spacing: 0.14em; margin-right: 0.6rem; }
+    .group-label .gl-title { color: var(--white); font-weight: 700; font-size: 1.05rem; }
+    .group-label .gl-sub { display: block; color: var(--text-m); font-size: 0.85rem; margin-top: 0.2rem; }
     .project-card {
       background: var(--card); border: 1px solid var(--border);
       border-radius: 10px; overflow: hidden;
@@ -321,6 +326,20 @@
       border: 1px solid var(--border);
     }
     .diagram-wrap svg { width: 100%; height: auto; display: block; }
+    @media (max-width: 700px) {
+      .diagram-wrap { overflow-x: auto; }
+      .diagram-wrap svg { min-width: 860px; max-width: none; }
+    }
+    .contact-link { overflow-wrap: anywhere; }
+    .project-card { grid-template-columns: 4px minmax(0, 1fr); }
+    .card-body { min-width: 0; }
+    h3.group-label { font-size: inherit; font-weight: inherit; line-height: 1.4; margin-bottom: 0; scroll-margin-top: 85px; }
+    h4.card-title { margin: 0; line-height: 1.3; }
+    .card-org .sp { text-transform: none; font-style: italic; letter-spacing: 0.04em; font-size: 0.8rem; }
+    .jump-links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; margin: -1rem 0 1.75rem; }
+    .jump-links a { color: var(--teal-l); font-size: 0.88rem; font-weight: 600; text-decoration: none; padding: 0.2rem 0; border-bottom: 1px solid transparent; }
+    .jump-links a:hover { border-bottom-color: var(--teal-l); }
+    .jump-links a:focus-visible { outline: 2px solid var(--teal-l); outline-offset: 3px; border-radius: 2px; }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 700px) {
@@ -378,7 +397,7 @@
           I am a <span class="highlight">molecular biologist</span> with a microbiology background and industry experience in molecular diagnostics, assay development and biotechnology.
         </p>
         <p>
-          Alongside that work, I have built independent <span class="highlight">computational biology</span> projects: reproducible bioinformatics workflows for microbial genomics and diagnostic applications, extended more recently to human clinical genomics — variant calling, ACMG/AMP classification, pharmacogenomics and somatic tumour–normal analysis.
+          Alongside that work, I have built independent <span class="highlight">computational biology</span> projects: reproducible bioinformatics workflows for microbial genomics, metagenomics and diagnostic applications, extended more recently to human clinical genomics — variant calling, ACMG/AMP classification, pharmacogenomics and somatic tumour–normal analysis.
         </p>
         <p>
           Having worked on both sides, I can connect what an assay has to do in practice with what the sequence data can and cannot show. The case studies below are self-directed projects, with code on GitHub, that show how I work.
@@ -439,6 +458,7 @@
           <li>Inclusivity and exclusivity analysis</li>
           <li>Assay-development support, including in-silico primer/probe design and QC</li>
           <li>AMR profiling and pathogen typing</li>
+          <li>Metagenomic profiling, AMR surveillance and analytical method benchmarking</li>
           <li>Phylogenomics and genome-collection curation</li>
         </ul>
       </div>
@@ -468,7 +488,258 @@
     <p class="section-intro">
       Independent projects that show the methods behind the services above. Each links to its code on GitHub.
     </p>
+    <div class="jump-links" role="navigation" aria-label="Case study groups">
+      <a href="#metagenomics">Metagenomics</a>
+      <a href="#microbial-genomics">Molecular Diagnostics</a>
+      <a href="#clinical-genomics">Human &amp; Clinical Genomics</a>
+    </div>
     <div class="projects-grid">
+
+      <h3 class="group-label" id="metagenomics"><span class="gl-num">01</span><span class="gl-title">Metagenomics &amp; Analytical Benchmarking</span><span class="gl-sub">Benchmarking taxonomic and resistance-gene profiling, and testing whether a published analysis can be reproduced.</span></h3>
+
+      <!-- Project 9 -->
+      <div class="project-card">
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div>
+              <div class="card-org">Nanopore Shotgun Metagenomics · Benchmark</div>
+              <h4 class="card-title">Pathogen &amp; AMR Profiling Benchmark</h4>
+            </div>
+            <a class="card-github" href="https://github.com/bkhimek/nanopore-metagenomics-benchmark" target="_blank" rel="noopener">
+              <svg class="icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              GitHub
+            </a>
+          </div>
+          <p class="card-desc">
+            Benchmark of taxonomic profiling and antimicrobial-resistance gene detection on public Nanopore shotgun data from a defined gut mock community (Zymo D6331, PRJNA1181840). Experiments were registered before they were run, tuned on a development read pool, frozen with a git tag, and scored once on a separate evaluation pool; every arm and deviation is reported, including the target that was missed. Research use only.
+          </p>
+          <p class="card-desc">
+            Species calls (Kraken2, cross-checked with Sylph) were scored against the theoretical composition, with depth, confidence-threshold and abundance experiments. Resistance genes were detected by read alignment to a reference catalogue built with AMRFinderPlus, and the species carrying each gene was tested separately. That attribution step fell short of its registered target and is reported as a failure, with a read-level trace of why. The sequenced kit lot could not be confirmed with the data authors, so all results are stated against the theoretical composition.
+          </p>
+          <div class="card-metrics">
+            <div class="metric"><b>0.966</b> species F1 on the evaluation pool (14 TP · 1 FP · 0 FN)</div>
+            <div class="metric"><b>14/17</b> species evaluable at a 20-read minimum</div>
+            <div class="metric"><b>0.953–0.966</b> F1 across 0.1 / 0.25 / 0.5 Gb depth</div>
+            <div class="metric"><b>3</b> resistance genes detected: <i>cepA</i> · <i>tet(Q)</i> · <i>tet(W)</i></div>
+            <div class="metric"><b>0.593</b> species attribution vs 0.85 target — not met</div>
+          </div>
+          <div class="card-tags">
+            <span class="tag">Nextflow DSL2</span>
+            <span class="tag">Kraken2</span>
+            <span class="tag">Sylph</span>
+            <span class="tag">minimap2</span>
+            <span class="tag">ResFinder</span>
+            <span class="tag">AMRFinderPlus</span>
+            <span class="tag">Docker</span>
+            <span class="tag">Python</span>
+          </div>
+          <details class="diagram-toggle">
+            <summary>View Workflow Diagram</summary>
+            <div class="diagram-wrap">
+<svg viewBox="0 0 860 560" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" role="img">
+  <title>Nanopore Metagenomics Benchmark Workflow</title>
+  <desc>A public Nanopore run of a gut mock community is split into development and evaluation read pools, experiments are registered and the pipeline frozen, then taxonomic profiling and resistance-gene detection are scored against the theoretical composition, and every result is reported including a missed target.</desc>
+  <defs>
+    <marker id="arr-nmb" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#2E4057"/></marker>
+  </defs>
+  <rect width="860" height="560" fill="#F4F6F8" rx="10"/>
+  <text x="430" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E4057">Nanopore Metagenomics Benchmark</text>
+  <text x="430" y="46" text-anchor="middle" font-size="10" fill="#777">Registered experiments · dev/eval split · scored against the theoretical composition</text>
+  <rect x="280" y="58" width="300" height="40" rx="6" fill="#2E4057"/>
+  <text x="430.0" y="75" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Public Nanopore run SRR31222153</text>
+  <text x="430.0" y="89" text-anchor="middle" font-size="9" fill="#A8BFD0">Zymo D6331 gut mock community (PRJNA1181840)</text>
+  <line x1="430" y1="98" x2="430" y2="114" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
+  <rect x="290" y="114" width="280" height="38" rx="6" fill="#2E4057"/>
+  <text x="430.0" y="131" text-anchor="middle" font-size="11" font-weight="bold" fill="white">DEV / EVAL READ POOLS</text>
+  <text x="430.0" y="145" text-anchor="middle" font-size="9" fill="#A8BFD0">tune on dev, score eval once</text>
+  <line x1="430" y1="152" x2="430" y2="168" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
+  <rect x="290" y="168" width="280" height="38" rx="6" fill="#2E4057"/>
+  <text x="430.0" y="185" text-anchor="middle" font-size="11" font-weight="bold" fill="white">REGISTER, THEN FREEZE</text>
+  <text x="430.0" y="199" text-anchor="middle" font-size="9" fill="#A8BFD0">plan registered · git tag before eval</text>
+  <line x1="430" y1="206" x2="430" y2="222" stroke="#2E4057" stroke-width="2"/>
+  <line x1="430" y1="222" x2="215" y2="222" stroke="#2E4057" stroke-width="2"/>
+  <line x1="430" y1="222" x2="645" y2="222" stroke="#2E4057" stroke-width="2"/>
+  <line x1="215" y1="222" x2="215" y2="238" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
+  <line x1="645" y1="222" x2="645" y2="238" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
+  <rect x="75" y="238" width="280" height="38" rx="6" fill="#2E4057"/>
+  <text x="215.0" y="255" text-anchor="middle" font-size="11" font-weight="bold" fill="white">TAXONOMIC PROFILING</text>
+  <text x="215.0" y="269" text-anchor="middle" font-size="9" fill="#A8BFD0">Kraken2 PlusPF-8 · Sylph</text>
+  <rect x="505" y="238" width="280" height="38" rx="6" fill="#2E4057"/>
+  <text x="645.0" y="255" text-anchor="middle" font-size="11" font-weight="bold" fill="white">RESISTANCE GENES</text>
+  <text x="645.0" y="269" text-anchor="middle" font-size="9" fill="#A8BFD0">minimap2 → ResFinder · AMRFinderPlus catalogue</text>
+  <line x1="215" y1="276" x2="215" y2="300" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
+  <line x1="645" y1="276" x2="645" y2="300" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
+  <rect x="75" y="300" width="280" height="50" rx="6" fill="#1A6B45"/>
+  <text x="215.0" y="317" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Species F1 0.966</text>
+  <text x="215.0" y="331" text-anchor="middle" font-size="9" fill="#A8D5B8">14 TP · 1 FP (human) · 0 FN · 14 of 17 evaluable</text>
+  <rect x="505" y="300" width="280" height="50" rx="6" fill="#1A6B45"/>
+  <text x="645.0" y="317" text-anchor="middle" font-size="12" font-weight="bold" fill="white">cepA · tet(Q) · tet(W) detected</text>
+  <text x="645.0" y="331" text-anchor="middle" font-size="9" fill="#A8D5B8">22 · 51 · 16 supporting reads</text>
+  <line x1="215" y1="350" x2="215" y2="374" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
+  <line x1="645" y1="350" x2="645" y2="374" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
+  <rect x="75" y="374" width="280" height="50" rx="6" fill="#2E4057"/>
+  <text x="215.0" y="391" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Depth series · confidence · abundance</text>
+  <text x="215.0" y="405" text-anchor="middle" font-size="9" fill="#A8BFD0">F1 0.953–0.966 · Bray-Curtis 0.137–0.168</text>
+  <rect x="505" y="374" width="280" height="50" rx="6" fill="#B5651D"/>
+  <text x="645.0" y="391" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Species attribution of AMR reads</text>
+  <text x="645.0" y="405" text-anchor="middle" font-size="9" fill="#F3D9B8">0.593 vs 0.85 target — not met</text>
+  <line x1="215" y1="424" x2="215" y2="448" stroke="#2E4057" stroke-width="2"/>
+  <line x1="645" y1="424" x2="645" y2="448" stroke="#2E4057" stroke-width="2"/>
+  <line x1="215" y1="448" x2="645" y2="448" stroke="#2E4057" stroke-width="2"/>
+  <line x1="430" y1="448" x2="430" y2="462" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
+  <rect x="180" y="462" width="500" height="52" rx="6" fill="#6B3FA0"/>
+  <text x="430.0" y="479" text-anchor="middle" font-size="12" font-weight="bold" fill="white">All arms and deviations reported</text>
+  <text x="430.0" y="493" text-anchor="middle" font-size="9" fill="#D8C4F0">Nextflow DSL2 core path · eval refused without --allow_eval · images pinned by digest</text>
+  <rect x="170" y="536" width="12" height="10" rx="2" fill="#2E4057"/>
+  <text x="186" y="545" font-size="9" fill="#555">Analysis step</text>
+  <rect x="290" y="536" width="12" height="10" rx="2" fill="#1A6B45"/>
+  <text x="306" y="545" font-size="9" fill="#555">Key output</text>
+  <rect x="400" y="536" width="12" height="10" rx="2" fill="#B5651D"/>
+  <text x="416" y="545" font-size="9" fill="#555">Target not met</text>
+  <rect x="530" y="536" width="12" height="10" rx="2" fill="#6B3FA0"/>
+  <text x="546" y="545" font-size="9" fill="#555">Reporting</text>
+</svg>
+            </div>
+          </details>
+          <div class="card-reports">
+            <div class="card-reports-label">Interactive Reports</div>
+            <div class="card-reports-links">
+              <a class="btn-report" href="assets/nanopore_01_amr_species_attribution.html" target="_blank" rel="noopener">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+                AMR Species Attribution
+              </a>
+              <a class="btn-report" href="assets/nanopore_02_species_scorecard.html" target="_blank" rel="noopener">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
+                Species Scorecard
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 10 -->
+      <div class="project-card">
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div>
+              <div class="card-org">Wastewater Shotgun Metagenomics · Preregistered Reproduction</div>
+              <h4 class="card-title">Resistance Genes by Metagenomics vs qPCR</h4>
+            </div>
+            <a class="card-github" href="https://github.com/bkhimek/Wastewater_AMR_Metagenomics" target="_blank" rel="noopener">
+              <svg class="icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              GitHub
+            </a>
+          </div>
+          <p class="card-desc">
+            Reproduction of a published wastewater study (Taylor et al. 2025, BioProject PRJNA904380) that compared shotgun metagenomics with qPCR for five resistance genes: <i>ermB</i>, <i>sul1</i>, <i>tetA</i>, <i>tetQ</i> and <i>tetW</i>. Using only the public reads and the paper&rsquo;s methods description, the pipeline was built on one development day. The pass/fail criteria and the scoring script were then registered and frozen with a git tag before 18 held-out liquid samples were opened and scored once. Research use only.
+          </p>
+          <p class="card-desc">
+            All registered criteria were met. Two results did not reproduce and are reported as such: <i>ermB</i> counts in three effluent samples, where competition between closely related reference sequences changes how reads are assigned (the authors&rsquo; exact reference files were not available), and the paper&rsquo;s ARG-per-16S scale, which is about 100 times different here for a reason that could not be verified. Gene-level agreement was stronger than subtype-level agreement. The comparison with the published qPCR calls is descriptive and exploratory.
+          </p>
+          <div class="card-metrics">
+            <div class="metric"><b>17/18</b> samples with summed ARG read counts within &plusmn;7% of the published sum (registered: 16/18)</div>
+            <div class="metric"><b>68/70</b> gene&ndash;sample pairs within &plusmn;10% of the published count</div>
+            <div class="metric"><b>0</b> additional gene detections (registered limit: 2)</div>
+            <div class="metric"><b>165/165</b> sample&ndash;gene presence calls match the paper&rsquo;s Table S5</div>
+            <div class="metric"><b>3/9</b> effluent samples with low <i>ermB</i> &mdash; reported, cause unresolved</div>
+          </div>
+          <div class="card-tags">
+            <span class="tag">Preregistration</span>
+            <span class="tag">KMA</span>
+            <span class="tag">bbduk</span>
+            <span class="tag">ResFinder</span>
+            <span class="tag">SILVA</span>
+            <span class="tag">conda</span>
+            <span class="tag">Bash</span>
+            <span class="tag">Python</span>
+          </div>
+          <details class="diagram-toggle">
+            <summary>View Workflow Diagram</summary>
+            <div class="diagram-wrap">
+<svg viewBox="0 0 860 560" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" role="img">
+  <title>Wastewater Resistance-Gene Metagenomics Reproduction Workflow</title>
+  <desc>Public shotgun reads from a wastewater study are split into development and evaluation samples, the criteria and scoring script are registered and frozen, then reads are trimmed and aligned to a resistance-gene database and a 16S database and scored against the published counts. The criteria were met, while ermB in three effluent samples and the 16S scale were not reproduced.</desc>
+  <defs>
+    <marker id="arr-ww" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#2E4057"/></marker>
+  </defs>
+  <rect width="860" height="560" fill="#F4F6F8" rx="10"/>
+  <text x="430" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E4057">Wastewater ARG Metagenomics: Preregistered Reproduction</text>
+  <text x="430" y="46" text-anchor="middle" font-size="10" fill="#777">Public reads · develop on Day 1 · freeze · score 18 held-out samples once</text>
+  <rect x="280" y="58" width="300" height="40" rx="6" fill="#2E4057"/>
+  <text x="430.0" y="75" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Public shotgun reads PRJNA904380</text>
+  <text x="430.0" y="89" text-anchor="middle" font-size="9" fill="#A8BFD0">33 wastewater samples from one plant (Taylor et al. 2025)</text>
+  <line x1="430" y1="98" x2="430" y2="114" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-ww)"/>
+  <rect x="290" y="114" width="280" height="38" rx="6" fill="#2E4057"/>
+  <text x="430.0" y="131" text-anchor="middle" font-size="11" font-weight="bold" fill="white">DEVELOPMENT / EVALUATION SPLIT</text>
+  <text x="430.0" y="145" text-anchor="middle" font-size="9" fill="#A8BFD0">Day 1: 9 develop · Days 2–3: 18 evaluate · 6 sediment descriptive</text>
+  <line x1="430" y1="152" x2="430" y2="168" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-ww)"/>
+  <rect x="290" y="168" width="280" height="38" rx="6" fill="#2E4057"/>
+  <text x="430.0" y="185" text-anchor="middle" font-size="11" font-weight="bold" fill="white">REGISTER, THEN FREEZE</text>
+  <text x="430.0" y="199" text-anchor="middle" font-size="9" fill="#A8BFD0">criteria and scoring script registered · git tag before evaluation</text>
+  <line x1="430" y1="206" x2="430" y2="222" stroke="#2E4057" stroke-width="2"/>
+  <line x1="430" y1="222" x2="215" y2="222" stroke="#2E4057" stroke-width="2"/>
+  <line x1="430" y1="222" x2="645" y2="222" stroke="#2E4057" stroke-width="2"/>
+  <line x1="215" y1="222" x2="215" y2="238" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-ww)"/>
+  <line x1="645" y1="222" x2="645" y2="238" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-ww)"/>
+  <rect x="75" y="238" width="280" height="38" rx="6" fill="#2E4057"/>
+  <text x="215.0" y="255" text-anchor="middle" font-size="11" font-weight="bold" fill="white">TRIM + RESISTANCE GENES</text>
+  <text x="215.0" y="269" text-anchor="middle" font-size="9" fill="#A8BFD0">bbduk → KMA vs ResFinder 2.1.1 · gene and subtype counts</text>
+  <rect x="505" y="238" width="280" height="38" rx="6" fill="#2E4057"/>
+  <text x="645.0" y="255" text-anchor="middle" font-size="11" font-weight="bold" fill="white">16S DENOMINATOR</text>
+  <text x="645.0" y="269" text-anchor="middle" font-size="9" fill="#A8BFD0">KMA vs SILVA 138.1 NR99 · ARG per 16S read</text>
+  <line x1="215" y1="276" x2="215" y2="300" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-ww)"/>
+  <line x1="645" y1="276" x2="645" y2="300" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-ww)"/>
+  <rect x="75" y="300" width="280" height="50" rx="6" fill="#1A6B45"/>
+  <text x="215.0" y="317" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Registered criteria P1–P4 met</text>
+  <text x="215.0" y="331" text-anchor="middle" font-size="9" fill="#A8D5B8">P1 17/18 · P2 18/18 · P3 68/70 · P4 17/18 · 0 extra genes</text>
+  <rect x="505" y="300" width="280" height="50" rx="6" fill="#B5651D"/>
+  <text x="645.0" y="317" text-anchor="middle" font-size="12" font-weight="bold" fill="white">ARG per 16S not reproduced</text>
+  <text x="645.0" y="331" text-anchor="middle" font-size="9" fill="#F3D9B8">about 100× smaller than the paper’s scale · unit unverified</text>
+  <line x1="215" y1="350" x2="215" y2="374" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-ww)"/>
+  <line x1="645" y1="350" x2="645" y2="374" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-ww)"/>
+  <rect x="75" y="374" width="280" height="50" rx="6" fill="#B5651D"/>
+  <text x="215.0" y="391" text-anchor="middle" font-size="12" font-weight="bold" fill="white">ermB low in 3 of 9 effluent samples</text>
+  <text x="215.0" y="405" text-anchor="middle" font-size="9" fill="#F3D9B8">reference competition supported · cause unresolved</text>
+  <rect x="505" y="374" width="280" height="50" rx="6" fill="#2E4057"/>
+  <text x="645.0" y="391" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Detection vs qPCR (exploratory)</text>
+  <text x="645.0" y="405" text-anchor="middle" font-size="9" fill="#A8BFD0">Table S5: 165/165 · 26/36 qPCR positives found in pond + sediment</text>
+  <line x1="215" y1="424" x2="215" y2="448" stroke="#2E4057" stroke-width="2"/>
+  <line x1="645" y1="424" x2="645" y2="448" stroke="#2E4057" stroke-width="2"/>
+  <line x1="215" y1="448" x2="645" y2="448" stroke="#2E4057" stroke-width="2"/>
+  <line x1="430" y1="448" x2="430" y2="462" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-ww)"/>
+  <rect x="180" y="462" width="500" height="52" rx="6" fill="#6B3FA0"/>
+  <text x="430.0" y="479" text-anchor="middle" font-size="12" font-weight="bold" fill="white">All results and post-freeze changes reported</text>
+  <text x="430.0" y="493" text-anchor="middle" font-size="9" fill="#D8C4F0">gene-level agreement stronger than subtype-level · limits stated · MIT-licensed code</text>
+  <rect x="170" y="536" width="12" height="10" rx="2" fill="#2E4057"/>
+  <text x="186" y="545" font-size="9" fill="#555">Analysis step</text>
+  <rect x="290" y="536" width="12" height="10" rx="2" fill="#1A6B45"/>
+  <text x="306" y="545" font-size="9" fill="#555">Criteria met</text>
+  <rect x="400" y="536" width="12" height="10" rx="2" fill="#B5651D"/>
+  <text x="416" y="545" font-size="9" fill="#555">Not reproduced</text>
+  <rect x="530" y="536" width="12" height="10" rx="2" fill="#6B3FA0"/>
+  <text x="546" y="545" font-size="9" fill="#555">Reporting</text>
+</svg>
+            </div>
+          </details>
+          <div class="card-reports">
+            <div class="card-reports-label">Interactive Reports</div>
+            <div class="card-reports-links">
+              <a class="btn-report" href="assets/ww_01_registered_criteria_scorecard.html" target="_blank" rel="noopener">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
+                Registered Criteria Scorecard
+              </a>
+              <a class="btn-report" href="assets/ww_02_ermB_shortfall.html" target="_blank" rel="noopener">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+                ermB Shortfall
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="group-label" id="microbial-genomics"><span class="gl-num">02</span><span class="gl-title">Molecular Diagnostics &amp; Microbial Genomics</span><span class="gl-sub">Assay design, resistance profiling, typing and phylogenomics of bacterial pathogens.</span></h3>
 
       <!-- Project 1 -->
       <div class="project-card">
@@ -476,8 +747,8 @@
         <div class="card-body">
           <div class="card-top">
             <div>
-              <div class="card-org">Neisseria gonorrhoeae</div>
-              <div class="card-title">AMR Diagnostic Pipeline</div>
+              <div class="card-org"><i class="sp">Neisseria gonorrhoeae</i></div>
+              <h4 class="card-title">AMR Diagnostic Pipeline</h4>
             </div>
             <a class="card-github" href="https://github.com/bkhimek/N_gonorrhoeae-AMR-pipeline" target="_blank" rel="noopener">
               <svg class="icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
@@ -655,8 +926,8 @@
         <div class="card-body">
           <div class="card-top">
             <div>
-              <div class="card-org">Streptococcus pyogenes</div>
-              <div class="card-title">AMR &amp; Typing Pipeline</div>
+              <div class="card-org"><i class="sp">Streptococcus pyogenes</i></div>
+              <h4 class="card-title">AMR &amp; Typing Pipeline</h4>
             </div>
             <a class="card-github" href="https://github.com/bkhimek/StrepA-AMR-pipeline" target="_blank" rel="noopener">
               <svg class="icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
@@ -848,8 +1119,8 @@
         <div class="card-body">
           <div class="card-top">
             <div>
-              <div class="card-org">Chlamydia trachomatis · Assay Design</div>
-              <div class="card-title">In-silico validated Workflow for Diagnostic Target Selection</div>
+              <div class="card-org"><i class="sp">Chlamydia trachomatis</i> · Assay Design</div>
+              <h4 class="card-title">In-silico validated Workflow for Diagnostic Target Selection</h4>
             </div>
             <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
               <a class="card-github" href="https://github.com/bkhimek/C_trachomatis_inclusivity_exclusivity" target="_blank" rel="noopener">
@@ -1031,8 +1302,8 @@
         <div class="card-body">
           <div class="card-top">
             <div>
-              <div class="card-org">Klebsiella pneumoniae</div>
-              <div class="card-title">Phylogenomics Pipeline</div>
+              <div class="card-org"><i class="sp">Klebsiella pneumoniae</i></div>
+              <h4 class="card-title">Phylogenomics Pipeline</h4>
             </div>
             <a class="card-github" href="https://github.com/bkhimek/K-pneumoniae-Phylogenomics" target="_blank" rel="noopener">
               <svg class="icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
@@ -1231,6 +1502,8 @@
         </div>
       </div>
 
+      <h3 class="group-label" id="clinical-genomics"><span class="gl-num">03</span><span class="gl-title">Human &amp; Clinical Genomics</span><span class="gl-sub">Variant calling, ACMG/AMP classification, pharmacogenomics and somatic analysis.</span></h3>
+
       <!-- Project 5 -->
       <div class="project-card">
         <div class="card-accent"></div>
@@ -1238,7 +1511,7 @@
           <div class="card-top">
             <div>
               <div class="card-org">CAPN3 / DMD</div>
-              <div class="card-title">Variant Calling Pipeline</div>
+              <h4 class="card-title">Variant Calling Pipeline</h4>
             </div>
             <a class="card-github" href="https://github.com/bkhimek/CAPN3-DMD-variant-calling-pipeline" target="_blank" rel="noopener">
               <svg class="icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
@@ -1403,7 +1676,7 @@
           <div class="card-top">
             <div>
               <div class="card-org">CAPN3 / DMD / BRCA1</div>
-              <div class="card-title">ACMG/AMP Variant Classifier</div>
+              <h4 class="card-title">ACMG/AMP Variant Classifier</h4>
             </div>
             <a class="card-github" href="https://github.com/bkhimek/CAPN3-DMD-variant-classifier" target="_blank" rel="noopener">
               <svg class="icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
@@ -1538,7 +1811,7 @@
           <div class="card-top">
             <div>
               <div class="card-org">TPMT / DPYD / SLCO1B1 / CYP2C19 / NUDT15</div>
-              <div class="card-title">PGx Interpretation Pipeline</div>
+              <h4 class="card-title">PGx Interpretation Pipeline</h4>
             </div>
             <a class="card-github" href="https://github.com/bkhimek/pgx-interpretation-pipeline" target="_blank" rel="noopener">
               <svg class="icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
@@ -1713,7 +1986,7 @@
           <div class="card-top">
             <div>
               <div class="card-org">COLO829 / COLO829BL</div>
-              <div class="card-title">Somatic Genomics Pipeline</div>
+              <h4 class="card-title">Somatic Genomics Pipeline</h4>
             </div>
             <a class="card-github" href="https://github.com/bkhimek/somatic-variant-analysis-COLO829" target="_blank" rel="noopener">
               <svg class="icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
@@ -1882,249 +2155,6 @@
               <a class="btn-report" href="assets/colo829_03_civic_evidence_coverage.html" target="_blank" rel="noopener">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm1 15h-2v-2h2zm0-4h-2V7h2z"/></svg>
                 CIViC Evidence Coverage
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Project 9 -->
-      <div class="project-card">
-        <div class="card-accent"></div>
-        <div class="card-body">
-          <div class="card-top">
-            <div>
-              <div class="card-org">Nanopore Shotgun Metagenomics · Benchmark</div>
-              <div class="card-title">Pathogen &amp; AMR Profiling Benchmark</div>
-            </div>
-            <a class="card-github" href="https://github.com/bkhimek/nanopore-metagenomics-benchmark" target="_blank" rel="noopener">
-              <svg class="icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-              GitHub
-            </a>
-          </div>
-          <p class="card-desc">
-            Benchmark of taxonomic profiling and antimicrobial-resistance gene detection on public Nanopore shotgun data from a defined gut mock community (Zymo D6331, PRJNA1181840). Experiments were registered before they were run, tuned on a development read pool, frozen with a git tag, and scored once on a separate evaluation pool; every arm and deviation is reported, including the target that was missed. Research use only.
-          </p>
-          <p class="card-desc">
-            Species calls (Kraken2, cross-checked with Sylph) were scored against the theoretical composition, with depth, confidence-threshold and abundance experiments. Resistance genes were detected by read alignment to a reference catalogue built with AMRFinderPlus, and the species carrying each gene was tested separately. That attribution step fell short of its registered target and is reported as a failure, with a read-level trace of why. The sequenced kit lot could not be confirmed with the data authors, so all results are stated against the theoretical composition.
-          </p>
-          <div class="card-metrics">
-            <div class="metric"><b>0.966</b> species F1 on the evaluation pool (14 TP · 1 FP · 0 FN)</div>
-            <div class="metric"><b>14/17</b> species evaluable at a 20-read minimum</div>
-            <div class="metric"><b>0.953–0.966</b> F1 across 0.1 / 0.25 / 0.5 Gb depth</div>
-            <div class="metric"><b>3</b> resistance genes detected: cepA · tet(Q) · tet(W)</div>
-            <div class="metric"><b>0.593</b> species attribution vs 0.85 target — not met</div>
-          </div>
-          <div class="card-tags">
-            <span class="tag">Nextflow DSL2</span>
-            <span class="tag">Kraken2</span>
-            <span class="tag">Sylph</span>
-            <span class="tag">minimap2</span>
-            <span class="tag">ResFinder</span>
-            <span class="tag">AMRFinderPlus</span>
-            <span class="tag">Docker</span>
-            <span class="tag">Python</span>
-          </div>
-          <details class="diagram-toggle">
-            <summary>View Workflow Diagram</summary>
-            <div class="diagram-wrap">
-<svg viewBox="0 0 860 560" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" role="img">
-  <title>Nanopore Metagenomics Benchmark Workflow</title>
-  <desc>A public Nanopore run of a gut mock community is split into development and evaluation read pools, experiments are registered and the pipeline frozen, then taxonomic profiling and resistance-gene detection are scored against the theoretical composition, and every result is reported including a missed target.</desc>
-  <defs>
-    <marker id="arr-nmb" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#2E4057"/></marker>
-  </defs>
-  <rect width="860" height="560" fill="#F4F6F8" rx="10"/>
-  <text x="430" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E4057">Nanopore Metagenomics Benchmark</text>
-  <text x="430" y="46" text-anchor="middle" font-size="10" fill="#777">Registered experiments · dev/eval split · scored against the theoretical composition</text>
-  <rect x="280" y="58" width="300" height="40" rx="6" fill="#2E4057"/>
-  <text x="430.0" y="75" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Public Nanopore run SRR31222153</text>
-  <text x="430.0" y="89" text-anchor="middle" font-size="9" fill="#A8BFD0">Zymo D6331 gut mock community (PRJNA1181840)</text>
-  <line x1="430" y1="98" x2="430" y2="114" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
-  <rect x="290" y="114" width="280" height="38" rx="6" fill="#2E4057"/>
-  <text x="430.0" y="131" text-anchor="middle" font-size="11" font-weight="bold" fill="white">DEV / EVAL READ POOLS</text>
-  <text x="430.0" y="145" text-anchor="middle" font-size="9" fill="#A8BFD0">tune on dev, score eval once</text>
-  <line x1="430" y1="152" x2="430" y2="168" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
-  <rect x="290" y="168" width="280" height="38" rx="6" fill="#2E4057"/>
-  <text x="430.0" y="185" text-anchor="middle" font-size="11" font-weight="bold" fill="white">REGISTER, THEN FREEZE</text>
-  <text x="430.0" y="199" text-anchor="middle" font-size="9" fill="#A8BFD0">plan registered · git tag before eval</text>
-  <line x1="430" y1="206" x2="430" y2="222" stroke="#2E4057" stroke-width="2"/>
-  <line x1="430" y1="222" x2="215" y2="222" stroke="#2E4057" stroke-width="2"/>
-  <line x1="430" y1="222" x2="645" y2="222" stroke="#2E4057" stroke-width="2"/>
-  <line x1="215" y1="222" x2="215" y2="238" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
-  <line x1="645" y1="222" x2="645" y2="238" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
-  <rect x="75" y="238" width="280" height="38" rx="6" fill="#2E4057"/>
-  <text x="215.0" y="255" text-anchor="middle" font-size="11" font-weight="bold" fill="white">TAXONOMIC PROFILING</text>
-  <text x="215.0" y="269" text-anchor="middle" font-size="9" fill="#A8BFD0">Kraken2 PlusPF-8 · Sylph</text>
-  <rect x="505" y="238" width="280" height="38" rx="6" fill="#2E4057"/>
-  <text x="645.0" y="255" text-anchor="middle" font-size="11" font-weight="bold" fill="white">RESISTANCE GENES</text>
-  <text x="645.0" y="269" text-anchor="middle" font-size="9" fill="#A8BFD0">minimap2 → ResFinder · AMRFinderPlus catalogue</text>
-  <line x1="215" y1="276" x2="215" y2="300" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
-  <line x1="645" y1="276" x2="645" y2="300" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
-  <rect x="75" y="300" width="280" height="50" rx="6" fill="#1A6B45"/>
-  <text x="215.0" y="317" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Species F1 0.966</text>
-  <text x="215.0" y="331" text-anchor="middle" font-size="9" fill="#A8D5B8">14 TP · 1 FP (human) · 0 FN · 14 of 17 evaluable</text>
-  <rect x="505" y="300" width="280" height="50" rx="6" fill="#1A6B45"/>
-  <text x="645.0" y="317" text-anchor="middle" font-size="12" font-weight="bold" fill="white">cepA · tet(Q) · tet(W) detected</text>
-  <text x="645.0" y="331" text-anchor="middle" font-size="9" fill="#A8D5B8">22 · 51 · 16 supporting reads</text>
-  <line x1="215" y1="350" x2="215" y2="374" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
-  <line x1="645" y1="350" x2="645" y2="374" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
-  <rect x="75" y="374" width="280" height="50" rx="6" fill="#2E4057"/>
-  <text x="215.0" y="391" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Depth series · confidence · abundance</text>
-  <text x="215.0" y="405" text-anchor="middle" font-size="9" fill="#A8BFD0">F1 0.953–0.966 · Bray-Curtis 0.137–0.168</text>
-  <rect x="505" y="374" width="280" height="50" rx="6" fill="#B5651D"/>
-  <text x="645.0" y="391" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Species attribution of AMR reads</text>
-  <text x="645.0" y="405" text-anchor="middle" font-size="9" fill="#F3D9B8">0.593 vs 0.85 target — not met</text>
-  <line x1="215" y1="424" x2="215" y2="448" stroke="#2E4057" stroke-width="2"/>
-  <line x1="645" y1="424" x2="645" y2="448" stroke="#2E4057" stroke-width="2"/>
-  <line x1="215" y1="448" x2="645" y2="448" stroke="#2E4057" stroke-width="2"/>
-  <line x1="430" y1="448" x2="430" y2="462" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
-  <rect x="180" y="462" width="500" height="52" rx="6" fill="#6B3FA0"/>
-  <text x="430.0" y="479" text-anchor="middle" font-size="12" font-weight="bold" fill="white">All arms and deviations reported</text>
-  <text x="430.0" y="493" text-anchor="middle" font-size="9" fill="#D8C4F0">Nextflow DSL2 core path · eval refused without --allow_eval · images pinned by digest</text>
-  <rect x="170" y="536" width="12" height="10" rx="2" fill="#2E4057"/>
-  <text x="186" y="545" font-size="9" fill="#555">Analysis step</text>
-  <rect x="290" y="536" width="12" height="10" rx="2" fill="#1A6B45"/>
-  <text x="306" y="545" font-size="9" fill="#555">Key output</text>
-  <rect x="400" y="536" width="12" height="10" rx="2" fill="#B5651D"/>
-  <text x="416" y="545" font-size="9" fill="#555">Target not met</text>
-  <rect x="530" y="536" width="12" height="10" rx="2" fill="#6B3FA0"/>
-  <text x="546" y="545" font-size="9" fill="#555">Reporting</text>
-</svg>
-            </div>
-          </details>
-          <div class="card-reports">
-            <div class="card-reports-label">Interactive Reports</div>
-            <div class="card-reports-links">
-              <a class="btn-report" href="assets/nanopore_01_amr_species_attribution.html" target="_blank" rel="noopener">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
-                AMR Species Attribution
-              </a>
-              <a class="btn-report" href="assets/nanopore_02_species_scorecard.html" target="_blank" rel="noopener">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
-                Species Scorecard
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-      <!-- Project 10 -->
-      <div class="project-card">
-        <div class="card-accent"></div>
-        <div class="card-body">
-          <div class="card-top">
-            <div>
-              <div class="card-org">Wastewater Shotgun Metagenomics · Preregistered Reproduction</div>
-              <div class="card-title">Resistance Genes by Metagenomics vs qPCR</div>
-            </div>
-            <a class="card-github" href="https://github.com/bkhimek/Wastewater_AMR_Metagenomics" target="_blank" rel="noopener">
-              <svg class="icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-              GitHub
-            </a>
-          </div>
-          <p class="card-desc">
-            Reproduction of a published wastewater study (Taylor et al. 2025, BioProject PRJNA904380) that compared shotgun metagenomics with qPCR for five resistance genes: ermB, sul1, tetA, tetQ and tetW. Using only the public reads and the paper&rsquo;s methods description, the pipeline was built on one development day. The pass/fail criteria and the scoring script were then registered and frozen with a git tag before 18 held-out liquid samples were opened and scored once. Research use only.
-          </p>
-          <p class="card-desc">
-            All registered criteria were met. Two results did not reproduce and are reported as such: ermB counts in three effluent samples, where competition between closely related reference sequences changes how reads are assigned (the authors&rsquo; exact reference files were not available), and the paper&rsquo;s ARG-per-16S scale, which is about 100 times different here for a reason that could not be verified. Gene-level agreement was stronger than subtype-level agreement. The comparison with the published qPCR calls is descriptive and exploratory.
-          </p>
-          <div class="card-metrics">
-            <div class="metric"><b>17/18</b> samples with summed ARG read counts within &plusmn;7% of the published sum (registered: 16/18)</div>
-            <div class="metric"><b>68/70</b> gene&ndash;sample pairs within &plusmn;10% of the published count</div>
-            <div class="metric"><b>0</b> additional gene detections (registered limit: 2)</div>
-            <div class="metric"><b>165/165</b> sample&ndash;gene presence calls match the paper&rsquo;s Table S5</div>
-            <div class="metric"><b>3/9</b> effluent samples with low ermB &mdash; reported, cause unresolved</div>
-          </div>
-          <div class="card-tags">
-            <span class="tag">Preregistration</span>
-            <span class="tag">KMA</span>
-            <span class="tag">bbduk</span>
-            <span class="tag">ResFinder</span>
-            <span class="tag">SILVA</span>
-            <span class="tag">conda</span>
-            <span class="tag">Bash</span>
-            <span class="tag">Python</span>
-          </div>
-          <details class="diagram-toggle">
-            <summary>View Workflow Diagram</summary>
-            <div class="diagram-wrap">
-<svg viewBox="0 0 860 560" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" role="img">
-  <title>Wastewater Resistance-Gene Metagenomics Reproduction Workflow</title>
-  <desc>Public shotgun reads from a wastewater study are split into development and evaluation samples, the criteria and scoring script are registered and frozen, then reads are trimmed and aligned to a resistance-gene database and a 16S database and scored against the published counts. The criteria were met, while ermB in three effluent samples and the 16S scale were not reproduced.</desc>
-  <defs>
-    <marker id="arr-ww" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#2E4057"/></marker>
-  </defs>
-  <rect width="860" height="560" fill="#F4F6F8" rx="10"/>
-  <text x="430" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E4057">Wastewater ARG Metagenomics: Preregistered Reproduction</text>
-  <text x="430" y="46" text-anchor="middle" font-size="10" fill="#777">Public reads · develop on Day 1 · freeze · score 18 held-out samples once</text>
-  <rect x="280" y="58" width="300" height="40" rx="6" fill="#2E4057"/>
-  <text x="430.0" y="75" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Public shotgun reads PRJNA904380</text>
-  <text x="430.0" y="89" text-anchor="middle" font-size="9" fill="#A8BFD0">33 wastewater samples from one plant (Taylor et al. 2025)</text>
-  <line x1="430" y1="98" x2="430" y2="114" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-ww)"/>
-  <rect x="290" y="114" width="280" height="38" rx="6" fill="#2E4057"/>
-  <text x="430.0" y="131" text-anchor="middle" font-size="11" font-weight="bold" fill="white">DEVELOPMENT / EVALUATION SPLIT</text>
-  <text x="430.0" y="145" text-anchor="middle" font-size="9" fill="#A8BFD0">Day 1: 9 develop · Days 2–3: 18 evaluate · 6 sediment descriptive</text>
-  <line x1="430" y1="152" x2="430" y2="168" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-ww)"/>
-  <rect x="290" y="168" width="280" height="38" rx="6" fill="#2E4057"/>
-  <text x="430.0" y="185" text-anchor="middle" font-size="11" font-weight="bold" fill="white">REGISTER, THEN FREEZE</text>
-  <text x="430.0" y="199" text-anchor="middle" font-size="9" fill="#A8BFD0">criteria and scoring script registered · git tag before evaluation</text>
-  <line x1="430" y1="206" x2="430" y2="222" stroke="#2E4057" stroke-width="2"/>
-  <line x1="430" y1="222" x2="215" y2="222" stroke="#2E4057" stroke-width="2"/>
-  <line x1="430" y1="222" x2="645" y2="222" stroke="#2E4057" stroke-width="2"/>
-  <line x1="215" y1="222" x2="215" y2="238" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-ww)"/>
-  <line x1="645" y1="222" x2="645" y2="238" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-ww)"/>
-  <rect x="75" y="238" width="280" height="38" rx="6" fill="#2E4057"/>
-  <text x="215.0" y="255" text-anchor="middle" font-size="11" font-weight="bold" fill="white">TRIM + RESISTANCE GENES</text>
-  <text x="215.0" y="269" text-anchor="middle" font-size="9" fill="#A8BFD0">bbduk → KMA vs ResFinder 2.1.1 · gene and subtype counts</text>
-  <rect x="505" y="238" width="280" height="38" rx="6" fill="#2E4057"/>
-  <text x="645.0" y="255" text-anchor="middle" font-size="11" font-weight="bold" fill="white">16S DENOMINATOR</text>
-  <text x="645.0" y="269" text-anchor="middle" font-size="9" fill="#A8BFD0">KMA vs SILVA 138.1 NR99 · ARG per 16S read</text>
-  <line x1="215" y1="276" x2="215" y2="300" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-ww)"/>
-  <line x1="645" y1="276" x2="645" y2="300" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-ww)"/>
-  <rect x="75" y="300" width="280" height="50" rx="6" fill="#1A6B45"/>
-  <text x="215.0" y="317" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Registered criteria P1–P4 met</text>
-  <text x="215.0" y="331" text-anchor="middle" font-size="9" fill="#A8D5B8">P1 17/18 · P2 18/18 · P3 68/70 · P4 17/18 · 0 extra genes</text>
-  <rect x="505" y="300" width="280" height="50" rx="6" fill="#B5651D"/>
-  <text x="645.0" y="317" text-anchor="middle" font-size="12" font-weight="bold" fill="white">ARG per 16S not reproduced</text>
-  <text x="645.0" y="331" text-anchor="middle" font-size="9" fill="#F3D9B8">about 100× smaller than the paper’s scale · unit unverified</text>
-  <line x1="215" y1="350" x2="215" y2="374" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-ww)"/>
-  <line x1="645" y1="350" x2="645" y2="374" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-ww)"/>
-  <rect x="75" y="374" width="280" height="50" rx="6" fill="#B5651D"/>
-  <text x="215.0" y="391" text-anchor="middle" font-size="12" font-weight="bold" fill="white">ermB low in 3 of 9 effluent samples</text>
-  <text x="215.0" y="405" text-anchor="middle" font-size="9" fill="#F3D9B8">reference competition supported · cause unresolved</text>
-  <rect x="505" y="374" width="280" height="50" rx="6" fill="#2E4057"/>
-  <text x="645.0" y="391" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Detection vs qPCR (exploratory)</text>
-  <text x="645.0" y="405" text-anchor="middle" font-size="9" fill="#A8BFD0">Table S5: 165/165 · 26/36 qPCR positives found in pond + sediment</text>
-  <line x1="215" y1="424" x2="215" y2="448" stroke="#2E4057" stroke-width="2"/>
-  <line x1="645" y1="424" x2="645" y2="448" stroke="#2E4057" stroke-width="2"/>
-  <line x1="215" y1="448" x2="645" y2="448" stroke="#2E4057" stroke-width="2"/>
-  <line x1="430" y1="448" x2="430" y2="462" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-ww)"/>
-  <rect x="180" y="462" width="500" height="52" rx="6" fill="#6B3FA0"/>
-  <text x="430.0" y="479" text-anchor="middle" font-size="12" font-weight="bold" fill="white">All results and post-freeze changes reported</text>
-  <text x="430.0" y="493" text-anchor="middle" font-size="9" fill="#D8C4F0">gene-level agreement stronger than subtype-level · limits stated · MIT-licensed code</text>
-  <rect x="170" y="536" width="12" height="10" rx="2" fill="#2E4057"/>
-  <text x="186" y="545" font-size="9" fill="#555">Analysis step</text>
-  <rect x="290" y="536" width="12" height="10" rx="2" fill="#1A6B45"/>
-  <text x="306" y="545" font-size="9" fill="#555">Criteria met</text>
-  <rect x="400" y="536" width="12" height="10" rx="2" fill="#B5651D"/>
-  <text x="416" y="545" font-size="9" fill="#555">Not reproduced</text>
-  <rect x="530" y="536" width="12" height="10" rx="2" fill="#6B3FA0"/>
-  <text x="546" y="545" font-size="9" fill="#555">Reporting</text>
-</svg>
-            </div>
-          </details>
-          <div class="card-reports">
-            <div class="card-reports-label">Interactive Reports</div>
-            <div class="card-reports-links">
-              <a class="btn-report" href="assets/ww_01_registered_criteria_scorecard.html" target="_blank" rel="noopener">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
-                Registered Criteria Scorecard
-              </a>
-              <a class="btn-report" href="assets/ww_02_ermB_shortfall.html" target="_blank" rel="noopener">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
-                ermB Shortfall
               </a>
             </div>
           </div>
