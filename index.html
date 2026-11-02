@@ -515,7 +515,7 @@
             Benchmark of taxonomic profiling and antimicrobial-resistance gene detection on public Nanopore shotgun data from a defined gut mock community (Zymo D6331, PRJNA1181840). Experiments were registered before they were run, tuned on a development read pool, frozen with a git tag, and scored once on a separate evaluation pool; every arm and deviation is reported, including the target that was missed. Research use only.
           </p>
           <p class="card-desc">
-            Species calls (Kraken2, cross-checked with Sylph) were scored against the theoretical composition, with depth, confidence-threshold and abundance experiments. Resistance genes were detected by read alignment to a reference catalogue built with AMRFinderPlus, and the species carrying each gene was tested separately. That attribution step fell short of its registered target and is reported as a failure, with a read-level trace of why. The sequenced kit lot could not be confirmed with the data authors, so all results are stated against the theoretical composition.
+            Kraken2 and Sylph were assessed against the community&rsquo;s theoretical composition, including sequencing-depth, confidence-threshold and abundance comparisons. Resistance-gene reads were then tested for correct assignment to their bacterial carriers. Species detection was strong, but species attribution missed its registered target. The sequenced kit lot could not be confirmed, limiting interpretation against the theoretical reference composition.
           </p>
           <div class="card-metrics">
             <div class="metric"><b>0.966</b> species F1 on the evaluation pool (14 TP · 1 FP · 0 FN)</div>
@@ -633,10 +633,10 @@
             </a>
           </div>
           <p class="card-desc">
-            Reproduction of a published wastewater study (Taylor et al. 2025, BioProject PRJNA904380) that compared shotgun metagenomics with qPCR for five resistance genes: <i>ermB</i>, <i>sul1</i>, <i>tetA</i>, <i>tetQ</i> and <i>tetW</i>. Using only the public reads and the paper&rsquo;s methods description, the pipeline was built on one development day. The pass/fail criteria and the scoring script were then registered and frozen with a git tag before 18 held-out liquid samples were opened and scored once. Research use only.
+            Reproduced the metagenomic analysis of a published wastewater study (Taylor et al., 2025; PRJNA904380) using public sequencing reads, reported methods and documented assumptions. Nine Day 1 liquid samples were used for development; the criteria and scoring script were then frozen before 18 held-out liquid samples were evaluated once. The study examined read counts for five resistance genes and compared detection calls with the authors&rsquo; published qPCR findings. Research use only.
           </p>
           <p class="card-desc">
-            All registered criteria were met. Two results did not reproduce and are reported as such: <i>ermB</i> counts in three effluent samples, where competition between closely related reference sequences changes how reads are assigned (the authors&rsquo; exact reference files were not available), and the paper&rsquo;s ARG-per-16S scale, which is about 100 times different here for a reason that could not be verified. Gene-level agreement was stronger than subtype-level agreement. The comparison with the published qPCR calls is descriptive and exploratory.
+            All registered reproduction criteria were met, but <i>ermB</i> counts differed substantially in three effluent samples and the published ARG/16S scale could not be reproduced. Exploratory analyses supported competition between closely related references as a factor in KMA read assignment, although the exact cause of the difference from the authors remains unresolved. Gene-level agreement was stronger than subtype-level agreement; the qPCR comparison was descriptive.
           </p>
           <div class="card-metrics">
             <div class="metric"><b>17/18</b> samples with summed ARG read counts within &plusmn;7% of the published sum (registered: 16/18)</div>
