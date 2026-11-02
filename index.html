@@ -1888,6 +1888,127 @@
         </div>
       </div>
 
+      <!-- Project 9 -->
+      <div class="project-card">
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div>
+              <div class="card-org">Nanopore Shotgun Metagenomics · Benchmark</div>
+              <div class="card-title">Pathogen &amp; AMR Profiling Benchmark</div>
+            </div>
+            <a class="card-github" href="https://github.com/bkhimek/nanopore-metagenomics-benchmark" target="_blank" rel="noopener">
+              <svg class="icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              GitHub
+            </a>
+          </div>
+          <p class="card-desc">
+            Benchmark of taxonomic profiling and antimicrobial-resistance gene detection on public Nanopore shotgun data from a defined gut mock community (Zymo D6331, PRJNA1181840). Experiments were registered before they were run, tuned on a development read pool, frozen with a git tag, and scored once on a separate evaluation pool; every arm and deviation is reported, including the target that was missed. Research use only.
+          </p>
+          <p class="card-desc">
+            Species calls (Kraken2, cross-checked with Sylph) were scored against the theoretical composition, with depth, confidence-threshold and abundance experiments. Resistance genes were detected by read alignment to a reference catalogue built with AMRFinderPlus, and the species carrying each gene was tested separately. That attribution step fell short of its registered target and is reported as a failure, with a read-level trace of why. The sequenced kit lot could not be confirmed with the data authors, so all results are stated against the theoretical composition.
+          </p>
+          <div class="card-metrics">
+            <div class="metric"><b>0.966</b> species F1 on the evaluation pool (14 TP · 1 FP · 0 FN)</div>
+            <div class="metric"><b>14/17</b> species evaluable at a 20-read minimum</div>
+            <div class="metric"><b>0.953–0.966</b> F1 across 0.1 / 0.25 / 0.5 Gb depth</div>
+            <div class="metric"><b>3</b> resistance genes detected: cepA · tet(Q) · tet(W)</div>
+            <div class="metric"><b>0.593</b> species attribution vs 0.85 target — not met</div>
+          </div>
+          <div class="card-tags">
+            <span class="tag">Nextflow DSL2</span>
+            <span class="tag">Kraken2</span>
+            <span class="tag">Sylph</span>
+            <span class="tag">minimap2</span>
+            <span class="tag">ResFinder</span>
+            <span class="tag">AMRFinderPlus</span>
+            <span class="tag">Docker</span>
+            <span class="tag">Python</span>
+          </div>
+          <details class="diagram-toggle">
+            <summary>View Workflow Diagram</summary>
+            <div class="diagram-wrap">
+<svg viewBox="0 0 860 560" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" role="img">
+  <title>Nanopore Metagenomics Benchmark Workflow</title>
+  <desc>A public Nanopore run of a gut mock community is split into development and evaluation read pools, experiments are registered and the pipeline frozen, then taxonomic profiling and resistance-gene detection are scored against the theoretical composition, and every result is reported including a missed target.</desc>
+  <defs>
+    <marker id="arr-nmb" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#2E4057"/></marker>
+  </defs>
+  <rect width="860" height="560" fill="#F4F6F8" rx="10"/>
+  <text x="430" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E4057">Nanopore Metagenomics Benchmark</text>
+  <text x="430" y="46" text-anchor="middle" font-size="10" fill="#777">Registered experiments · dev/eval split · scored against the theoretical composition</text>
+  <rect x="280" y="58" width="300" height="40" rx="6" fill="#2E4057"/>
+  <text x="430.0" y="75" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Public Nanopore run SRR31222153</text>
+  <text x="430.0" y="89" text-anchor="middle" font-size="9" fill="#A8BFD0">Zymo D6331 gut mock community (PRJNA1181840)</text>
+  <line x1="430" y1="98" x2="430" y2="114" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
+  <rect x="290" y="114" width="280" height="38" rx="6" fill="#2E4057"/>
+  <text x="430.0" y="131" text-anchor="middle" font-size="11" font-weight="bold" fill="white">DEV / EVAL READ POOLS</text>
+  <text x="430.0" y="145" text-anchor="middle" font-size="9" fill="#A8BFD0">tune on dev, score eval once</text>
+  <line x1="430" y1="152" x2="430" y2="168" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
+  <rect x="290" y="168" width="280" height="38" rx="6" fill="#2E4057"/>
+  <text x="430.0" y="185" text-anchor="middle" font-size="11" font-weight="bold" fill="white">REGISTER, THEN FREEZE</text>
+  <text x="430.0" y="199" text-anchor="middle" font-size="9" fill="#A8BFD0">plan registered · git tag before eval</text>
+  <line x1="430" y1="206" x2="430" y2="222" stroke="#2E4057" stroke-width="2"/>
+  <line x1="430" y1="222" x2="215" y2="222" stroke="#2E4057" stroke-width="2"/>
+  <line x1="430" y1="222" x2="645" y2="222" stroke="#2E4057" stroke-width="2"/>
+  <line x1="215" y1="222" x2="215" y2="238" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
+  <line x1="645" y1="222" x2="645" y2="238" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
+  <rect x="75" y="238" width="280" height="38" rx="6" fill="#2E4057"/>
+  <text x="215.0" y="255" text-anchor="middle" font-size="11" font-weight="bold" fill="white">TAXONOMIC PROFILING</text>
+  <text x="215.0" y="269" text-anchor="middle" font-size="9" fill="#A8BFD0">Kraken2 PlusPF-8 · Sylph</text>
+  <rect x="505" y="238" width="280" height="38" rx="6" fill="#2E4057"/>
+  <text x="645.0" y="255" text-anchor="middle" font-size="11" font-weight="bold" fill="white">RESISTANCE GENES</text>
+  <text x="645.0" y="269" text-anchor="middle" font-size="9" fill="#A8BFD0">minimap2 → ResFinder · AMRFinderPlus catalogue</text>
+  <line x1="215" y1="276" x2="215" y2="300" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
+  <line x1="645" y1="276" x2="645" y2="300" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
+  <rect x="75" y="300" width="280" height="50" rx="6" fill="#1A6B45"/>
+  <text x="215.0" y="317" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Species F1 0.966</text>
+  <text x="215.0" y="331" text-anchor="middle" font-size="9" fill="#A8D5B8">14 TP · 1 FP (human) · 0 FN · 14 of 17 evaluable</text>
+  <rect x="505" y="300" width="280" height="50" rx="6" fill="#1A6B45"/>
+  <text x="645.0" y="317" text-anchor="middle" font-size="12" font-weight="bold" fill="white">cepA · tet(Q) · tet(W) detected</text>
+  <text x="645.0" y="331" text-anchor="middle" font-size="9" fill="#A8D5B8">22 · 51 · 16 supporting reads</text>
+  <line x1="215" y1="350" x2="215" y2="374" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
+  <line x1="645" y1="350" x2="645" y2="374" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
+  <rect x="75" y="374" width="280" height="50" rx="6" fill="#2E4057"/>
+  <text x="215.0" y="391" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Depth series · confidence · abundance</text>
+  <text x="215.0" y="405" text-anchor="middle" font-size="9" fill="#A8BFD0">F1 0.953–0.966 · Bray-Curtis 0.137–0.168</text>
+  <rect x="505" y="374" width="280" height="50" rx="6" fill="#B5651D"/>
+  <text x="645.0" y="391" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Species attribution of AMR reads</text>
+  <text x="645.0" y="405" text-anchor="middle" font-size="9" fill="#F3D9B8">0.593 vs 0.85 target — not met</text>
+  <line x1="215" y1="424" x2="215" y2="448" stroke="#2E4057" stroke-width="2"/>
+  <line x1="645" y1="424" x2="645" y2="448" stroke="#2E4057" stroke-width="2"/>
+  <line x1="215" y1="448" x2="645" y2="448" stroke="#2E4057" stroke-width="2"/>
+  <line x1="430" y1="448" x2="430" y2="462" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-nmb)"/>
+  <rect x="180" y="462" width="500" height="52" rx="6" fill="#6B3FA0"/>
+  <text x="430.0" y="479" text-anchor="middle" font-size="12" font-weight="bold" fill="white">All arms and deviations reported</text>
+  <text x="430.0" y="493" text-anchor="middle" font-size="9" fill="#D8C4F0">Nextflow DSL2 core path · eval refused without --allow_eval · images pinned by digest</text>
+  <rect x="170" y="536" width="12" height="10" rx="2" fill="#2E4057"/>
+  <text x="186" y="545" font-size="9" fill="#555">Analysis step</text>
+  <rect x="290" y="536" width="12" height="10" rx="2" fill="#1A6B45"/>
+  <text x="306" y="545" font-size="9" fill="#555">Key output</text>
+  <rect x="400" y="536" width="12" height="10" rx="2" fill="#B5651D"/>
+  <text x="416" y="545" font-size="9" fill="#555">Target not met</text>
+  <rect x="530" y="536" width="12" height="10" rx="2" fill="#6B3FA0"/>
+  <text x="546" y="545" font-size="9" fill="#555">Reporting</text>
+</svg>
+            </div>
+          </details>
+          <div class="card-reports">
+            <div class="card-reports-label">Interactive Reports</div>
+            <div class="card-reports-links">
+              <a class="btn-report" href="assets/nanopore_01_amr_species_attribution.html" target="_blank" rel="noopener">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+                AMR Species Attribution
+              </a>
+              <a class="btn-report" href="assets/nanopore_02_species_scorecard.html" target="_blank" rel="noopener">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
+                Species Scorecard
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
