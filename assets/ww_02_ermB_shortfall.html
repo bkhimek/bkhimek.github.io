@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wastewater ARG Reproduction — The ermB Shortfall</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--navy:#2E4057;--teal:#14998D;--teal-l:#1ab8aa;--teal-xl:#d0f0ed;--slate:#4a6680;--text:#e8edf2;--text-m:#b0bec8;--bg:#111d27;--card:#1c2e3e;--border:#2a3f54;--green:#1A6B45;--green-l:#3fae7c;--amber:#B5651D;--amber-l:#e0a050;--red-l:#d9776b;--purple-l:#b79be0;}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;padding:2rem 1.25rem 4rem;}
+.wrap{max-width:1000px;margin:0 auto;}
+header{margin-bottom:2rem;}
+.eyebrow{font-size:0.75rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal-l);margin-bottom:0.5rem;}
+h1{font-size:1.7rem;color:#fff;margin-bottom:0.4rem;}
+.sub{color:var(--text-m);font-size:0.95rem;max-width:760px;}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin:2rem 0;}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1rem;text-align:center;}
+.stat b{display:block;font-size:1.9rem;color:var(--teal-l);}
+.stat.warn b{color:var(--amber-l);}
+.stat span{font-size:0.78rem;color:var(--text-m);}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.75rem;}
+.panel h2{font-size:1.05rem;color:#fff;margin-bottom:0.4rem;}
+.panel .lead{font-size:0.82rem;color:var(--text-m);margin-bottom:1rem;}
+.scroll{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:0.83rem;}
+th{text-align:left;color:var(--text-m);font-weight:600;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.04em;padding:0.5rem 0.6rem;border-bottom:1px solid var(--border);white-space:nowrap;}
+td{padding:0.5rem 0.6rem;border-bottom:1px solid rgba(42,63,84,0.6);vertical-align:top;font-variant-numeric:tabular-nums;}
+tr:last-child td{border-bottom:none;}
+td.bad{color:var(--red-l);font-weight:700;} td.ok{color:var(--green-l);}
+.pill{display:inline-block;font-size:0.68rem;font-weight:700;padding:0.15em 0.55em;border-radius:999px;letter-spacing:0.03em;white-space:nowrap;}
+.pill-met{background:rgba(63,174,124,0.18);color:var(--green-l);}
+.pill-not{background:rgba(224,160,80,0.18);color:var(--amber-l);}
+.pill-open{background:rgba(183,155,224,0.18);color:var(--purple-l);}
+.note{font-size:0.78rem;color:var(--text-m);margin-top:0.9rem;}
+.ctrl{display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:1.1rem;align-items:center;}
+.ctrl .lab{font-size:0.75rem;color:var(--text-m);margin-right:0.3rem;}
+.ctrl button{background:transparent;border:1px solid var(--border);color:var(--text-m);border-radius:6px;padding:0.3rem 0.75rem;font-size:0.78rem;cursor:pointer;font-family:inherit;}
+.ctrl button:hover{border-color:var(--teal);color:var(--text);}
+.ctrl button.on{background:rgba(20,153,141,0.18);border-color:var(--teal);color:var(--teal-xl);}
+.ctrl button:focus-visible,svg [tabindex]:focus-visible{outline:2px solid var(--teal-l);outline-offset:2px;}
+.chart-legend{display:flex;gap:1.2rem;margin-top:1rem;font-size:0.75rem;color:var(--text-m);flex-wrap:wrap;}
+.chart-legend span{display:inline-flex;align-items:center;gap:0.4rem;}
+.sw{width:11px;height:11px;border-radius:3px;display:inline-block;}
+.tip{position:fixed;pointer-events:none;background:#0b141b;border:1px solid var(--border);color:var(--text);font-size:0.75rem;padding:0.45rem 0.65rem;border-radius:6px;max-width:300px;opacity:0;transition:opacity .1s;z-index:10;line-height:1.45;}
+footer{font-size:0.78rem;color:var(--text-m);margin-top:1rem;}
+footer a{color:var(--teal-l);text-decoration:none;} footer a:hover{text-decoration:underline;}
+svg text{font-family:inherit;}
+@media(max-width:640px){body{padding:1.25rem 0.85rem 3rem;} .panel{padding:1rem;}}
+
+.bar-row{display:grid;grid-template-columns:150px 1fr 64px;align-items:center;gap:0.8rem;margin-bottom:0.55rem;cursor:pointer;border-radius:6px;padding:2px 4px;}
+.bar-row:hover,.bar-row:focus-visible{background:rgba(255,255,255,0.04);outline:none;}
+.bar-row.sel{background:rgba(20,153,141,0.12);}
+.bar-label{font-size:0.8rem;color:var(--text-m);} .bar-label small{opacity:.8;}
+.track{position:relative;background:rgba(255,255,255,0.06);border-radius:5px;height:18px;}
+.fill{height:100%;border-radius:5px;}
+.band{position:absolute;top:0;bottom:0;background:rgba(63,174,124,.2);border-left:1px solid #3fae7c;border-right:1px solid #3fae7c;}
+.one{position:absolute;top:-3px;bottom:-3px;border-left:2px dashed #fff;opacity:.8;}
+.val{font-size:0.8rem;text-align:right;font-variant-numeric:tabular-nums;}
+.trow{display:grid;grid-template-columns:190px 1fr 1fr;gap:0.8rem;align-items:center;margin-bottom:0.5rem;}
+.tname{font-size:0.76rem;color:var(--text-m);word-break:break-all;} .tname.ermb{color:var(--teal-xl);font-weight:600;}
+.mini{position:relative;background:rgba(255,255,255,0.06);border-radius:4px;height:14px;}
+.mini i{display:block;height:100%;border-radius:4px;}
+.mini span{position:absolute;right:6px;top:-2px;font-size:0.68rem;color:#fff;text-shadow:0 0 3px #000;font-style:normal;}
+.colhead{font-size:0.7rem;text-transform:uppercase;letter-spacing:.04em;color:var(--text-m);margin-bottom:.4rem;}
+.hm th{text-transform:none;font-style:italic;font-size:.8rem;} .hm td{text-align:center;font-weight:600;} .hm td:first-child{text-align:left;font-weight:400;}
+.hm td.ok{background:rgba(63,174,124,.12);} .hm td.bad{background:rgba(217,119,107,.22);} .hm td.na{color:#5f7488;font-weight:400;}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1rem;} @media(max-width:700px){.two{grid-template-columns:1fr;}.trow{grid-template-columns:1fr;gap:.2rem;margin-bottom:.9rem;}.bar-row{grid-template-columns:110px 1fr 54px;}}
+.mini-card{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:.9rem 1rem;font-size:.83rem;}
+.mini-card b{color:var(--teal-xl);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Wastewater ARG Metagenomics · Preregistered Reproduction</div>
+    <h1>The ermB Shortfall in Effluent</h1>
+    <p class="sub">In three of nine effluent samples our ermB total is far below the published one, while the other four genes in the same samples agree. This page shows where the reads went and what the follow-up tests do and do not explain. The ermB work was exploratory and done after the scoring; it does not change the registered result.</p>
+  </header>
+
+  <div class="stat-row">
+    <div class="stat warn"><b>0.22</b><span>ermB ratio in E021 (165 of 759 reads)</span></div>
+    <div class="stat warn"><b>0.71</b><span>ermB ratio in E036 (548 of 773)</span></div>
+    <div class="stat warn"><b>0.73</b><span>ermB ratio in E011, a development sample (557 of 761)</span></div>
+    <div class="stat"><b>6 of 9</b><span>effluent samples agree within 4% on ermB</span></div>
+  </div>
+
+  <div class="panel">
+    <h2>ermB, ours against published, per effluent sample</h2>
+    <p class="lead">Ratio of our ermB total (templates with &ge; 50 reads) to the published ermB total. The shaded band is 0.90&ndash;1.10. Click a sample to see its templates below.</p>
+    <div id="bars"></div>
+    <div class="chart-legend">
+      <span><i class="sw" style="background:var(--green-l)"></i>inside 0.90&ndash;1.10</span>
+      <span><i class="sw" style="background:var(--red-l)"></i>outside</span>
+      <span>E001, E006, E011 are development samples (Day 1); the others are evaluation samples</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Where the reads went</h2>
+    <p class="lead">For the selected sample: every template KMA reported for the erm(B) family (teal names) and the closest other erm genes (grey). <b>Reads</b> is KMA&rsquo;s read-assignment count; <b>coverage</b> is how much of the template length is supported. A template with many assigned reads but low coverage is a &ldquo;thin block&rdquo;, not whole-gene evidence.</p>
+    <div class="ctrl" id="sel" role="group" aria-label="Choose a sample"><span class="lab">Sample</span></div>
+    <div id="sum" class="note" style="margin:-.3rem 0 1rem"></div>
+    <div class="trow"><div class="colhead">Template</div><div class="colhead">Reads assigned (bar scaled within sample)</div><div class="colhead">Template coverage (%)</div></div>
+    <div id="rows"></div>
+    <div class="chart-legend">
+      <span><i class="sw" style="background:var(--teal-l)"></i>coverage &ge; 95% (whole-gene support)</span>
+      <span><i class="sw" style="background:var(--amber-l)"></i>coverage &lt; 95% (thin block)</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>What the follow-up tests show</h2>
+    <div class="two">
+      <div class="mini-card"><b>With competition (full database).</b><br>E021: erm(B)_2 receives <b>0</b> reads; the control E026 receives <b>698</b>. Reads are assigned to erm(B)_18, erm(B)_20, erm(G)_1 or erm(F)_3 instead.</div>
+      <div class="mini-card"><b>Without competition (erm(B)_2 alone, raw reads).</b><br>E021: <b>899</b> reads, 738 of 738 positions covered. E026: <b>906</b> reads, 738 of 738. The two samples look alike.</div>
+    </div>
+    <p class="note">The single-template count is an upper bound: any sufficiently similar read, including from related erm genes, can map to it. It shows that sequence similar to erm(B)_2 is present, not how much of it there is.</p>
+    <div class="scroll" style="margin-top:1rem"><table>
+      <tr><th>Hypothesis</th><th>Status</th><th>Evidence</th></tr>
+      <tr><td>KMA reference competition / ambiguous allele assignment</td><td><span class="pill pill-met">supported</span></td><td>Reads exist in E021 at the control&rsquo;s level when erm(B)_2 stands alone; in the full database they are labelled as neighbouring templates.</td></tr>
+      <tr><td>Assumed bbduk adapter options</td><td><span class="pill pill-not">not supported</span></td><td>Raw, untrimmed reads give the same absence in E021; trimming changes counts by about 2&ndash;17%.</td></tr>
+      <tr><td>Differences from the authors&rsquo; reference files or index</td><td><span class="pill pill-open">unresolved</span></td><td>Cannot be tested without the authors&rsquo; exact files, which were not available.</td></tr>
+      <tr><td>Sample or run mix-up; error in the published table</td><td><span class="pill pill-not">not supported</span></td><td>The other four genes agree in the same samples; md5 checks passed. The shared published erm(B)_2 value of 659 in E011 and E021 is unexplained.</td></tr>
+    </table></div>
+  </div>
+
+  <div class="panel">
+    <h2>The same samples, all five genes</h2>
+    <p class="lead">Ratio of our gene total to the published gene total, evaluation samples. Dashes mean the paper reports no count for that gene in that sample. Green is within 0.90&ndash;1.10; red is outside.</p>
+    <div class="scroll"><table class="hm" id="hm"></table></div>
+    <p class="note">Gene-level agreement is strong everywhere except ermB in two samples. At subtype level, counts swap between near-identical alleles, which is the same effect seen here at larger scale.</p>
+  </div>
+
+  <footer>
+    <p>The paper&rsquo;s text describes a whole-gene coverage requirement, yet its published counts contain thin blocks of the kind shown above, so low-support counts should not be read as abundance. Source: <a href="https://github.com/bkhimek/Wastewater_AMR_Metagenomics/blob/main/registration/R1_ermB_diagnostic_note.md" target="_blank" rel="noopener">R1_ermB_diagnostic_note.md</a> and <a href="https://github.com/bkhimek/Wastewater_AMR_Metagenomics/blob/main/registration/ermB_diagnostic_effluent.tsv" target="_blank" rel="noopener">ermB_diagnostic_effluent.tsv</a> in the <a href="https://github.com/bkhimek/Wastewater_AMR_Metagenomics" target="_blank" rel="noopener">GitHub repository</a>. Research use only.</p>
+  </footer>
+</div>
+<script>
+const E=[{"id": "E001", "run": "SRR22752025", "pub": 583, "ours": 570, "t": [{"n": "erm(B)_18_X66468", "blk": "ermB", "rc": 570, "cov": 100.0, "dep": 4.6, "al": 28}, {"n": "erm(B)_20_AF109075", "blk": "ermB", "rc": 35, "cov": 19.0, "dep": 0.3, "al": 2}, {"n": "erm(B)_10_U86375", "blk": "ermB", "rc": 19, "cov": 45.9, "dep": 0.8, "al": 4}, {"n": "erm(38)_1_AY154657", "blk": "neighbour", "rc": 3534, "cov": 25.8, "dep": 0.8, "al": 6}, {"n": "erm(Q)_1_L22689", "blk": "neighbour", "rc": 1463, "cov": 89.9, "dep": 2.8, "al": 15}, {"n": "erm(G)_2_L42817", "blk": "neighbour", "rc": 790, "cov": 23.7, "dep": 0.3, "al": 2}, {"n": "erm(F)_3_M17808", "blk": "neighbour", "rc": 669, "cov": 93.0, "dep": 1.6, "al": 10}, {"n": "erm(T)_2_AY894138", "blk": "neighbour", "rc": 641, "cov": 18.1, "dep": 0.2, "al": 1}, {"n": "erm(X)_1_M36726", "blk": "neighbour", "rc": 228, "cov": 17.7, "dep": 0.2, "al": 1}], "dev": true}, {"id": "E006", "run": "SRR22752015", "pub": 908, "ours": 890, "t": [{"n": "erm(B)_2_K00551", "blk": "ermB", "rc": 780, "cov": 26.4, "dep": 0.4, "al": 2}, {"n": "erm(B)_18_X66468", "blk": "ermB", "rc": 110, "cov": 51.8, "dep": 0.8, "al": 5}, {"n": "erm(B)_20_AF109075", "blk": "ermB", "rc": 46, "cov": 47.8, "dep": 0.7, "al": 4}, {"n": "erm(B)_23_X72021", "blk": "ermB", "rc": 36, "cov": 37.8, "dep": 0.7, "al": 4}, {"n": "erm(38)_1_AY154657", "blk": "neighbour", "rc": 3315, "cov": 27.4, "dep": 0.5, "al": 4}, {"n": "erm(Q)_1_L22689", "blk": "neighbour", "rc": 1932, "cov": 87.0, "dep": 1.4, "al": 9}, {"n": "erm(50)_1_LC473083", "blk": "neighbour", "rc": 1140, "cov": 19.1, "dep": 0.2, "al": 1}, {"n": "erm(C)_9_Y09001", "blk": "neighbour", "rc": 1051, "cov": 18.8, "dep": 0.2, "al": 1}, {"n": "erm(T)_1_M64090", "blk": "neighbour", "rc": 921, "cov": 16.2, "dep": 0.2, "al": 1}, {"n": "erm(G)_1_M15332", "blk": "neighbour", "rc": 847, "cov": 44.0, "dep": 0.6, "al": 3}, {"n": "erm(F)_3_M17808", "blk": "neighbour", "rc": 731, "cov": 91.8, "dep": 2.0, "al": 13}], "dev": true}, {"id": "E011", "run": "SRR22752014", "pub": 761, "ours": 557, "t": [{"n": "erm(B)_18_X66468", "blk": "ermB", "rc": 557, "cov": 100.0, "dep": 4.3, "al": 25}, {"n": "erm(B)_23_X72021", "blk": "ermB", "rc": 19, "cov": 80.1, "dep": 1.1, "al": 6}, {"n": "erm(B)_10_U86375", "blk": "ermB", "rc": 15, "cov": 23.4, "dep": 0.3, "al": 2}, {"n": "erm(B)_1_JN899585", "blk": "ermB", "rc": 10, "cov": 23.4, "dep": 0.4, "al": 2}, {"n": "erm(38)_1_AY154657", "blk": "neighbour", "rc": 3056, "cov": 28.9, "dep": 0.9, "al": 7}, {"n": "erm(Q)_1_L22689", "blk": "neighbour", "rc": 1643, "cov": 92.1, "dep": 1.9, "al": 11}, {"n": "erm(C)_10_Y09002", "blk": "neighbour", "rc": 834, "cov": 2.6, "dep": 0.0, "al": 1}, {"n": "erm(T)_1_M64090", "blk": "neighbour", "rc": 758, "cov": 2.7, "dep": 0.0, "al": 1}, {"n": "erm(F)_3_M17808", "blk": "neighbour", "rc": 618, "cov": 48.1, "dep": 0.8, "al": 5}, {"n": "erm(X)_1_M36726", "blk": "neighbour", "rc": 165, "cov": 17.1, "dep": 0.2, "al": 1}], "dev": true}, {"id": "E016", "run": "SRR22752010", "pub": 859, "ours": 846, "t": [{"n": "erm(B)_2_K00551", "blk": "ermB", "rc": 723, "cov": 52.3, "dep": 0.5, "al": 3}, {"n": "erm(B)_18_X66468", "blk": "ermB", "rc": 123, "cov": 98.7, "dep": 2.0, "al": 11}, {"n": "erm(B)_15_U48430", "blk": "ermB", "rc": 30, "cov": 40.1, "dep": 0.4, "al": 2}, {"n": "erm(B)_10_U86375", "blk": "ermB", "rc": 18, "cov": 46.6, "dep": 0.7, "al": 4}, {"n": "erm(38)_1_AY154657", "blk": "neighbour", "rc": 2856, "cov": 17.3, "dep": 0.2, "al": 2}, {"n": "erm(Q)_1_L22689", "blk": "neighbour", "rc": 1980, "cov": 39.0, "dep": 0.6, "al": 3}, {"n": "erm(T)_2_AY894138", "blk": "neighbour", "rc": 880, "cov": 14.2, "dep": 0.1, "al": 1}, {"n": "erm(G)_2_L42817", "blk": "neighbour", "rc": 820, "cov": 39.2, "dep": 0.4, "al": 2}, {"n": "erm(F)_3_M17808", "blk": "neighbour", "rc": 785, "cov": 70.5, "dep": 1.3, "al": 8}, {"n": "erm(X)_4_NC_005206", "blk": "neighbour", "rc": 500, "cov": 13.7, "dep": 0.1, "al": 1}], "dev": false}, {"id": "E021", "run": "SRR22752046", "pub": 759, "ours": 165, "t": [{"n": "erm(B)_18_X66468", "blk": "ermB", "rc": 101, "cov": 86.5, "dep": 1.9, "al": 10}, {"n": "erm(B)_20_AF109075", "blk": "ermB", "rc": 64, "cov": 66.7, "dep": 1.3, "al": 7}, {"n": "erm(38)_1_AY154657", "blk": "neighbour", "rc": 2999, "cov": 16.5, "dep": 0.5, "al": 4}, {"n": "erm(Q)_1_L22689", "blk": "neighbour", "rc": 1786, "cov": 81.8, "dep": 0.9, "al": 6}, {"n": "erm(G)_1_M15332", "blk": "neighbour", "rc": 775, "cov": 51.2, "dep": 0.6, "al": 3}, {"n": "erm(F)_3_M17808", "blk": "neighbour", "rc": 698, "cov": 97.9, "dep": 1.4, "al": 10}], "dev": false}, {"id": "E026", "run": "SRR22752045", "pub": 859, "ours": 839, "t": [{"n": "erm(B)_2_K00551", "blk": "ermB", "rc": 698, "cov": 37.7, "dep": 0.6, "al": 3}, {"n": "erm(B)_18_X66468", "blk": "ermB", "rc": 141, "cov": 95.9, "dep": 1.8, "al": 11}, {"n": "erm(B)_23_X72021", "blk": "ermB", "rc": 17, "cov": 36.3, "dep": 0.6, "al": 4}, {"n": "erm(B)_1_JN899585", "blk": "ermB", "rc": 16, "cov": 56.4, "dep": 0.8, "al": 4}, {"n": "erm(B)_9_AF299292", "blk": "ermB", "rc": 9, "cov": 40.9, "dep": 0.4, "al": 2}, {"n": "erm(38)_1_AY154657", "blk": "neighbour", "rc": 3344, "cov": 30.2, "dep": 1.2, "al": 9}, {"n": "erm(Q)_1_L22689", "blk": "neighbour", "rc": 1584, "cov": 34.8, "dep": 0.3, "al": 3}, {"n": "erm(50)_1_LC473083", "blk": "neighbour", "rc": 1231, "cov": 38.1, "dep": 0.4, "al": 2}, {"n": "erm(F)_3_M17808", "blk": "neighbour", "rc": 699, "cov": 88.6, "dep": 1.2, "al": 10}, {"n": "erm(35)_1_AF319779", "blk": "neighbour", "rc": 626, "cov": 30.1, "dep": 0.3, "al": 2}], "dev": false}, {"id": "E031", "run": "SRR22752041", "pub": 864, "ours": 830, "t": [{"n": "erm(B)_2_K00551", "blk": "ermB", "rc": 733, "cov": 25.8, "dep": 0.5, "al": 4}, {"n": "erm(B)_10_U86375", "blk": "ermB", "rc": 97, "cov": 98.9, "dep": 2.5, "al": 13}, {"n": "erm(B)_20_AF109075", "blk": "ermB", "rc": 34, "cov": 42.3, "dep": 0.6, "al": 3}, {"n": "erm(B)_23_X72021", "blk": "ermB", "rc": 23, "cov": 48.4, "dep": 0.5, "al": 3}, {"n": "erm(B)_18_X66468", "blk": "ermB", "rc": 16, "cov": 32.7, "dep": 0.5, "al": 5}, {"n": "erm(38)_1_AY154657", "blk": "neighbour", "rc": 3205, "cov": 18.3, "dep": 0.5, "al": 4}, {"n": "erm(Q)_1_L22689", "blk": "neighbour", "rc": 1775, "cov": 70.8, "dep": 1.2, "al": 7}, {"n": "erm(T)_1_M64090", "blk": "neighbour", "rc": 822, "cov": 2.9, "dep": 0.0, "al": 1}, {"n": "erm(G)_1_M15332", "blk": "neighbour", "rc": 727, "cov": 58.2, "dep": 0.8, "al": 5}, {"n": "erm(F)_1_M14730", "blk": "neighbour", "rc": 721, "cov": 89.8, "dep": 2.7, "al": 16}], "dev": false}, {"id": "E036", "run": "SRR22752040", "pub": 773, "ours": 548, "t": [{"n": "erm(B)_10_U86375", "blk": "ermB", "rc": 548, "cov": 99.2, "dep": 4.1, "al": 21}, {"n": "erm(B)_20_AF109075", "blk": "ermB", "rc": 34, "cov": 40.9, "dep": 0.6, "al": 3}, {"n": "erm(B)_26_AF080450", "blk": "ermB", "rc": 28, "cov": 49.3, "dep": 1.1, "al": 6}, {"n": "erm(B)_18_X66468", "blk": "ermB", "rc": 14, "cov": 39.4, "dep": 0.7, "al": 4}, {"n": "erm(38)_1_AY154657", "blk": "neighbour", "rc": 3393, "cov": 23.7, "dep": 0.8, "al": 7}, {"n": "erm(Q)_1_L22689", "blk": "neighbour", "rc": 1729, "cov": 7.1, "dep": 0.1, "al": 1}, {"n": "erm(G)_1_M15332", "blk": "neighbour", "rc": 750, "cov": 79.7, "dep": 0.9, "al": 5}, {"n": "erm(F)_3_M17808", "blk": "neighbour", "rc": 679, "cov": 99.5, "dep": 4.6, "al": 29}], "dev": false}, {"id": "E041", "run": "SRR22752039", "pub": 814, "ours": 789, "t": [{"n": "erm(B)_2_K00551", "blk": "ermB", "rc": 672, "cov": 47.8, "dep": 1.0, "al": 5}, {"n": "erm(B)_1_JN899585", "blk": "ermB", "rc": 117, "cov": 98.6, "dep": 3.2, "al": 16}, {"n": "erm(B)_20_AF109075", "blk": "ermB", "rc": 37, "cov": 81.6, "dep": 1.3, "al": 8}, {"n": "erm(B)_23_X72021", "blk": "ermB", "rc": 8, "cov": 49.7, "dep": 0.5, "al": 3}, {"n": "erm(38)_1_AY154657", "blk": "neighbour", "rc": 2872, "cov": 29.9, "dep": 0.6, "al": 5}, {"n": "erm(Q)_1_L22689", "blk": "neighbour", "rc": 1711, "cov": 26.9, "dep": 0.3, "al": 2}, {"n": "erm(50)_1_LC473083", "blk": "neighbour", "rc": 933, "cov": 19.1, "dep": 0.2, "al": 1}, {"n": "erm(G)_1_M15332", "blk": "neighbour", "rc": 815, "cov": 42.9, "dep": 0.5, "al": 3}, {"n": "erm(F)_3_M17808", "blk": "neighbour", "rc": 605, "cov": 91.3, "dep": 1.9, "al": 11}, {"n": "erm(C)_12_Y09003", "blk": "neighbour", "rc": 248, "cov": 3.5, "dep": 0.0, "al": 1}, {"n": "erm(X)_1_M36726", "blk": "neighbour", "rc": 177, "cov": 34.7, "dep": 0.3, "al": 2}], "dev": false}], G=[{"id": "R016", "type": "INF", "g": [0.97, 0.98, 0.99, 0.99, 0.98]}, {"id": "R021", "type": "INF", "g": [0.98, 0.98, 1.0, 0.98, 0.98]}, {"id": "R026", "type": "INF", "g": [0.96, 0.98, 0.99, 0.99, 0.98]}, {"id": "R031", "type": "INF", "g": [0.97, 0.98, 0.99, 0.99, 0.98]}, {"id": "R036", "type": "INF", "g": [0.99, 0.98, 0.98, 1.0, 0.97]}, {"id": "R041", "type": "INF", "g": [0.98, 0.98, 1.0, 0.99, 0.97]}, {"id": "E016", "type": "EFF", "g": [0.98, 0.98, 0.99, 0.99, 0.98]}, {"id": "E021", "type": "EFF", "g": [0.22, 0.98, 0.99, 0.99, 0.97]}, {"id": "E026", "type": "EFF", "g": [0.98, 0.99, 1.0, 0.99, 0.99]}, {"id": "E031", "type": "EFF", "g": [0.96, 0.98, 0.98, 0.97, 0.97]}, {"id": "E036", "type": "EFF", "g": [0.71, 0.99, 0.99, 0.98, 0.98]}, {"id": "E041", "type": "EFF", "g": [0.97, 0.98, 0.98, 0.99, 0.94]}, {"id": "P016", "type": "POND", "g": [null, 0.98, null, null, null]}, {"id": "P021", "type": "POND", "g": [null, 0.98, 0.97, null, null]}, {"id": "P026", "type": "POND", "g": [null, 0.98, null, null, null]}, {"id": "P031", "type": "POND", "g": [null, 0.99, 0.97, null, null]}, {"id": "P036", "type": "POND", "g": [null, 0.96, 0.97, null, null]}, {"id": "P041", "type": "POND", "g": [null, 0.98, 0.96, null, null]}];
+const $=s=>document.querySelector(s);
+const ratio=e=>e.ours/e.pub, bad=r=>r<.9||r>1.1;
+let cur='E021';
+function bars(){
+  const max=1.2; let h='';
+  E.forEach(e=>{const r=ratio(e);h+='<div class="bar-row'+(e.id===cur?' sel':'')+'" tabindex="0" role="button" data-id="'+e.id+'" aria-label="'+e.id+' ermB ratio '+r.toFixed(2)+'"><div class="bar-label">'+e.id+' <small>'+(e.dev?'(development)':'(evaluation)')+'</small></div><div class="track"><div class="band" style="left:'+(.9/max*100)+'%;width:'+(.2/max*100)+'%"></div><div class="fill" style="width:'+(Math.min(r,max)/max*100)+'%;background:'+(bad(r)?'var(--red-l)':'var(--green-l)')+';opacity:.9"></div><div class="one" style="left:'+(1/max*100)+'%"></div></div><div class="val" style="color:'+(bad(r)?'var(--red-l)':'inherit')+'">'+r.toFixed(2)+'</div></div>';});
+  $('#bars').innerHTML=h;
+  document.querySelectorAll('.bar-row').forEach(b=>{const go=()=>{cur=b.dataset.id;draw();};b.onclick=go;b.onkeydown=ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();go();}};});
+}
+function buttons(){
+  const s=$('#sel');E.forEach(e=>{const b=document.createElement('button');b.textContent=e.id;b.dataset.id=e.id;b.onclick=()=>{cur=e.id;draw();};s.appendChild(b);});
+}
+function draw(){
+  bars();
+  document.querySelectorAll('#sel button').forEach(b=>b.classList.toggle('on',b.dataset.id===cur));
+  const e=E.find(x=>x.id===cur), r=ratio(e);
+  $('#sum').innerHTML='<b>'+e.id+'</b> ('+(e.dev?'development':'evaluation')+'): published ermB total '+e.pub+', ours '+e.ours+' (ratio '+r.toFixed(2)+').';
+  const mx=Math.max(...e.t.map(t=>t.rc));
+  let h='';
+  e.t.slice().sort((a,b)=>(a.blk==='ermB'?0:1)-(b.blk==='ermB'?0:1)||b.rc-a.rc).forEach(t=>{
+    const full=t.cov>=95;
+    h+='<div class="trow"><div class="tname'+(t.blk==='ermB'?' ermb':'')+'">'+t.n+'</div><div class="mini"><i style="width:'+(t.rc/mx*100)+'%;background:var(--slate)"></i><span>'+t.rc.toLocaleString()+'</span></div><div class="mini"><i style="width:'+t.cov+'%;background:'+(full?'var(--teal-l)':'var(--amber-l)')+'"></i><span>'+t.cov.toFixed(0)+'%</span></div></div>';
+  });
+  $('#rows').innerHTML=h;
+}
+function heat(){
+  const GN=['ermB','sul1','tetA','tetQ','tetW'];
+  let h='<tr><th>Sample</th>'+GN.map(g=>'<th style="text-align:center">'+g+'</th>').join('')+'</tr>';
+  G.forEach(d=>{h+='<tr><td>'+d.id+' <small style="color:var(--text-m)">'+d.type+'</small></td>'+d.g.map(v=>v===null?'<td class="na">&ndash;</td>':'<td class="'+(bad(v)?'bad':'ok')+'">'+v.toFixed(2)+'</td>').join('')+'</tr>';});
+  $('#hm').innerHTML=h;
+}
+buttons();draw();heat();
+</script>
+</body>
+</html>
