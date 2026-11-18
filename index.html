@@ -228,6 +228,9 @@
     }
     .btn-report:hover { background: rgba(107,63,160,0.3); }
     .card-desc { color: var(--text-m); font-size: 0.9rem; margin-bottom: 1.25rem; }
+    .card-credits { color: var(--text-m); font-size: 0.75rem; line-height: 1.55; margin-bottom: 1.25rem; }
+    .card-credits a { color: var(--teal-l); text-decoration: none; }
+    .card-credits a:hover { text-decoration: underline; }
     .card-metrics {
       display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.25rem;
     }
@@ -495,7 +498,7 @@
     </div>
     <div class="projects-grid">
 
-      <h3 class="group-label" id="metagenomics"><span class="gl-num">01</span><span class="gl-title">Metagenomics &amp; Analytical Benchmarking</span><span class="gl-sub">Benchmarking taxonomic and resistance-gene profiling, and testing whether a published analysis can be reproduced.</span></h3>
+      <h3 class="group-label" id="metagenomics"><span class="gl-num">01</span><span class="gl-title">Metagenomics &amp; Analytical Benchmarking</span><span class="gl-sub">Benchmarking taxonomic and resistance-gene profiling, reanalysing published microbiome data, and testing whether a published analysis can be reproduced.</span></h3>
 
       <!-- Project 9 -->
       <div class="project-card">
@@ -733,6 +736,131 @@
               <a class="btn-report" href="assets/ww_02_ermB_shortfall.html" target="_blank" rel="noopener">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
                 ermB Shortfall
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 11 -->
+      <div class="project-card">
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <div>
+              <div class="card-org">16S Amplicon Microbiome · Prespecified Reanalysis</div>
+              <h4 class="card-title">Diet and gut microbiome recovery after antibiotics &mdash; a 16S reanalysis</h4>
+            </div>
+            <a class="card-github" href="https://github.com/bkhimek/Ng_16S_Reanalysis" target="_blank" rel="noopener">
+              <svg class="icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              GitHub
+            </a>
+          </div>
+          <p class="card-desc">
+            Reanalysed published 16S rRNA data from humanised mice to compare gut microbiome recovery after ciprofloxacin under standard and low-MAC diets. Built a QIIME 2 workflow using DADA2 and SILVA, with a prespecified analysis plan, cage-level summaries and sensitivity analyses. Reproduced the primary result in nf-core/ampliseq with matched settings.
+          </p>
+          <p class="card-desc">
+            Low-MAC cages were closer to their own pre-antibiotic composition during days 8&ndash;12 by Bray&ndash;Curtis distance. Baseline samples for the two diets were sequenced in different runs, which limits attributing this pattern to diet.
+          </p>
+          <div class="card-metrics">
+            <div class="metric"><b>&minus;0.145</b> low-MAC &minus; standard Bray&ndash;Curtis distance from day 0 (cage-equal)</div>
+            <div class="metric"><b>2/2</b> low-MAC cages below all 3 standard-diet cages; mice overlap</div>
+            <div class="metric"><b>&minus;0.1453</b> vs &minus;0.1454: nf-core/ampliseq vs QIIME 2 (prespecified tolerance 0.02)</div>
+            <div class="metric"><b>453</b> samples demultiplexed &middot; <b>451</b> passed initial QC &middot; <b>17</b> mice across <b>5</b> cages in the primary analysis</div>
+          </div>
+          <p class="card-credits">
+            <b>Original data:</b> Ng KM, Aranda-D&iacute;az A, Tropini C, et al. Recovery of the gut microbiota after antibiotics depends on host diet, community context, and environmental reservoirs. <i>Cell Host &amp; Microbe.</i> 2019;26(5):650&ndash;665.e4. <a href="https://doi.org/10.1016/j.chom.2019.10.011" target="_blank" rel="noopener">doi:10.1016/j.chom.2019.10.011</a><br>
+            <b>Sequence data:</b> Stanford Digital Repository, <a href="https://purl.stanford.edu/rm696bw4911" target="_blank" rel="noopener">purl.stanford.edu/rm696bw4911</a>, licensed CC BY-NC 3.0.<br>
+            <b>Analysis and figures:</b> Krzysztof Gizynski, independently reanalysing the published dataset of Ng et al. (2019).
+          </p>
+          <div class="card-tags">
+            <span class="tag">QIIME 2</span>
+            <span class="tag">DADA2</span>
+            <span class="tag">SILVA</span>
+            <span class="tag">q2-boots</span>
+            <span class="tag">nf-core/ampliseq</span>
+            <span class="tag">Nextflow</span>
+            <span class="tag">Docker</span>
+            <span class="tag">Python</span>
+          </div>
+          <details class="diagram-toggle">
+            <summary>View Workflow Diagram</summary>
+            <div class="diagram-wrap">
+<svg viewBox="0 0 860 560" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" role="img">
+  <title>16S Microbiome Reanalysis Workflow</title>
+  <desc>Public 16S reads from a humanised-mouse study are demultiplexed once per run, the analysis plan is frozen, and the same per-sample reads are processed in QIIME 2 and, as a reproducibility check, in nf-core/ampliseq with matched settings. The primary result was reproduced; it depends on the distance metric, and a sequencing-run confound between diets is documented.</desc>
+  <defs>
+    <marker id="arr-16s" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#2E4057"/></marker>
+  </defs>
+  <rect width="860" height="560" fill="#F4F6F8" rx="10"/>
+  <text x="430" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E4057">16S Reanalysis: Diet and Recovery after Antibiotics</text>
+  <text x="430" y="46" text-anchor="middle" font-size="10" fill="#777">Public reads · frozen plan · QIIME 2 · matched second workflow · cage-level reporting</text>
+  <rect x="280" y="58" width="300" height="40" rx="6" fill="#2E4057"/>
+  <text x="430.0" y="75" text-anchor="middle" font-size="11" font-weight="bold" fill="white">Public 16S V4 reads (Ng et al. 2019)</text>
+  <text x="430.0" y="89" text-anchor="middle" font-size="9" fill="#A8BFD0">humanised mice · 3 MiSeq runs · 453 samples · rm696bw4911</text>
+  <line x1="430" y1="98" x2="430" y2="114" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-16s)"/>
+  <rect x="260" y="114" width="340" height="38" rx="6" fill="#2E4057"/>
+  <text x="430.0" y="131" text-anchor="middle" font-size="11" font-weight="bold" fill="white">DEMULTIPLEX ONCE PER RUN</text>
+  <text x="430.0" y="145" text-anchor="middle" font-size="9" fill="#A8BFD0">EMP paired-end, Golay correction · checksummed per-sample FASTQs</text>
+  <line x1="430" y1="152" x2="430" y2="168" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-16s)"/>
+  <rect x="270" y="168" width="320" height="38" rx="6" fill="#2E4057"/>
+  <text x="430.0" y="185" text-anchor="middle" font-size="11" font-weight="bold" fill="white">FREEZE THE ANALYSIS PLAN</text>
+  <text x="430.0" y="199" text-anchor="middle" font-size="9" fill="#A8BFD0">endpoint · 17 eligible mice · cage weighting · sensitivity set · git tag</text>
+  <line x1="430" y1="206" x2="430" y2="222" stroke="#2E4057" stroke-width="2"/>
+  <line x1="430" y1="222" x2="215" y2="222" stroke="#2E4057" stroke-width="2"/>
+  <line x1="430" y1="222" x2="645" y2="222" stroke="#2E4057" stroke-width="2"/>
+  <line x1="215" y1="222" x2="215" y2="238" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-16s)"/>
+  <line x1="645" y1="222" x2="645" y2="238" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-16s)"/>
+  <rect x="75" y="238" width="280" height="38" rx="6" fill="#2E4057"/>
+  <text x="215.0" y="255" text-anchor="middle" font-size="11" font-weight="bold" fill="white">QIIME 2 WORKFLOW</text>
+  <text x="215.0" y="269" text-anchor="middle" font-size="9" fill="#A8BFD0">DADA2 per run · SILVA · 100 rarefactions at 6,400 reads</text>
+  <rect x="505" y="238" width="280" height="38" rx="6" fill="#2E4057"/>
+  <text x="645.0" y="255" text-anchor="middle" font-size="11" font-weight="bold" fill="white">nf-core/ampliseq 3.1.0</text>
+  <text x="645.0" y="269" text-anchor="middle" font-size="9" fill="#A8BFD0">DADA2 settings matched from source · rule tagged before run</text>
+  <line x1="215" y1="276" x2="215" y2="300" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-16s)"/>
+  <line x1="645" y1="276" x2="645" y2="300" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-16s)"/>
+  <rect x="75" y="300" width="280" height="50" rx="6" fill="#1A6B45"/>
+  <text x="215.0" y="317" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Frozen primary result</text>
+  <text x="215.0" y="331" text-anchor="middle" font-size="9" fill="#A8D5B8">low-MAC − standard = −0.145 · 2 cages below all 3</text>
+  <rect x="505" y="300" width="280" height="50" rx="6" fill="#1A6B45"/>
+  <text x="645.0" y="317" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Result reproduced</text>
+  <text x="645.0" y="331" text-anchor="middle" font-size="9" fill="#A8D5B8">−0.1453 vs −0.1454 · same cage pattern · tolerance 0.02</text>
+  <line x1="215" y1="350" x2="215" y2="374" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-16s)"/>
+  <line x1="645" y1="350" x2="645" y2="374" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-16s)"/>
+  <rect x="75" y="374" width="280" height="50" rx="6" fill="#B5651D"/>
+  <text x="215.0" y="391" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Depends on the distance metric</text>
+  <text x="215.0" y="405" text-anchor="middle" font-size="9" fill="#F3D9B8">stable across Bray–Curtis versions · UniFrac, Aitchison overlap</text>
+  <rect x="505" y="374" width="280" height="50" rx="6" fill="#B5651D"/>
+  <text x="645.0" y="391" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Design confound</text>
+  <text x="645.0" y="405" text-anchor="middle" font-size="9" fill="#F3D9B8">baselines in different runs by diet · concurrency unverified</text>
+  <line x1="215" y1="424" x2="215" y2="448" stroke="#2E4057" stroke-width="2"/>
+  <line x1="645" y1="424" x2="645" y2="448" stroke="#2E4057" stroke-width="2"/>
+  <line x1="215" y1="448" x2="645" y2="448" stroke="#2E4057" stroke-width="2"/>
+  <line x1="430" y1="448" x2="430" y2="462" stroke="#2E4057" stroke-width="2" marker-end="url(#arr-16s)"/>
+  <rect x="180" y="462" width="500" height="52" rx="6" fill="#6B3FA0"/>
+  <text x="430.0" y="479" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Diet effect not claimed</text>
+  <text x="430.0" y="493" text-anchor="middle" font-size="9" fill="#D8C4F0">descriptive cage-level comparison · baseline run confounded with diet</text>
+  <rect x="170" y="536" width="12" height="10" rx="2" fill="#2E4057"/>
+  <text x="186" y="545" font-size="9" fill="#555">Analysis step</text>
+  <rect x="290" y="536" width="12" height="10" rx="2" fill="#1A6B45"/>
+  <text x="306" y="545" font-size="9" fill="#555">Result</text>
+  <rect x="400" y="536" width="12" height="10" rx="2" fill="#B5651D"/>
+  <text x="416" y="545" font-size="9" fill="#555">Limit</text>
+  <rect x="530" y="536" width="12" height="10" rx="2" fill="#6B3FA0"/>
+  <text x="546" y="545" font-size="9" fill="#555">Reporting</text>
+</svg>
+            </div>
+          </details>
+          <div class="card-reports">
+            <div class="card-reports-label">Report Figures</div>
+            <div class="card-reports-links">
+              <a class="btn-report" href="assets/16s_01_primary_result.html" target="_blank" rel="noopener">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+                Primary Result
+              </a>
+              <a class="btn-report" href="assets/16s_02_workflow_reproducibility.html" target="_blank" rel="noopener">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
+                Workflow Reproducibility
               </a>
             </div>
           </div>
@@ -2176,16 +2304,35 @@
         <div class="skill-group-title">Pipeline &amp; Workflow</div>
         <div class="skill-pills">
           <span class="skill-pill">Nextflow DSL2</span>
+          <span class="skill-pill">nf-core</span>
           <span class="skill-pill">bash</span>
           <span class="skill-pill">Git</span>
         </div>
       </div>
 
       <div class="skill-group">
-        <div class="skill-group-title">Containers</div>
+        <div class="skill-group-title">Containers &amp; Environments</div>
         <div class="skill-pills">
           <span class="skill-pill">Docker</span>
           <span class="skill-pill">Singularity</span>
+          <span class="skill-pill">conda</span>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <div class="skill-group-title">Metagenomics &amp; Microbiome Analysis</div>
+        <div class="skill-pills">
+          <span class="skill-pill">QIIME 2</span>
+          <span class="skill-pill">DADA2</span>
+          <span class="skill-pill">nf-core/ampliseq</span>
+          <span class="skill-pill">SILVA</span>
+          <span class="skill-pill">Kraken2</span>
+          <span class="skill-pill">Sylph</span>
+          <span class="skill-pill">KMA</span>
+          <span class="skill-pill">ResFinder</span>
+          <span class="skill-pill">FastQC</span>
+          <span class="skill-pill">MultiQC</span>
+          <span class="skill-pill">BBDuk</span>
         </div>
       </div>
 
@@ -2246,18 +2393,17 @@
         <div class="skill-pills">
           <span class="skill-pill">Python</span>
           <span class="skill-pill">Dash</span>
+          <span class="skill-pill">matplotlib</span>
           <span class="skill-pill">pandas</span>
           <span class="skill-pill">Biopython</span>
         </div>
       </div>
 
       <div class="skill-group">
-        <div class="skill-group-title">Regulatory Genomics</div>
+        <div class="skill-group-title">Comparative Genomics &amp; Assay Design</div>
         <div class="skill-pills">
           <span class="skill-pill">Inclusivity analysis</span>
           <span class="skill-pill">Exclusivity analysis</span>
-          <span class="skill-pill">FDA 510(k)</span>
-          <span class="skill-pill">CE-IVDR</span>
           <span class="skill-pill">Primer3</span>
           <span class="skill-pill">Panaroo</span>
           <span class="skill-pill">NCBI BLAST</span>
